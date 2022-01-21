@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import { UploadOutlined } from '@ant-design/icons'
 import { useHistory } from "react-router-dom";
 
-
 const layout = {
     labelCol: {
         span: 8,
@@ -19,12 +18,16 @@ const layout = {
 };
 
 const validateMessages = {
+    // eslint-disable-next-line no-template-curly-in-string
     required: '${label} is required!',
     types: {
+        // eslint-disable-next-line no-template-curly-in-string
         email: '${label} is not a valid email!',
+        // eslint-disable-next-line no-template-curly-in-string
         number: '${label} is not a valid number!',
     },
     number: {
+        // eslint-disable-next-line no-template-curly-in-string
         range: '${label} must be between ${min} and ${max}',
     },
 };
@@ -43,14 +46,6 @@ export type FormCreatedSimulated = {
 export type Time = {
     tempoPorProva: string
 }
-// titulo: "titulo"
-// descricao: "descrição"
-// thumbnail: [{… }]
-// youtubeOuThumbnail: "thumbnail"
-// aleatoria: 12
-// tempoPorProva: Moment { _isAMomentObject: true, _isUTC: false, _pf: {… }, _locale: Locale, _d: Tue Dec 28 2021 01: 00: 00 GMT - 0300(Horário Padrão de Brasília), … }
-// [[Prototype]]: Object
-
 export default function FormCreatedSimulated() {
     const antIcon = <LoadingOutlined style={{ fontSize: 34, color: "#E414B2" }} spin />
     const [ordemDasPerguntas, setOrdemDasPerguntas] = useState({ ordemDasPerguntas: 0 })
@@ -60,17 +55,6 @@ export default function FormCreatedSimulated() {
     const [time, setTime] = useState<Time>({ tempoPorProva: '' })
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
     const history = useHistory();
-
-    // const FakeUser = {
-    //     author: 'Usuario'
-    // }
-    // const [formSimuled, setFormSimuled] = useState<FormCreatedSimuled>({
-    //     author: FakeUser.author,
-    //     descricao: "",
-    //     linkYouTube: "",
-    //     titulo: "",
-    //     ordemDasPerguntas: 1
-    // })
 
     function goTohome() {
         history.push("/");

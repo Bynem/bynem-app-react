@@ -6,10 +6,10 @@ import FormUpdateSimulated from '../../components/FormUpdateSimulated'
 import { Divider } from 'antd';
 
 
-export type Id = {
-    id?: string | string[];
+export type Uuid = {
+    uuid: string | string[];
 }
-export default function UpdateSimulated({ id }: Id) {
+export default function UpdateSimulated({ uuid }: Uuid) {
 
     return (
         <>
@@ -18,9 +18,7 @@ export default function UpdateSimulated({ id }: Id) {
                 <S.Title>Altere seu simulado</S.Title>
                 <Divider />
                 <S.FormContainer>
-                    {console.log("id no body ", id)}
-
-                    <FormUpdateSimulated id={id} />
+                    <FormUpdateSimulated uuid={uuid} />
                 </S.FormContainer>
             </S.Content>
             <Footer bottom={false} />

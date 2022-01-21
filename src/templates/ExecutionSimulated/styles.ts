@@ -33,7 +33,7 @@ export const Title = styled.div`
     margin: 0 0 0 2rem;
     color: #46a6e6;
     word-wrap: break-word;
-
+    font-weight: bold;
 `
 
 export const SubTitle = styled.p`
@@ -44,11 +44,11 @@ export const SubTitle = styled.p`
 export const ContainerVideoOrImage = styled.main`
     margin: 2rem 6rem 2rem 0rem;
     display: flex;
- @media (max-width: 768px) {
+    @media (max-width: 768px) {
             margin: 0
 
     }
-
+   
    
 `
 
@@ -82,23 +82,35 @@ export const ContainerIframe = styled.div`
     width: 100%;
     display: flex;
     justify-content: center;
-     > iframe {
-      width: 600px;
-      margin: 0 auto 0 auto;
+     img{
+         height: 400px;
+         width: 600px;
+        @media (max-width: 600px) {
+            width: 100%;
+            }
     }
-
-
 `
+
 export const ContainerSubTitle = styled.div`
-    font-size: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
     margin: 24px 0 0 2rem;
     color: #46a6e6;
     word-wrap: break-word;
+    text-align: center;
     p{
 
     }
 `
 export const ContainerOptions = styled.div`
+    background-color: #f5f5f5;
+    width: 600px;
+    margin: 0 auto 0 auto;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    @media (max-width: 600px) {
+        width: 100%;
+
+    }
 
 `
 export const CheckContainer = styled.div`
@@ -132,8 +144,11 @@ export const ContainerDescription = styled.div`
     }
 `
 export const ContainerButton = styled.div`
-    width: fit-content;
+    display: flex;
+    padding: 0 2rem 1rem 2rem;
+    justify-content: space-between;
     margin-right: auto;
+    align-items: center;
      .ant-btn{
         margin: 2px;
         border-radius: 4px;

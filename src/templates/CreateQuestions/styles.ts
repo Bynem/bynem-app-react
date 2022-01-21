@@ -48,3 +48,8 @@ export const FormContainer = styled.div`
 `
 
 
+export const ContianerTeste = styled.div`
+    width: 600px;
+    height: 200px;
+    margin: 0 auto 0 auto;
+`

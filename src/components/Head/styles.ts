@@ -38,6 +38,7 @@ export const Menu = styled.div`
   justify-content: space-between;
   align-items: center;
   position: relative;
+  font-weight: bold;
 
   @media (max-width: 768px) {
     overflow-y: hidden;

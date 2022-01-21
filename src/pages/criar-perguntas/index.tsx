@@ -7,7 +7,6 @@ import CreateQuestions from '../../templates/CreateQuestions'
 export default function CreateQuestionsPage() {
     const [loading, setLoading] = useState(false)
     const history = useHistory();
-    const { uuid } = router.query
 
     useEffect(() => {
         setLoading(true)
@@ -27,8 +26,7 @@ export default function CreateQuestionsPage() {
                     <Loading />
                 ) :
                 (<>
-                    {console.log("uuid no get", uuid)}
-                    <CreateQuestions uuid={uuid} />
+                    <CreateQuestions />
                 </>
                 )
         }

@@ -101,7 +101,7 @@ export default function ExecutionSimulated({ uuid }: Uuid) {
                     </Steps>
                 </S.StepContainer>
                 <S.ContainerIframe>
-                    <img style={{ height: '600px', width: '300px' }} src='/abertura.jpg'></img>
+                    <img src='/abertura.jpg'></img>
                 </S.ContainerIframe>
                 {/* } */}
             </S.ContainerVideoOrImage>

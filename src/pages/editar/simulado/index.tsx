@@ -3,10 +3,11 @@ import { useHistory } from "react-router-dom";
 import React, { useState, useEffect } from 'react'
 import UpdateSimulated from '../../../templates/UpdateSimulated'
 import Loading from '../../../components/Loading'
+import { useParams } from 'react-router-dom';
 
 export default function UpdateSimulatedPage() {
     const [loading, setLoading] = useState(false)
-    const history = useHistory();
+    let { uuid } = useParams();
 
     useEffect(() => {
         setLoading(true)
@@ -26,8 +27,7 @@ export default function UpdateSimulatedPage() {
                     <Loading />
                 ) :
                 (<>
-                    {console.log("id no get", id)}
-                    <UpdateSimulated id={id} />
+                    <UpdateSimulated uuid={uuid} />
                 </>
                 )
         }
