@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Divider, Form, Input, Radio, Space, Switch, Upload } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { Button, Divider, Form, Input, Switch, Upload, Radio } from 'antd';
 import * as S from './styles'
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -9,6 +9,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import api from '../../service/api';
 import { toast } from 'react-toastify';
+import Input2 from '../../components/InputCheck'
 
 const layout = {
     labelCol: {
@@ -20,17 +21,10 @@ const layout = {
 };
 
 const validateMessages = {
-    required: '${label} is required!',
-    types: {
-        email: '${label} is not a valid email!',
-        number: '${label} is not a valid number!',
-    },
-    number: {
-        range: '${label} must be between ${min} and ${max}',
-    },
+
 };
 
-export type FormCreatedSimulated = {
+export type FormCreatedSimulatedType = {
     titulo: string
     descricao: string
     linkYouTube?: string
@@ -52,6 +46,23 @@ export default function FormCreatedSimulated() {
     const [questionLabel, setQuestionLabel] = useState<number[]>([1, 2])
     const [checkLabel, setCheckLabel] = useState<number[]>([])
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
+    const [deletarUltimo, setDeletarUltimo] = useState<any>(1)
+    const [form, setForm] = useState<any>()
+
+    useEffect(() => {
+        setForm({
+            resposta1: { descricao: '', certa: false },
+            resposta2: { descricao: '', certa: false },
+            resposta3: { descricao: '', certa: false },
+            resposta4: { descricao: '', certa: false },
+            resposta5: { descricao: '', certa: false },
+            resposta6: { descricao: '', certa: false },
+            resposta7: { descricao: '', certa: false },
+            resposta8: { descricao: '', certa: false },
+            resposta9: { descricao: '', certa: false },
+            resposta10: { descricao: '', certa: false },
+        })
+    }, [])
 
     const history = useHistory();
     // function goTohome() {
@@ -59,17 +70,29 @@ export default function FormCreatedSimulated() {
     //     router.push("/")
     // }
 
-    const onFinish = (values) => {
-        console.log("values", values)
 
-        postPergunta(values)
+    const onFinish = (values) => {
+        console.log("fpr,", form);
+
+        Object.keys(form).forEach((item) => {
+            console.log("objheto percorrido", form[item]);
+        });
+
+        // let perguntas = {}
+        // for (let i = 0; i < questionLabel.length; i++) {
+
+        // }
+        // let final =
+        //     console.log("values", values)
+
+        // postPergunta(values)
 
     };
 
     async function postPergunta(values) {
         await api.post('api/pergunta', values)
             .then(response => {
-                console.log("response simu", response)
+                // console.log("response simu", response)
                 // if (response) {
                 //     postThumbnail(response.data.id)
                 // }
@@ -125,7 +148,7 @@ export default function FormCreatedSimulated() {
         }
         const removedArr = [...questionLabel].filter(question => question !== remove);
         setQuestionLabel(removedArr)
-
+        setDeletarUltimo(deletarUltimo + 1)
         // setTodos(removedArr);
         // setQuestionLabel([])
         // questionLabel.pop()
@@ -161,6 +184,17 @@ export default function FormCreatedSimulated() {
     //     )
     // }
 
+
+
+    function setFormPerguntas(e) {
+        const { name, value } = e.target
+        setForm({
+            ...form,
+            [name]: value
+        })
+    }
+    // console.log("form fora", form)
+    let araarioo = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     return (
         <Spin indicator={antIcon} spinning={isSpinning}>
             <Form {...layout} name="nest-messages" labelAlign={"left"} onFinish={onFinish} validateMessages={validateMessages}>
@@ -182,7 +216,7 @@ export default function FormCreatedSimulated() {
                     </Form.Item>
 
                     <Form.Item
-                        name="questions"
+                        name="descricao"
 
                         rules={[
                             {
@@ -191,82 +225,21 @@ export default function FormCreatedSimulated() {
                             },
                         ]}
                     >
-                        <Input.TextArea rows={6} showCount maxLength={500} />
+                        <Input.TextArea name="descricao" onChange={e => setFormPerguntas(e)} rows={6} showCount maxLength={500} />
                     </Form.Item>
                     <Divider />
-
                     <Form.Item className="switch-form">
                         <S.Title>Respostas</S.Title>
-                        <Form.Item
-                            label="Multipla escolha?"
-                            className="switch-container"
-                        >
-                            <Switch onChange={onChange} />
-                        </Form.Item>
                     </Form.Item>
-                    {questionLabel.map((question, index) => {
-                        if (checked) {
-                            return (
-
-                                <S.CheckContainer>
-                                    <S.DivCheckBox>
-                                        <input
-                                            type="radio"
-                                            name={`question${question}`}
-                                            className="form-check-input"
-                                            value={'diferente'}
-                                            // checked={ checkLabel.forEach(x => x == question ? true : false)}
-                                            onClick={(e) => handleChange(e, index)}
-                                        />
-
-                                    </S.DivCheckBox>
-                                    <Form.Item name={`question${question}`} key={question} className="question">
-                                        <Input.TextArea rows={2} showCount maxLength={500} />
-                                    </Form.Item >
-                                </S.CheckContainer>
-                            )
-                        }
-
-                        // if (checked) {
-                        //     return <S.ContainerQuestions key={question}>
-                        //         <Radio.Group>
-                        //             <Radio value={`${question}`} />
-                        //         </Radio.Group>
-                        //         <Form.Item name={`checked`} wrapperCol={{ span: 2 }}>
-                        //         </Form.Item>
-                        //         <Form.Item name={`question${question}`} key={question} className="question">
-                        //             <Input.TextArea rows={2} showCount maxLength={500} />
-                        //         </Form.Item >
-                        //     </S.ContainerQuestions>
-                        // }
-
-                        return <S.ContainerQuestions key={question}>
-                            <Form.Item name={`checked`} wrapperCol={{ span: 2 }}>
-                                <Radio.Group>
-                                    <Radio value={`${question}`} />
-                                </Radio.Group>
-                            </Form.Item>
-                            <Form.Item name={`question${question}`} key={question} className="question">
-                                <Input.TextArea rows={2} showCount maxLength={500} />
-                            </Form.Item >
-                        </S.ContainerQuestions>
-
-                    })}
-
-
-                    {/* {questionLabel.map(question => (
-                        <S.ContainerQuestions key={question}>
-                            <Radio.Group>
-                                <Radio value={`${question}`} />
-                            </Radio.Group>
-                            <Form.Item name={`checked`} wrapperCol={{ span: 2 }}>
-                            </Form.Item>
-                            <Form.Item name={`question${question}`} key={question} className="question">
-                                <Input.TextArea rows={2} showCount maxLength={500} />
-                            </Form.Item >
-                        </S.ContainerQuestions>
-                    ))} */}
-
+                    {questionLabel.map((position) => (
+                        <Input2
+                            key={position}
+                            deletarUltimo={deletarUltimo}
+                            form={form}
+                            setForm={setForm}
+                            index={position}
+                        />
+                    ))}
                     <Form.Item>
                         <S.ContainerButton>
                             <Button

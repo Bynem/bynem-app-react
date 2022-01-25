@@ -11,7 +11,7 @@ import TableVizualizeQuestions from '../../components/TableVizualizeQuestions'
 import api from '../../service/api';
 
 export type Uuid = {
-    uuid: string | string[];
+    uuid?: string | string[];
 }
 
 export default function VisualizeSimulated({ uuid }: Uuid) {
@@ -32,44 +32,43 @@ export default function VisualizeSimulated({ uuid }: Uuid) {
     }, [uuid])
 
     return <>
-        {!simulated &&
-            <>
-                <Head home={true} />
-                <S.Content>
-                    <S.Title>{simulated?.titulo}</S.Title>
-                    <Divider />
-                    <S.ContainerVideoOrImage>
-                        {/* {simulated.linkYouTube && */}
-                        <iframe
-                            height="315"
-                            src="https://www.youtube.com/embed/1_h1D7GPwSw"
-                            title="YouTube video player"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        />
-                        {/* } */}
-                    </S.ContainerVideoOrImage>
-                    <Divider />
-                    <S.ContainerDescription>
-                        <TextArea rows={4} disabled={true} style={{ color: "#373737" }} defaultValue={simulated?.descricao} />
-                    </S.ContainerDescription>
-                    <S.ContainerButton>
-                        <Button
-                            type="primary"
-                            style={{
-                                backgroundColor: "#38B000",
-                                border: "none",
-                            }}
-                            size="large"
-                        >Iniciar Simulado</Button>
-                    </S.ContainerButton>
-                    <S.ContainerTableQuestions>
-                        <TableVizualizeQuestions uuid={uuid} />
-                    </S.ContainerTableQuestions>
-                </S.Content>
-                <Footer bottom={false} />
-            </>
-        }
+        <>
+            <Head home={true} />
+            <S.Content>
+                <S.Title>{simulated?.titulo}</S.Title>
+                <Divider />
+                <S.ContainerVideoOrImage>
+                    {/* {simulated.linkYouTube && */}
+                    <iframe
+                        height="315"
+                        src="https://www.youtube.com/embed/1_h1D7GPwSw"
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    />
+                    {/* } */}
+                </S.ContainerVideoOrImage>
+                <Divider />
+                <S.ContainerDescription>
+                    <TextArea rows={4} disabled={true} style={{ color: "#373737" }} defaultValue={simulated?.descricao} />
+                </S.ContainerDescription>
+                <S.ContainerButton>
+                    <Button
+                        type="primary"
+                        style={{
+                            backgroundColor: "#38B000",
+                            border: "none",
+                        }}
+                        size="large"
+                    >Iniciar Simulado</Button>
+                </S.ContainerButton>
+                <S.ContainerTableQuestions>
+                    <TableVizualizeQuestions uuid={uuid} />
+                </S.ContainerTableQuestions>
+            </S.Content>
+            <Footer bottom={false} />
+        </>
+
     </>
 }

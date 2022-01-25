@@ -83,19 +83,14 @@ const Login: React.FC = () => {
                     </Container>
                 </S.LoginContainer>
             </S.ConteinerLeft>
-
             <S.ConteinerRight>
                 <S.ContainerText>
-
                     <S.Title>Bem-Vindo</S.Title>
                     <S.Title>A Bynem</S.Title>
-
-                    <S.SubTitle>A melhor plataforma de simuados do Mundo !</S.SubTitle>
+                    <S.SubTitle>A melhor plataforma de simulados</S.SubTitle>
+                    <S.SubTitle>Gratuita  do Mundo !</S.SubTitle>
                 </S.ContainerText>
-
             </S.ConteinerRight>
-
-
         </S.Content>
     </S.Container>
 }

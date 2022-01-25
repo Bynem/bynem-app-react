@@ -13,11 +13,7 @@ export default function CreateQuestionsPage() {
         setTimeout(() => {
             setLoading(false)
         }, 1000)
-
-
-
     }, [])
-
 
     return <>
         {

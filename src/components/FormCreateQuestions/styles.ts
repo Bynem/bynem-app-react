@@ -73,7 +73,9 @@ export const DivCheckBox = styled.div`
     align-items: center;
     margin-bottom: 24px;
     margin-right: 8px;
-
+    .form-check-input{
+        color: red;
+    }
     >input{
         width: 16px;
         height: 16px;
