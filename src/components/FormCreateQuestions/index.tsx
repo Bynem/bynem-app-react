@@ -73,6 +73,7 @@ export default function FormCreatedSimulated() {
 
     const onFinish = (values) => {
         console.log("fpr,", form);
+        console.log("values,", values);
 
         Object.keys(form).forEach((item) => {
             console.log("objheto percorrido", form[item]);
