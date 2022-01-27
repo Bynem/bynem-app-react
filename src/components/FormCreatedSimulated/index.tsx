@@ -61,12 +61,17 @@ export default function FormCreatedSimulated() {
     }
 
     const onFinish = (values) => {
+        console.log({ values })
+
+
+
         if (values.linkYoutube) {
             const urlYoutube = values.linkYoutube.replace('watch?v=', 'embed/');
             values.linkYoutube = urlYoutube
             const newObject = Object.assign(values, time)
             // setFormSimuled(newObject)
             postSimulated(newObject)
+            return
         }
         // setIsSpinning(true)
         const newObject = Object.assign(values, time)
@@ -105,6 +110,8 @@ export default function FormCreatedSimulated() {
                 history.push("/");
                 toast.success('Simulado salvo com sucesso ')
             }).catch(function (error) {
+                history.push("/");
+
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
                 setIsSpinning(false)
             });
@@ -192,7 +199,7 @@ export default function FormCreatedSimulated() {
                         ) : (null)
                 }
                 <S.SubTitle>Ordem das perguntas</S.SubTitle>
-                <Form.Item name="radio-group" rules={[{ required: true, message: 'Selecione uma das opções!' }]}>
+                <Form.Item name="ordemDasPerguntas" rules={[{ required: true, message: 'Selecione uma das opções!' }]}>
                     <Radio.Group name="radiogroup" onChange={(e) => orderQuestions(e)} >
                         <Space direction="vertical">
                             <Radio value={1}>Sequencial</Radio>
@@ -200,7 +207,7 @@ export default function FormCreatedSimulated() {
                             {OrderQuestionsSelected == 2 ?
                                 (
                                     <Form.Item
-                                        name='aleatoria'
+                                        name='qtdLimitePerguntasSimulado'
                                         label="Quantidade de Perguntas Por Simulado"
                                         rules={[{ required: true, message: 'Selecione a Quantidade de perguntas!' }]}
                                     >

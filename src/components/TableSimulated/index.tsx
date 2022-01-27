@@ -59,11 +59,13 @@ export default function TableSimulated({ setBottom }: Table) {
                     <Button
                         onClick={() => UpdateSimulated(id)}
                         type="primary"
+                        style={{ width: "77px" }}
                     >Editar
                     </Button>
                     <Button
                         onClick={() => DeleteSimulated(id)}
                         type="primary"
+                        style={{ width: "77px" }}
                         danger
                     >Deletar
                     </Button>

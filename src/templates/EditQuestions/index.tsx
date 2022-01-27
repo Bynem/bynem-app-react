@@ -7,8 +7,7 @@ import FormEditQuestions from '../../components/FormEditQuestions'
 export type Uuid = {
     uuid: string | string[];
 }
-export default function EditQuestions({ uuid }: Uuid) {
-    console.log("uuid dentro do CreateQuestions", uuid)
+export default function EditQuestions() {
     const variavelQuestao = 1
     return (
         <>

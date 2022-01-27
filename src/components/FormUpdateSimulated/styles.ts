@@ -41,3 +41,9 @@ export const IconClose = styled(CloseOutlined)`
     }
 
 `
+
+export const Imagem = styled.img`
+    max-width: 200px;
+    max-height: 400px;
+
+`

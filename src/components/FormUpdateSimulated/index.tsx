@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import api from '../../service/api'
-import { Form, Input, Button, Radio, Space, Divider, Upload, Image, InputNumber } from 'antd';
+import { Form, Input, Button, Radio, Space, Divider, Upload, InputNumber } from 'antd';
 import * as S from './styles'
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -20,14 +20,8 @@ const layout = {
 };
 
 const validateMessages = {
-    required: '${label} is required!',
-    types: {
-        email: '${label} is not a valid email!',
-        number: '${label} is not a valid number!',
-    },
-    number: {
-        range: '${label} must be between ${min} and ${max}',
-    },
+    // eslint-disable-next-line no-template-curly-in-string
+    required: '${label} é obrigatorio',
 };
 
 export type FormCreatedSimulated = {
@@ -44,13 +38,10 @@ export type Simulated = {
 }
 
 export default function FormUpdateSimulated({ uuid }: Uuid) {
-    const [simulated, setSimulated] = useState<FormCreatedSimulated>()
+    const [simulated, setSimulated] = useState<FormCreatedSimulated | any>()
     const antIcon = <LoadingOutlined style={{ fontSize: 34, color: "#E414B2" }} spin />
     const [isSpinning, setIsSpinning] = useState(false)
-    const [novaCapa, setNovaCapa] = useState(false)
-    const [youtubeOrThumbnailSelected, setYoutubeOrThumbnailSelected] = useState("")
     const [OrderQuestionsSelected, setOrderQuestionsSelected] = useState<number>(0)
-    const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
     const ordemDasPerguntas = { ordemDasPerguntas: 1 }
     const [form, setForm] = useState<any>()
 
@@ -66,6 +57,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                 filenameImagem: simulated?.filenameImagem,
                 file: '',
             })
+            setOrderQuestionsSelected(simulated.ordemDasPerguntas)
         }
     }, [simulated])
 
@@ -159,23 +151,11 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         history.push("/meus-simulados")
     }
 
-    function youtubeOrThumbnail(e) {
-        setYoutubeOrThumbnailSelected(e.target.value)
-    }
-
     const normFile = (file: any, fileList: any) => {
-        setformDataThumbnail(file)
+        console.log("file", URL.createObjectURL(file))
+        setSimulated(simulated => ({ ...simulated, filenameImagem: URL.createObjectURL(file) }))
     }
 
-    function deleteImagem() {
-        simulated.filenameImagem = ""
-        setNovaCapa(true)
-    }
-
-    function deleteYoutube() {
-        simulated.linkYouTube = ""
-        setNovaCapa(true)
-    }
     console.log("simulated", simulated)
     return (
         <Spin indicator={antIcon} spinning={isSpinning}>
@@ -209,84 +189,50 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                             label="Descriação"
                         >
                             <Input.TextArea name="descricao" onChange={e => criarObjeto(e)} placeholder="Insira sua descriação" />
-
                         </Form.Item>
-                        {simulated.filenameImagem ? (
+                        {simulated.filenameImagem ? (<>
                             <Form.Item
                                 name="youtubeOuThumbnail"
                                 label="Capa do simulado"
                                 rules={[{ required: true, message: 'Selecione uma das opções!' }]}
                             >
-                                <Image
-                                    width={200}
-                                    height={200}
+                                <S.Imagem
                                     src={simulated.filenameImagem}
                                 />
-                                <S.IconClose onClick={() => deleteImagem()} style={{ cursor: 'pointer' }} />
 
                             </Form.Item>
-
-                        ) : (null)}
-                        {simulated.linkYouTube ? (
                             <Form.Item
-                                name='linkYoutube'
-                                label="Youtube Link"
+                                name='clientImage'
+                                label="Atulizar Capa do simulado"
+                                rules={[{ required: true, message: 'Por favor insira uma imagem' }]}
                             >
-                                <Input defaultValue={simulated.linkYouTube} name="linkYouTube" onChange={e => criarObjeto(e)} addonBefore="youtube.com/" />
-                                <S.IconClose onClick={() => deleteYoutube()} style={{ cursor: 'pointer', position: 'absolute' }} />
-                            </Form.Item>
-
-                        ) : (null)}
-                        {novaCapa ? (
-
-                            <Form.Item
-                                name="youtubeOuThumbnail"
-                                label="Capa do simulado"
-                                rules={[{ required: true, message: 'Selecione uma das opções!' }]}
-                            >
-                                <Radio.Group onChange={e => youtubeOrThumbnail(e)}>
-                                    <Radio.Button value="thumbnail">Imagem</Radio.Button> <S.Or>Ou</S.Or>
-                                    <Radio.Button value="youtube" style={{ padding: "0 21px 0 22px", marginTop: "4px" }}>Link Do Youtube</Radio.Button>
-                                </Radio.Group>
-                            </Form.Item>
-                        ) : ("")}
-                        {youtubeOrThumbnailSelected == "thumbnail" ?
-                            (
-                                <Form.Item
-                                    name='clientImage'
-                                    label="Capa do simulado"
-                                    rules={[{ required: true, message: 'Por favor insira uma imagem' }]}
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "flex-end"
-                                    }}
+                                <Upload
+                                    listType="picture"
+                                    beforeUpload={normFile}
+                                    accept=".png"
                                 >
-                                    <Upload
-                                        listType="picture"
-                                        beforeUpload={normFile}
-                                        accept=".png"
-                                    >
-                                        <Button style={{ color: '#000000D9', border: '1px solid #d9d9d9' }} icon={<UploadOutlined />}>Click to upload</Button>
-                                    </Upload>
+                                    <Button style={{ color: '#000000D9', border: '1px solid #d9d9d9' }} icon={<UploadOutlined />}>Click to upload</Button>
+                                </Upload>
+                            </Form.Item>
+                        </>
+                        ) : (
+                            simulated.linkYouTube ? (
+                                <Form.Item
+                                    name='linkYoutube'
+                                    label="Youtube Link"
+                                >
+                                    <Input defaultValue={simulated.linkYouTube} name="linkYouTube" onChange={e => criarObjeto(e)} addonBefore="youtube.com/" />
                                 </Form.Item>
-                            ) : youtubeOrThumbnailSelected == "youtube" ?
-                                (
-                                    <Form.Item
-                                        name='linkYoutube'
-                                        label="Youtube Link"
-                                    >
-                                        <Input addonBefore="youtube.com/" name="linkYouTube" onChange={e => criarObjeto(e)} defaultValue="mysite" />
-                                    </Form.Item>
-                                ) : (null)
-                        }
+
+                            ) : (null)
+                        )}
                         <S.SubTitle>Ordem das perguntas</S.SubTitle>
                         <Form.Item name="radio-group" rules={[{ required: true, message: 'Selecione uma das opções!' }]} >
-                            <Radio.Group name="ordemDasPerguntas" onChange={e => (criarObjeto(e))} style={{ width: "400px" }}>
+                            <Radio.Group name="ordemDasPerguntas" defaultValue={simulated.ordemDasPerguntas} onChange={e => (criarObjeto(e))} style={{ width: "400px" }}>
                                 <Space direction="vertical">
                                     <Radio value={1}>Sequencial</Radio>
                                     <Radio value={2}>Aleatória</Radio>
-                                    {OrderQuestionsSelected == 2 ?
+                                    {OrderQuestionsSelected === 2 ?
                                         (
                                             <Form.Item
                                                 name='aleatoria'

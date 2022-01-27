@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Divider, Form, Input, Radio, Switch, Upload } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { Button, Divider, Form, Input, Switch, Upload, Radio } from 'antd';
 import * as S from './styles'
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -7,6 +7,9 @@ import { useHistory } from "react-router-dom";
 
 import { InboxOutlined } from '@ant-design/icons';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import api from '../../service/api';
+import { toast } from 'react-toastify';
+import Input2 from '../../components/InputCheck'
 
 const layout = {
     labelCol: {
@@ -18,17 +21,10 @@ const layout = {
 };
 
 const validateMessages = {
-    required: '${label} is required!',
-    types: {
-        email: '${label} is not a valid email!',
-        number: '${label} is not a valid number!',
-    },
-    number: {
-        range: '${label} must be between ${min} and ${max}',
-    },
+
 };
 
-export type FormEditQuestions = {
+export type FormCreatedSimulatedType = {
     titulo: string
     descricao: string
     linkYouTube?: string
@@ -43,12 +39,30 @@ export type Time = {
     tempoPorProva: string
 }
 
-export default function FormEditQuestions() {
+export default function FormCreatedSimulated() {
     const antIcon = <LoadingOutlined style={{ fontSize: 34, color: "#E414B2" }} spin />
     const [isSpinning, setIsSpinning] = useState<boolean>(false)
     const [checked, setChecked] = useState<boolean>(false)
-    const [questionLabel, setQuestionLabel] = useState<number[]>([1])
+    const [questionLabel, setQuestionLabel] = useState<number[]>([1, 2])
     const [checkLabel, setCheckLabel] = useState<number[]>([])
+    const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
+    const [deletarUltimo, setDeletarUltimo] = useState<any>(1)
+    const [form, setForm] = useState<any>()
+
+    useEffect(() => {
+        setForm({
+            resposta1: { descricao: '', correta: false },
+            resposta2: { descricao: '', correta: false },
+            resposta3: { descricao: '', correta: false },
+            resposta4: { descricao: '', correta: false },
+            resposta5: { descricao: '', correta: false },
+            resposta6: { descricao: '', correta: false },
+            resposta7: { descricao: '', correta: false },
+            resposta8: { descricao: '', correta: false },
+            resposta9: { descricao: '', correta: false },
+            resposta10: { descricao: '', correta: false },
+        })
+    }, [])
 
     const history = useHistory();
     // function goTohome() {
@@ -56,29 +70,77 @@ export default function FormEditQuestions() {
     //     router.push("/")
     // }
 
+
     const onFinish = (values) => {
-        console.log("values", values)
+        setIsSpinning(true)
+
+        const respostas = { respostas: [] }
+
+        Object.keys(form).forEach((item) => {
+            if (form[item].descricao != "") {
+                respostas.respostas.push(form[item]);
+            }
+        });
+        const dataPerguntaSimulado = Object.assign(values, respostas)
+        postPergunta(dataPerguntaSimulado)
+
     };
 
-    const normFile = (e) => {
-        console.log('Upload event:', e);
+    async function postPergunta(values) {
+        console.log({ values });
 
-        if (Array.isArray(e)) {
-            return e;
-        }
+        await api.post('api/pergunta', values)
+            .then(response => {
+                console.log("response simu", response)
+                setIsSpinning(false)
 
-        return e && e.fileList;
+                // if (response) {
+                //     postThumbnail(response.data.id)
+                // }
+
+            }).catch(function (error) {
+                setIsSpinning(false)
+                // toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                // setIsSpinning(false)
+            });
+    }
+
+
+    async function postThumbnail(id) {
+        const archive = new FormData()
+        archive.append('arquivo', formDataThumbnail)
+
+        await api.post(`api/pergunta/upload-thumbnail/${id}`, archive)
+            .then(function () {
+                setIsSpinning(false)
+                toast.success('Pergunta salvo com sucesso ')
+            }).catch(function (error) {
+                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                setIsSpinning(false)
+            });
+    }
+
+    const normFile = ({ file }) => {
+        setformDataThumbnail(file)
     };
 
     function addQuestion() {
+        if (questionLabel.length == 10) {
+            toast.error(`Você não pode ter mais que 10 respostas!`)
+            return
+        }
         setQuestionLabel(questionLabel => [...questionLabel, (questionLabel.length + 1)])
         // CreatListQuestion(questionLabel)
     }
 
     const removeQuestion = remove => {
+        if (questionLabel.length == 2) {
+            toast.error(`Você não pode ter menos que 2 respostas!`)
+            return
+        }
         const removedArr = [...questionLabel].filter(question => question !== remove);
         setQuestionLabel(removedArr)
-
+        setDeletarUltimo(deletarUltimo + 1)
         // setTodos(removedArr);
         // setQuestionLabel([])
         // questionLabel.pop()
@@ -101,18 +163,13 @@ export default function FormEditQuestions() {
         // console.log(e, question)
     };
 
-    // console.log(checkLabel)
-
-    // function CreatListQuestion(teste: number[]) {
-    //     return (
-    //         teste.map(question => (
-    //             <Form.Item name={`question${question}`} key={question} className="question">
-    //                 <Radio />
-    //                 <Input.TextArea rows={2} showCount maxLength={500} />
-    //             </Form.Item >
-    //         ))
-    //     )
-    // }
+    function setFormPerguntas(e) {
+        // const { name, value } = e.target
+        // setForm({
+        //     ...form,
+        //     [name]: value
+        // })
+    }
 
     return (
         <Spin indicator={antIcon} spinning={isSpinning}>
@@ -135,7 +192,7 @@ export default function FormEditQuestions() {
                     </Form.Item>
 
                     <Form.Item
-                        name="questions"
+                        name="descricao"
 
                         rules={[
                             {
@@ -144,82 +201,21 @@ export default function FormEditQuestions() {
                             },
                         ]}
                     >
-                        <Input.TextArea rows={6} showCount maxLength={500} />
+                        <Input.TextArea name="descricao" onChange={e => setFormPerguntas(e)} rows={6} showCount maxLength={500} />
                     </Form.Item>
                     <Divider />
-
                     <Form.Item className="switch-form">
                         <S.Title>Respostas</S.Title>
-                        <Form.Item
-                            label="Multipla escolha?"
-                            className="switch-container"
-                        >
-                            <Switch onChange={onChange} />
-                        </Form.Item>
                     </Form.Item>
-                    {questionLabel.map((question, index) => {
-                        if (checked) {
-                            return (
-
-                                <S.CheckContainer>
-                                    <S.DivCheckBox>
-                                        <input
-                                            type="radio"
-                                            name={`question${question}`}
-                                            className="form-check-input"
-                                            value={'diferente'}
-                                            // checked={ checkLabel.forEach(x => x == question ? true : false)}
-                                            onClick={(e) => handleChange(e, index)}
-                                        />
-
-                                    </S.DivCheckBox>
-                                    <Form.Item name={`question${question}`} key={question} className="question">
-                                        <Input.TextArea rows={2} showCount maxLength={500} />
-                                    </Form.Item >
-                                </S.CheckContainer>
-                            )
-                        }
-
-                        // if (checked) {
-                        //     return <S.ContainerQuestions key={question}>
-                        //         <Radio.Group>
-                        //             <Radio value={`${question}`} />
-                        //         </Radio.Group>
-                        //         <Form.Item name={`checked`} wrapperCol={{ span: 2 }}>
-                        //         </Form.Item>
-                        //         <Form.Item name={`question${question}`} key={question} className="question">
-                        //             <Input.TextArea rows={2} showCount maxLength={500} />
-                        //         </Form.Item >
-                        //     </S.ContainerQuestions>
-                        // }
-
-                        return <S.ContainerQuestions key={question}>
-                            <Form.Item name={`checked`} wrapperCol={{ span: 2 }}>
-                                <Radio.Group>
-                                    <Radio value={`${question}`} />
-                                </Radio.Group>
-                            </Form.Item>
-                            <Form.Item name={`question${question}`} key={question} className="question">
-                                <Input.TextArea rows={2} showCount maxLength={500} />
-                            </Form.Item >
-                        </S.ContainerQuestions>
-
-                    })}
-
-
-                    {/* {questionLabel.map(question => (
-                        <S.ContainerQuestions key={question}>
-                            <Radio.Group>
-                                <Radio value={`${question}`} />
-                            </Radio.Group>
-                            <Form.Item name={`checked`} wrapperCol={{ span: 2 }}>
-                            </Form.Item>
-                            <Form.Item name={`question${question}`} key={question} className="question">
-                                <Input.TextArea rows={2} showCount maxLength={500} />
-                            </Form.Item >
-                        </S.ContainerQuestions>
-                    ))} */}
-
+                    {questionLabel.map((position) => (
+                        <Input2
+                            key={position}
+                            deletarUltimo={deletarUltimo}
+                            form={form}
+                            setForm={setForm}
+                            index={position}
+                        />
+                    ))}
                     <Form.Item>
                         <S.ContainerButton>
                             <Button
@@ -247,7 +243,7 @@ export default function FormEditQuestions() {
                         <S.SubTitle>O comentário será exibido após a confirmação da resposta</S.SubTitle>
                     </Form.Item>
                     <Form.Item
-                        name="comentario"
+                        name="comentarioFinal"
                         rules={[
                             {
                                 required: true,
@@ -257,18 +253,6 @@ export default function FormEditQuestions() {
                     >
                         <Input.TextArea showCount rows={8} maxLength={500} />
                     </Form.Item>
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                        style={{
-                            backgroundColor: "#ff0000",
-                            borderRadius: "2px",
-                            marginRight: "10px",
-                            border: "none"
-                        }}
-                        size="large"
-                        onClick={onFinish} >Voltar</Button>
-
                     <Button
                         type="primary"
                         htmlType="submit"

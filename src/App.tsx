@@ -8,6 +8,7 @@ import CriarPerguntas from './pages/criar-perguntas'
 import EditarSimulado from './pages/editar/simulado'
 import EditarQuestaoDeSimulado from './pages/editar/questao/simulado'
 import Login from './pages/login'
+import EditQuestionsPage from './pages/editar/questao/simulado'
 
 export default function App() {
   return (
@@ -25,8 +26,9 @@ export default function App() {
 
         <Route path='/criar-perguntas/:uuid' exact component={CriarPerguntas} />
 
-
         <Route path='/editar/simulado/:uuid' exact component={EditarSimulado} />
+
+        <Route path='/editar/questao/:uuidSimulado/:uuidQuestao' exact component={EditQuestionsPage} />
 
         {/*<Route path='/editar/questao/:uuidSimulado/:uuidPergunta' exact component={EditarQuestaoDeSimulado} /> */}
         <Route path='/vizualizar/simulado/:uuidSimulado' exact component={ViewSimulado} />

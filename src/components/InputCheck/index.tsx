@@ -12,7 +12,7 @@ export default function Input2({ form, setForm, index, deletarUltimo }: any) {
                 [nome11]: {
                     ...form[nome11],
                     descricao: "",
-                    certa: false
+                    correta: false
                 }
             })
         }
@@ -26,7 +26,7 @@ export default function Input2({ form, setForm, index, deletarUltimo }: any) {
                 ...form,
                 [nome11]: {
                     ...form[nome11],
-                    certa: checked
+                    correta: checked
                 }
             })
             return

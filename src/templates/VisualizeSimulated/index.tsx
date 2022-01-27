@@ -14,22 +14,22 @@ export type Uuid = {
     uuid?: string | string[];
 }
 
-export default function VisualizeSimulated({ uuid }: Uuid) {
+export default function VisualizeSimulated() {
     const { TextArea } = Input
     const [simulated, setSimulated] = useState<FormCreatedSimulated>()
 
-    useEffect(() => {
-        async function getSimulatedById() {
-            await api.get(`api/Simulado/${uuid}`).then(function (response) {
-                console.log("response", response);
-                setSimulated(response.data)
-            })
-                .catch(function (error) {
-                    toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
-                });
-        }
-        getSimulatedById()
-    }, [uuid])
+    // useEffect(() => {
+    //     async function getSimulatedById() {
+    //         await api.get(`api/Simulado/${uuid}`).then(function (response) {
+    //             console.log("response", response);
+    //             setSimulated(response.data)
+    //         })
+    //             .catch(function (error) {
+    //                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+    //             });
+    //     }
+    //     getSimulatedById()
+    // }, [uuid])
 
     return <>
         <>
@@ -64,7 +64,7 @@ export default function VisualizeSimulated({ uuid }: Uuid) {
                     >Iniciar Simulado</Button>
                 </S.ContainerButton>
                 <S.ContainerTableQuestions>
-                    <TableVizualizeQuestions uuid={uuid} />
+                    <TableVizualizeQuestions />
                 </S.ContainerTableQuestions>
             </S.Content>
             <Footer bottom={false} />

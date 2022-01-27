@@ -51,16 +51,16 @@ export default function FormCreatedSimulated() {
 
     useEffect(() => {
         setForm({
-            resposta1: { descricao: '', certa: false },
-            resposta2: { descricao: '', certa: false },
-            resposta3: { descricao: '', certa: false },
-            resposta4: { descricao: '', certa: false },
-            resposta5: { descricao: '', certa: false },
-            resposta6: { descricao: '', certa: false },
-            resposta7: { descricao: '', certa: false },
-            resposta8: { descricao: '', certa: false },
-            resposta9: { descricao: '', certa: false },
-            resposta10: { descricao: '', certa: false },
+            resposta1: { descricao: '', correta: false },
+            resposta2: { descricao: '', correta: false },
+            resposta3: { descricao: '', correta: false },
+            resposta4: { descricao: '', correta: false },
+            resposta5: { descricao: '', correta: false },
+            resposta6: { descricao: '', correta: false },
+            resposta7: { descricao: '', correta: false },
+            resposta8: { descricao: '', correta: false },
+            resposta9: { descricao: '', correta: false },
+            resposta10: { descricao: '', correta: false },
         })
     }, [])
 
@@ -72,33 +72,34 @@ export default function FormCreatedSimulated() {
 
 
     const onFinish = (values) => {
-        console.log("fpr,", form);
-        console.log("values,", values);
+        setIsSpinning(true)
+
+        const respostas = { respostas: [] }
 
         Object.keys(form).forEach((item) => {
-            console.log("objheto percorrido", form[item]);
+            if (form[item].descricao != "") {
+                respostas.respostas.push(form[item]);
+            }
         });
-
-        // let perguntas = {}
-        // for (let i = 0; i < questionLabel.length; i++) {
-
-        // }
-        // let final =
-        //     console.log("values", values)
-
-        // postPergunta(values)
+        const dataPerguntaSimulado = Object.assign(values, respostas)
+        postPergunta(dataPerguntaSimulado)
 
     };
 
     async function postPergunta(values) {
+        console.log({ values });
+
         await api.post('api/pergunta', values)
             .then(response => {
-                // console.log("response simu", response)
+                console.log("response simu", response)
+                setIsSpinning(false)
+
                 // if (response) {
                 //     postThumbnail(response.data.id)
                 // }
 
             }).catch(function (error) {
+                setIsSpinning(false)
                 // toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
                 // setIsSpinning(false)
             });
@@ -106,14 +107,12 @@ export default function FormCreatedSimulated() {
 
 
     async function postThumbnail(id) {
-        console.log("id", id)
-        console.log("thumbnail", formDataThumbnail)
         const archive = new FormData()
         archive.append('arquivo', formDataThumbnail)
 
         await api.post(`api/pergunta/upload-thumbnail/${id}`, archive)
             .then(function () {
-                history.push("/");
+                setIsSpinning(false)
                 toast.success('Pergunta salvo com sucesso ')
             }).catch(function (error) {
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
@@ -121,16 +120,8 @@ export default function FormCreatedSimulated() {
             });
     }
 
-
-
-    const normFile = (e) => {
-        console.log('Upload event:', e);
-
-        if (Array.isArray(e)) {
-            return e;
-        }
-
-        return e && e.fileList;
+    const normFile = ({ file }) => {
+        setformDataThumbnail(file)
     };
 
     function addQuestion() {
@@ -172,30 +163,14 @@ export default function FormCreatedSimulated() {
         // console.log(e, question)
     };
 
-    // console.log(checkLabel)
-
-    // function CreatListQuestion(teste: number[]) {
-    //     return (
-    //         teste.map(question => (
-    //             <Form.Item name={`question${question}`} key={question} className="question">
-    //                 <Radio />
-    //                 <Input.TextArea rows={2} showCount maxLength={500} />
-    //             </Form.Item >
-    //         ))
-    //     )
-    // }
-
-
-
     function setFormPerguntas(e) {
-        const { name, value } = e.target
-        setForm({
-            ...form,
-            [name]: value
-        })
+        // const { name, value } = e.target
+        // setForm({
+        //     ...form,
+        //     [name]: value
+        // })
     }
-    // console.log("form fora", form)
-    let araarioo = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
     return (
         <Spin indicator={antIcon} spinning={isSpinning}>
             <Form {...layout} name="nest-messages" labelAlign={"left"} onFinish={onFinish} validateMessages={validateMessages}>
@@ -268,7 +243,7 @@ export default function FormCreatedSimulated() {
                         <S.SubTitle>O comentário será exibido após a confirmação da resposta</S.SubTitle>
                     </Form.Item>
                     <Form.Item
-                        name="comentario"
+                        name="comentarioFinal"
                         rules={[
                             {
                                 required: true,
