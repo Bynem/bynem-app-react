@@ -7,9 +7,6 @@ import api from '../../service/api'
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 
-
-
-
 export type DataTable = {
     descricao: string
     id: number
@@ -21,7 +18,6 @@ export type Table = {
     // eslint-disable-next-line @typescript-eslint/ban-types
     setBottom: Function
 }
-
 
 export default function TableAnt({ setBottom }: Table) {
     const [data, setData] = useState<DataTable[] | null>(null)

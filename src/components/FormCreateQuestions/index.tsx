@@ -98,6 +98,7 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
             .then(response => {
                 setIsSpinning(false)
                 if (response) {
+                    console.log("response", { response })
                     postThumbnail(response.data.id)
                 }
 
@@ -114,6 +115,7 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
         await api.post(`api/pergunta/upload-thumbnail/${id}`, archive)
             .then(function () {
                 setIsSpinning(false)
+                console.log("Upload", uuiSimulado)
                 toast.success('Pergunta salva com sucesso ')
                 history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
                 window.location.reload()
