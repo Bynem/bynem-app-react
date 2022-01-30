@@ -250,6 +250,12 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                                 </Space>
                             </Radio.Group>
                         </Form.Item>
+                        <Form.Item
+                            name="tempoPorProva"
+                            label="Tempo por prova /min"
+                        >
+                            <InputNumber min={0} />
+                        </Form.Item>
                         <Divider style={{ borderTop: "2px solid rgba(0, 0, 0, 0.06)" }} />
                         <Form.Item>
                             <S.ContainerButton>

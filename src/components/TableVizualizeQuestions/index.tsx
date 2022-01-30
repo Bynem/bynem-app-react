@@ -9,14 +9,22 @@ import TextArea from 'antd/lib/input/TextArea';
 import { useHistory } from "react-router-dom";
 
 
-type Question = {
-    descricao: string,
-    id: number
+type Perguntas = {
+    comentarioFinal: string
+    descricao: string
+    filenameImage?: string
+    id: string
+    multiplaEscolha: false
+}
+type PerguntasType = {
+    perguntas: Perguntas[]
+    uuidSimulado: string | string[]
 }
 
-export default function TableVizualizeQuestions(uuid: Uuid) {
+export default function TableVizualizeQuestions({ perguntas, uuidSimulado }: PerguntasType) {
+    console.log("Perguntas", perguntas)
     const antIcon = <LoadingOutlined style={{ fontSize: 34, color: "#E414B2" }} spin />
-    const [dataModal, setDataModal] = useState<Question>({ descricao: '', id: 0 })
+    const [dataModal, setDataModal] = useState({ descricao: '', id: 0 })
     const [isModalVisible, setIsModalVisible] = useState(false);
     const history = useHistory();
 
@@ -29,14 +37,8 @@ export default function TableVizualizeQuestions(uuid: Uuid) {
             { descricao: 'quinta pergunta', id: 5 }
         ]
 
-    const viewQuestion = (id) => {
-        const idSimulado = 22
-        history.push(`/vizualizar/questao/${idSimulado}/${id}`)
-    }
-
     const editQuestion = (id) => {
-        const idSimulado = 20
-        history.push(`/editar/questao/${idSimulado}/${id}`)
+        history.push(`/editar/questao/${uuidSimulado}/${id}`)
     }
 
     const columns = [
@@ -59,24 +61,9 @@ export default function TableVizualizeQuestions(uuid: Uuid) {
         },
     ];
 
-    const onFinish = (values) => {
-        console.log(values);
-    };
-
-    const saveQuestion = async (dataModal) => {
-        // dataModal <= ainda falta o id do user
-        // await api.post('api/Simulado', dataModal, {
-
-        // }).then(function () {
-        //     toast.success('Questão salva con sucesso')
-        // }).catch(function (error) {
-        //     toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
-        // });
-    };
-
     return (<>
         <Spin indicator={antIcon} spinning={false}>
-            <Table pagination={{ pageSize: 6 }} loading={false} columns={columns} dataSource={fakeQuestions} scroll={{ y: 430 }} />
+            <Table pagination={{ pageSize: 6 }} loading={false} columns={columns} dataSource={perguntas} scroll={{ y: 430 }} />
         </Spin>
     </>
     )

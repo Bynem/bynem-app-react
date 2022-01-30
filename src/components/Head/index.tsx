@@ -47,16 +47,11 @@ export default function Head({ home }: Home) {
             <S.MenuLink >Criar Simulados</S.MenuLink>
           </a>
         </a>
-        <a href="/criar-perguntas/uuidFake">
-          <a>
-            <S.MenuLink >Criar Perguntas</S.MenuLink>
-          </a>
-        </a>
-        <a href="/vizualizar/simulado/5">
+        {/* <a href="/vizualizar/simulado/5">
           <a>
             <S.MenuLink >Vizualizar Simulado</S.MenuLink>
           </a>
-        </a>
+        </a> */}
         <a href="/simulado/uuidSimulado">
           <a>
             <S.MenuLink >Execução Simulado</S.MenuLink>

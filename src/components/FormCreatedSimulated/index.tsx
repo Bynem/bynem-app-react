@@ -17,6 +17,7 @@ const layout = {
     },
 };
 
+
 const validateMessages = {
     // eslint-disable-next-line no-template-curly-in-string
     required: '${label} is required!',
@@ -52,7 +53,6 @@ export default function FormCreatedSimulated() {
     const [isSpinning, setIsSpinning] = useState<boolean>(false)
     const [youtubeOrThumbnailSelected, setYoutubeOrThumbnailSelected] = useState("")
     const [OrderQuestionsSelected, setOrderQuestionsSelected] = useState<number>(0)
-    const [time, setTime] = useState<Time>({ tempoPorProva: '' })
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
     const history = useHistory();
 
@@ -62,22 +62,14 @@ export default function FormCreatedSimulated() {
 
     const onFinish = (values) => {
         console.log({ values })
-
-
-
+        setIsSpinning(true)
         if (values.linkYoutube) {
             const urlYoutube = values.linkYoutube.replace('watch?v=', 'embed/');
             values.linkYoutube = urlYoutube
-            const newObject = Object.assign(values, time)
-            // setFormSimuled(newObject)
-            postSimulated(newObject)
+            postSimulatedLinkYoutube(values)
             return
         }
-        // setIsSpinning(true)
-        const newObject = Object.assign(values, time)
-        console.log("newObject", newObject)
-        // setFormSimuled(newObject)
-        postSimulated(newObject)
+        postSimulated(values)
     };
 
     function orderQuestions(e) {
@@ -85,11 +77,33 @@ export default function FormCreatedSimulated() {
         setOrdemDasPerguntas({ ...ordemDasPerguntas, ordemDasPerguntas: e.target.value })
     }
 
-    async function postSimulated(newObject) {
+    async function postSimulatedLinkYoutube(newObject) {
+        newObject.tempoPorProva = newObject.tempoPorProva.toString();
+
         await api.post('api/Simulado', newObject)
             .then(response => {
-                console.log("response simu", response)
                 if (response) {
+                    console.log("entro no push")
+
+                    history.push(`/criar-perguntas/${response.data.id}`);
+                }
+
+            }).catch(function (error) {
+                console.log("entro no push", error)
+                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                setIsSpinning(false)
+            });
+    }
+
+    async function postSimulated(newObject) {
+        newObject.tempoPorProva = newObject.tempoPorProva.toString();
+
+        console.log("com thumbnail", newObject)
+
+        await api.post('api/Simulado', newObject)
+            .then(response => {
+                if (response) {
+                    console.log("response do simulado", response)
                     postThumbnail(response.data.id)
                 }
 
@@ -100,18 +114,13 @@ export default function FormCreatedSimulated() {
     }
 
     async function postThumbnail(id) {
-        console.log("id", id)
-        console.log("thumbnail", formDataThumbnail)
         const archive = new FormData()
         archive.append('arquivo', formDataThumbnail)
-
         await api.post(`api/Simulado/upload-thumbnail/${id}`, archive)
-            .then(function () {
-                history.push("/");
+            .then(function (response) {
+                history.push(`/criar-perguntas/${id}`);
                 toast.success('Simulado salvo com sucesso ')
             }).catch(function (error) {
-                history.push("/");
-
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
                 setIsSpinning(false)
             });
@@ -123,10 +132,6 @@ export default function FormCreatedSimulated() {
 
     function youtubeOrThumbnail(e) {
         setYoutubeOrThumbnailSelected(e.target.value)
-    }
-
-    function onChange(time, timeString) {
-        setTime({ ...time, tempoPorProva: timeString })
     }
 
     return (
@@ -225,7 +230,7 @@ export default function FormCreatedSimulated() {
                     name="tempoPorProva"
                     label="Tempo por prova"
                 >
-                    <TimePicker onChange={onChange} />
+                    <InputNumber min={0} />
                 </Form.Item>
                 <Divider style={{ borderTop: "1px solid rgba(0, 0, 0, 0.06)", width: "100vw" }} />
                 <Form.Item>

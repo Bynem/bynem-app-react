@@ -5,26 +5,10 @@ import * as S from './styles';
 import { Input, Space } from 'antd';
 import api from '../../service/api'
 import { toast } from 'react-toastify';
+import { useHistory } from 'react-router-dom';
 
-const columns = [
-    {
-        title: 'Nome',
-        dataIndex: 'titulo',
-        key: 'titulo',
-    },
-    {
-        title: 'Autor',
-        dataIndex: 'author',
-        key: 'author',
-    },
 
-    {
-        title: '',
-        dataIndex: 'id',
-        key: 'id',
-        render: (link) => <a href={link.id}>Simular</a>,
-    },
-];
+
 
 export type DataTable = {
     descricao: string
@@ -46,6 +30,35 @@ export default function TableAnt({ setBottom }: Table) {
     const { Search } = Input;
 
     const onSearch = value => { setParams(value) };
+    const history = useHistory();
+
+    const editQuestion = (id) => {
+        history.push(`/vizualizar/simulado/${id}`)
+    }
+
+    const columns = [
+        {
+            title: 'Nome',
+            dataIndex: 'titulo',
+            key: 'titulo',
+        },
+        {
+            title: 'Autor',
+            dataIndex: 'author',
+            key: 'author',
+        },
+
+        {
+            title: '',
+            dataIndex: 'id',
+            key: 'id',
+            render: (id) => (
+                <Space size="middle">
+                    <a onClick={() => editQuestion(id)}>Simular</a>
+                </Space>
+            ),
+        },
+    ];
 
     function onSearchEnter(e) {
         e.preventDefault();

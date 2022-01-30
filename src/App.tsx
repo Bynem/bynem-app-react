@@ -24,13 +24,14 @@ export default function App() {
 
         <Route path='/simulado/:uuidSimulado' exact component={Simulado} />
 
-        <Route path='/criar-perguntas/:uuid' exact component={CriarPerguntas} />
+        <Route path='/criar-perguntas/:uuiSimulado' exact component={CriarPerguntas} />
+
+        <Route path='/criar-perguntas/:uuiSimulado/:numeroDaPergunta' exact component={CriarPerguntas} />
 
         <Route path='/editar/simulado/:uuid' exact component={EditarSimulado} />
 
         <Route path='/editar/questao/:uuidSimulado/:uuidQuestao' exact component={EditQuestionsPage} />
 
-        {/*<Route path='/editar/questao/:uuidSimulado/:uuidPergunta' exact component={EditarQuestaoDeSimulado} /> */}
         <Route path='/vizualizar/simulado/:uuidSimulado' exact component={ViewSimulado} />
 
       </Switch>

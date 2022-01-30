@@ -39,15 +39,20 @@ export type Time = {
     tempoPorProva: string
 }
 
-export default function FormCreatedSimulated() {
+export type simuladoId = {
+    uuiSimulado: string | string[];
+    numeroDaPergunta: number
+    setNumeroDaPerguntaNumber: Function
+}
+
+export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, setNumeroDaPerguntaNumber }: simuladoId) {
     const antIcon = <LoadingOutlined style={{ fontSize: 34, color: "#E414B2" }} spin />
     const [isSpinning, setIsSpinning] = useState<boolean>(false)
-    const [checked, setChecked] = useState<boolean>(false)
     const [questionLabel, setQuestionLabel] = useState<number[]>([1, 2])
-    const [checkLabel, setCheckLabel] = useState<number[]>([])
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
     const [deletarUltimo, setDeletarUltimo] = useState<any>(1)
     const [form, setForm] = useState<any>()
+    const history = useHistory();
 
     useEffect(() => {
         setForm({
@@ -64,14 +69,8 @@ export default function FormCreatedSimulated() {
         })
     }, [])
 
-    const history = useHistory();
-    // function goTohome() {
-    //     setIsSpinning(false)
-    //     router.push("/")
-    // }
-
-
     const onFinish = (values) => {
+
         setIsSpinning(true)
 
         const respostas = { respostas: [] }
@@ -81,42 +80,64 @@ export default function FormCreatedSimulated() {
                 respostas.respostas.push(form[item]);
             }
         });
-        const dataPerguntaSimulado = Object.assign(values, respostas)
+
+        const simuladoId = { simuladoId: uuiSimulado }
+        const dataPerguntaSimulado = Object.assign(values, respostas, simuladoId)
+
+        if (formDataThumbnail) {
+            postPerguntaComThubnail(dataPerguntaSimulado)
+            return
+        }
+        console.log("dataPerguntaSimulado", dataPerguntaSimulado)
         postPergunta(dataPerguntaSimulado)
 
     };
 
-    async function postPergunta(values) {
-        console.log({ values });
-
+    async function postPerguntaComThubnail(values) {
         await api.post('api/pergunta', values)
             .then(response => {
-                console.log("response simu", response)
                 setIsSpinning(false)
-
-                // if (response) {
-                //     postThumbnail(response.data.id)
-                // }
+                if (response) {
+                    postThumbnail(response.data.id)
+                }
 
             }).catch(function (error) {
                 setIsSpinning(false)
-                // toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
-                // setIsSpinning(false)
+                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                setIsSpinning(false)
             });
     }
-
 
     async function postThumbnail(id) {
         const archive = new FormData()
         archive.append('arquivo', formDataThumbnail)
-
         await api.post(`api/pergunta/upload-thumbnail/${id}`, archive)
             .then(function () {
                 setIsSpinning(false)
-                toast.success('Pergunta salvo com sucesso ')
+                toast.success('Pergunta salva com sucesso ')
+                history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
+                window.location.reload()
             }).catch(function (error) {
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
                 setIsSpinning(false)
+            });
+    }
+
+    async function postPergunta(values) {
+        console.log("values", values)
+        await api.post('api/pergunta', values)
+            .then(response => {
+                setIsSpinning(false)
+                toast.success('Pergunta salva com sucesso ')
+                history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
+                window.location.reload()
+
+            }).catch(function (error) {
+                console.log("error", error)
+
+                // setIsSpinning(false)
+                // console.log(`Um erro inesperado aconteceu ${error.response.status}`)
+                // setIsSpinning(false)
             });
     }
 
@@ -130,7 +151,6 @@ export default function FormCreatedSimulated() {
             return
         }
         setQuestionLabel(questionLabel => [...questionLabel, (questionLabel.length + 1)])
-        // CreatListQuestion(questionLabel)
     }
 
     const removeQuestion = remove => {
@@ -141,34 +161,6 @@ export default function FormCreatedSimulated() {
         const removedArr = [...questionLabel].filter(question => question !== remove);
         setQuestionLabel(removedArr)
         setDeletarUltimo(deletarUltimo + 1)
-        // setTodos(removedArr);
-        // setQuestionLabel([])
-        // questionLabel.pop()
-        // console.log("questionLabel diferente", questionLabel)
-    }
-
-    function onChange(checked) {
-        setChecked(checked)
-    }
-
-    const handleChange = (e, question) => {
-        checkLabel.forEach(x => {
-            if (x == question) {
-                const removedArr = [...checkLabel].filter(i => i !== question);
-                console.log("removedArr", removedArr)
-                setCheckLabel(removedArr)
-            }
-        })
-        setCheckLabel(checkLabel => [...checkLabel, question])
-        // console.log(e, question)
-    };
-
-    function setFormPerguntas(e) {
-        // const { name, value } = e.target
-        // setForm({
-        //     ...form,
-        //     [name]: value
-        // })
     }
 
     return (
@@ -201,7 +193,7 @@ export default function FormCreatedSimulated() {
                             },
                         ]}
                     >
-                        <Input.TextArea name="descricao" onChange={e => setFormPerguntas(e)} rows={6} showCount maxLength={500} />
+                        <Input.TextArea name="descricao" rows={6} showCount maxLength={500} />
                     </Form.Item>
                     <Divider />
                     <Form.Item className="switch-form">
@@ -253,33 +245,36 @@ export default function FormCreatedSimulated() {
                     >
                         <Input.TextArea showCount rows={8} maxLength={500} />
                     </Form.Item>
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                        style={{
-                            backgroundColor: "#46a6e6",
-                            borderRadius: "2px"
-                        }}
-                        size="large"
-                        onClick={onFinish} >Adicionar Questão</Button>
-                    {/* <div style={{
-                        marginLeft: "1565px",
+                    <div style={{
                         width: "fit-content",
                         display: "inline-block"
                     }}>
+                        {numeroDaPergunta > 1 &&
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                style={{
+                                    backgroundColor: "#FF0000",
+                                    border: "none",
+                                    marginLeft: "auto",
+                                    borderRadius: "2px",
+                                    marginRight: "60px"
+                                }}
+                                size="large"
+                                onClick={() => history.push(`/vizualizar/simulado/${uuiSimulado}`)} >Terminar simulado</Button>
+                        }
 
                         <Button
                             type="primary"
                             htmlType="submit"
                             style={{
-                                backgroundColor: "rgb(56, 176, 0)",
-                                border: "none",
-                                marginLeft: "auto",
-                                borderRadius: "2px"
+                                backgroundColor: "#46a6e6",
+                                borderRadius: "2px",
                             }}
                             size="large"
-                            onClick={onFinish} >Terminar simulado</Button>
-                    </div> */}
+                        >Adicionar Questão</Button>
+
+                    </div>
                 </S.ContainerDrop>
             </Form>
             <br></br>
@@ -289,3 +284,26 @@ export default function FormCreatedSimulated() {
         </Spin>
     );
 }
+
+
+/// fake Data
+
+// {
+//     "id": "string",
+//         "titulo": "string",
+//             "descricao": "string",
+//                 "linkYouTube": "string",
+//                     "ordemDasPerguntas": 1,
+//                         "filenameImagem": "string",
+//                             "tempoPorProva": "string",
+//                                 "qtdLimitePerguntasSimulado": 0,
+//                                     "perguntas": [
+//                                         {
+//                                             "id": "string",
+//                                             "filenameImage": "string",
+//                                             "descricao": "string",
+//                                             "multiplaEscolha": true,
+//                                             "comentarioFinal": "string"
+//                                         }
+//                                     ]
+// }

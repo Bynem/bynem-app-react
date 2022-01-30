@@ -6,8 +6,6 @@ export const Footer = styled.footer`
     align-items: center;
     justify-content: center;
     position: absolute;
-    height: 11vh;
-    background-color: #F5F5F5;
     bottom: ${({ bottom }: FooterProps) => (bottom ? '0' : null)};
     left: 0;
     right: 0;

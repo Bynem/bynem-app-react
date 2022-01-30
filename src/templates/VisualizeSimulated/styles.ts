@@ -30,6 +30,10 @@ export const ContainerVideoOrImage = styled.div`
     > iframe {
       width: 600px;
     }
+    img{ 
+      width: 600px;
+
+    }
 `
 
 export const ContainerDescription = styled.div`

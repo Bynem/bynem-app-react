@@ -8,7 +8,6 @@ export type FooterProps = {
 export default function Footer({ bottom }: FooterProps) {
   return (
     <S.Footer bottom={bottom}>
-      <img src={"/bynem3.png"} width={120} height={12} />
     </S.Footer>
   )
 }

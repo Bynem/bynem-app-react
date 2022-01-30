@@ -261,7 +261,7 @@ export default function FormCreatedSimulated() {
                             borderRadius: "2px"
                         }}
                         size="large"
-                        onClick={onFinish} >Adicionar Questão</Button>
+                    >Adicionar Questão</Button>
                     {/* <div style={{
                         marginLeft: "1565px",
                         width: "fit-content",
