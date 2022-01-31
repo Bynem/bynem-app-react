@@ -15,11 +15,16 @@ export const Footer = styled.footer`
         width: 120px;
         height: 12px;
     }
+    
 `
 export const Wrapper = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    @media(max-width:504px){
+    flex-direction: column;
+    align-items: center;
+    }
 `
 
 export const ContainerBynem = styled.div`
