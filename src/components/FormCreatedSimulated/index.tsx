@@ -61,20 +61,39 @@ export default function FormCreatedSimulated() {
     }
 
     const onFinish = (values) => {
-        console.log({ values })
-        setIsSpinning(true)
+        console.log("onFinish", { values })
         if (values.linkYoutube) {
             const urlYoutube = values.linkYoutube.replace('watch?v=', 'embed/');
             values.linkYoutube = urlYoutube
             postSimulatedLinkYoutube(values)
             return
+        } else if (formDataThumbnail) {
+            postSimulated(values)
+            return
         }
-        postSimulated(values)
+        postSimulatedSemNada(values)
     };
 
     function orderQuestions(e) {
         setOrderQuestionsSelected(e.target.value)
         setOrdemDasPerguntas({ ...ordemDasPerguntas, ordemDasPerguntas: e.target.value })
+    }
+
+    async function postSimulatedSemNada(newObject) {
+        newObject.tempoPorProva = newObject.tempoPorProva.toString();
+
+        await api.post('api/Simulado', newObject)
+            .then(response => {
+                if (response) {
+
+                    history.push(`/criar-perguntas/${response.data.id}`);
+                }
+
+            }).catch(function (error) {
+                console.log("entro no push", error)
+                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                setIsSpinning(false)
+            });
     }
 
     async function postSimulatedLinkYoutube(newObject) {
@@ -98,7 +117,6 @@ export default function FormCreatedSimulated() {
     async function postSimulated(newObject) {
         newObject.tempoPorProva = newObject.tempoPorProva.toString();
 
-        console.log("com thumbnail", newObject)
 
         await api.post('api/Simulado', newObject)
             .then(response => {
@@ -166,7 +184,6 @@ export default function FormCreatedSimulated() {
                 <Form.Item
                     name="youtubeOuThumbnail"
                     label="Capa do simulado"
-                    rules={[{ required: true, message: 'Selecione uma das opções!' }]}
                 >
                     <Radio.Group onChange={e => youtubeOrThumbnail(e)}>
                         <Radio.Button value="thumbnail">Imagem</Radio.Button> <S.Or>Ou</S.Or>
@@ -178,7 +195,6 @@ export default function FormCreatedSimulated() {
                         <Form.Item
                             name='clientImage'
                             label="Capa do simulado"
-                            rules={[{ required: true, message: 'Por favor insira uma imagem' }]}
                             style={{
                                 display: "flex",
                                 alignItems: "center",
@@ -199,7 +215,7 @@ export default function FormCreatedSimulated() {
                                 name='linkYoutube'
                                 label="Youtube Link"
                             >
-                                <Input addonBefore="youtube.com/" defaultValue="mysite" />
+                                <Input placeholder="https://www.youtube.com/watch?v=xxxxx" />
                             </Form.Item>
                         ) : (null)
                 }

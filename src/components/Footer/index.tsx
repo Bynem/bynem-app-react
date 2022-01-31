@@ -14,7 +14,6 @@ export default function Footer({ bottom }: FooterProps) {
       <S.Wrapper>
 
         <S.ContainerLogo>
-          <img src="/bynem0.png" alt="Logo do footer" />
           <S.ContainerRedeSociais>
             <FacebookIcon />
             <TwitterIcon />
