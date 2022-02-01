@@ -1,8 +1,13 @@
 import styled from 'styled-components'
 import { FooterProps } from '.'
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 export const Footer = styled.footer`
     padding-top: 20px;
+    background: #F8F9FA;
     position: absolute;
     bottom: ${({ bottom }: FooterProps) => (bottom ? '0' : null)};
     left: 0;
@@ -18,118 +23,60 @@ export const Footer = styled.footer`
     
 `
 export const Wrapper = styled.div`
+
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    @media(max-width:504px){
-    flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
+    padding:  0 40px 0 40px;
+    @media(max-width: 604px){
+        flex-direction: column;
+        align-items: center;
+    padding:  0 0 40px 0;
+
     }
 `
 
-export const ContainerBynem = styled.div`
-
-
-`
-
-
-
-
-
 export const ContainerLogo = styled.div`
-    text-align: center;
-    width: 300px;
     height: 40px;
     display: flex;
     cursor: pointer;
     align-items: center;
-    flex-direction: column;
-    img{
-        height: 40px;
-        width: 160px;
+    flex-direction: row;
+    @media(max-width: 320px){
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+
     }
+    
 
 `
 
 export const ContainerQuemSomos = styled.div`
     text-align: center;
     justify-content: center;
-    width: 300px;
     height: 40px;
     display: flex;
-    flex-direction: column;
 `
 
 export const ContainerContato = styled.div`
-    width: 300px;
+    margin-left: 20px;
     height: 40px;
     justify-content: center;
     text-align: center;
     display: flex;
-    flex-direction: column;
 
 `
 
 export const ContainerPoliticaDePrivacidade = styled.div`
     text-align: center;
+    margin-left: 20px;
     justify-content: center;
-    width: 300px;
     height: 40px;
     display: flex;
-    flex-direction: column;
 `
-
-export const ContainerCopiRight = styled.div`
-    text-align: center;
-    width: 100%;
-    height: 40px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-
-`
-
-export const LineLeft = styled.div`
-    width: 35%;
-    height: 3px;
-    background-color: #E414B2;
-    margin-left: 5%;
-    border-radius: 10px;
-    transition: 0.8s;
-    &:hover {
-        background-color: #46a6e6;
-
-    }
-`
-export const LineRight = styled.div`
-    width: 35%;
-    height: 3px;
-    border-radius: 10px;
-    margin-right: 5%;
-    background-color: #E414B2;
-    transition: 0.8s;
-    &:hover {
-        background-color: #46a6e6;
-
-    }
-`
-export const Bynem = styled.div`
-    cursor: pointer;
-    width: 100px;
-    span{
-        transition: 0.8s;
-        font-size: 1rem;
-        color: #46a6e6;
-        font-weight: bold;
-        &:hover {
-            color: #E414B2;
-        }
-    }
-`
-
 export const ContainerRedeSociais = styled.div`
-    width: 100%;
+    width: 300px;
     height: 100%;
     display: flex;
     align-items: center;
@@ -161,4 +108,25 @@ export const Title = styled.a`
 `
 export const SubTitle = styled.span`
     
+`
+
+export const FacebookIconc = styled(FacebookIcon)`
+    margin-left: 20px;
+    cursor: pointer;
+
+`
+export const InstagramIconc = styled(InstagramIcon)`
+    margin-left: 20px;
+    cursor: pointer;
+
+`
+export const TwitterIconc = styled(TwitterIcon)`
+    margin-left: 20px;
+    cursor: pointer;
+
+`
+export const LinkedInIconc = styled(LinkedInIcon)`
+    margin-left: 20px;
+    cursor: pointer;
+
 `

@@ -8,7 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import GlobalStyles from '../src/styles/global'
 import 'antd/dist/antd.css'
 import 'react-toastify/dist/ReactToastify.css';
-
+import "./index.css"
 
 ReactDOM.render(
   <React.StrictMode>

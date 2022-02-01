@@ -18,6 +18,8 @@ export const Title = styled.p`
 export const SubTitle = styled.p`
     margin: 0 0 0 2rem; 
     color: black;
+    font-weight: 600;
+
 `
 
 
