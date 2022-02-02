@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Head from "../../components/Head"
 import * as S from './styles'
 import FormCreateQuestions from '../../components/FormCreateQuestions'
-// import Footer from '../../components/Footer';
-
-
 
 export type Uuid = {
     uuiSimulado: string | string[];
@@ -13,7 +10,6 @@ export type Uuid = {
 }
 
 export default function CreateQuestions({ uuiSimulado, numeroDaPergunta, setNumeroDaPerguntaNumber }: Uuid) {
-
     return (
         <>
             <Head home={true} />
@@ -21,7 +17,6 @@ export default function CreateQuestions({ uuiSimulado, numeroDaPergunta, setNume
                 <S.Title>Questão {numeroDaPergunta}</S.Title>
                 <FormCreateQuestions uuiSimulado={uuiSimulado} setNumeroDaPerguntaNumber={setNumeroDaPerguntaNumber} numeroDaPergunta={numeroDaPergunta} />
             </S.Content>
-            {/* <Footer bottom={false} /> */}
         </>
     )
 }

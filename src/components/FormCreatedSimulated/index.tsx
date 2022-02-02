@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import api from '../../service/api'
-import { Form, Input, Button, Radio, Space, Divider, Upload, InputNumber, TimePicker } from 'antd';
+import { Form, Input, Button, Radio, Space, Divider, Upload, InputNumber } from 'antd';
 import * as S from './styles'
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -17,18 +17,13 @@ const layout = {
     },
 };
 
-
 const validateMessages = {
-    // eslint-disable-next-line no-template-curly-in-string
     required: '${label} is required!',
     types: {
-        // eslint-disable-next-line no-template-curly-in-string
         email: '${label} is not a valid email!',
-        // eslint-disable-next-line no-template-curly-in-string
         number: '${label} is not a valid number!',
     },
     number: {
-        // eslint-disable-next-line no-template-curly-in-string
         range: '${label} must be between ${min} and ${max}',
     },
 };
@@ -47,6 +42,7 @@ export type FormCreatedSimulated = {
 export type Time = {
     tempoPorProva: string
 }
+
 export default function FormCreatedSimulated() {
     const antIcon = <LoadingOutlined style={{ fontSize: 34, color: "#E414B2" }} spin />
     const [ordemDasPerguntas, setOrdemDasPerguntas] = useState({ ordemDasPerguntas: 0 })
@@ -54,6 +50,7 @@ export default function FormCreatedSimulated() {
     const [youtubeOrThumbnailSelected, setYoutubeOrThumbnailSelected] = useState("")
     const [OrderQuestionsSelected, setOrderQuestionsSelected] = useState<number>(0)
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
+
     const history = useHistory();
 
     function goTohome() {
