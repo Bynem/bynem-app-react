@@ -58,14 +58,17 @@ export default function FormCreatedSimulated() {
     }
 
     const onFinish = (values) => {
-        setIsSpinning(true)
+        // setIsSpinning(true)
         console.log("onFinish", { values })
         if (values.linkYoutube) {
             const urlYoutube = values.linkYoutube.replace('watch?v=', 'embed/');
             values.linkYoutube = urlYoutube
+            console.log("values.linkYoutube", values.linkYoutube)
+
             postSimulatedLinkYoutube(values)
             return
         } else if (formDataThumbnail) {
+            console.log("formDataThumbnail", formDataThumbnail)
             postSimulated(values)
             return
         }
@@ -78,7 +81,11 @@ export default function FormCreatedSimulated() {
     }
 
     async function postSimulatedSemNada(newObject) {
-        newObject.tempoPorProva = newObject.tempoPorProva.toString();
+        console.log("postSimulatedSemNada", newObject)
+
+        if (newObject.tempoPorProva) {
+            newObject.tempoPorProva = newObject.tempoPorProva.toString();
+        }
 
         await api.post('api/Simulado', newObject)
             .then(response => {
@@ -95,7 +102,11 @@ export default function FormCreatedSimulated() {
     }
 
     async function postSimulatedLinkYoutube(newObject) {
-        newObject.tempoPorProva = newObject.tempoPorProva.toString();
+        console.log("postSimulatedSemNada", newObject)
+
+        if (newObject.tempoPorProva) {
+            newObject.tempoPorProva = newObject.tempoPorProva.toString();
+        }
 
         await api.post('api/Simulado', newObject)
             .then(response => {
@@ -113,7 +124,10 @@ export default function FormCreatedSimulated() {
     }
 
     async function postSimulated(newObject) {
-        newObject.tempoPorProva = newObject.tempoPorProva.toString();
+        console.log("postSimulated", newObject)
+        if (newObject.tempoPorProva) {
+            newObject.tempoPorProva = newObject.tempoPorProva.toString();
+        }
 
 
         await api.post('api/Simulado', newObject)
@@ -231,7 +245,7 @@ export default function FormCreatedSimulated() {
                                         label="Quantidade de Perguntas Por Simulado"
                                         rules={[{ required: true, message: 'Selecione a Quantidade de perguntas!' }]}
                                     >
-                                        <InputNumber min={0} />
+                                        <InputNumber defaultValue={0} min={0} />
                                     </Form.Item>
                                 ) :
                                 (
@@ -245,7 +259,7 @@ export default function FormCreatedSimulated() {
                     name="tempoPorProva"
                     label="Tempo por prova"
                 >
-                    <InputNumber min={0} />
+                    <InputNumber min={0} defaultValue={0} />
                 </Form.Item>
                 <Divider style={{ borderTop: "1px solid rgba(0, 0, 0, 0.06)", width: "100vw" }} />
                 <Form.Item>

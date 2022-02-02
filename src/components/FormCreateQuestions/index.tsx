@@ -70,26 +70,37 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
     }, [])
 
     const onFinish = (values) => {
-
-        setIsSpinning(true)
-
-        const respostas = { respostas: [] }
-
+        let algumaCoisa = false
         Object.keys(form).forEach((item) => {
-            if (form[item].descricao != "") {
-                respostas.respostas.push(form[item]);
+            if (form[item].correta == true) {
+                algumaCoisa = true
             }
         });
+        if (algumaCoisa) {
+            setIsSpinning(true)
 
-        const simuladoId = { simuladoId: uuiSimulado }
-        const dataPerguntaSimulado = Object.assign(values, respostas, simuladoId)
+            const respostas = { respostas: [] }
 
-        if (formDataThumbnail) {
-            postPerguntaComThubnail(dataPerguntaSimulado)
-            return
+
+            Object.keys(form).forEach((item) => {
+                if (form[item].descricao != "") {
+                    respostas.respostas.push(form[item]);
+                }
+            });
+
+            const simuladoId = { simuladoId: uuiSimulado }
+            const dataPerguntaSimulado = Object.assign(values, respostas, simuladoId)
+
+            if (formDataThumbnail) {
+                postPerguntaComThubnail(dataPerguntaSimulado)
+                return
+            }
+            console.log("dataPerguntaSimulado", dataPerguntaSimulado)
+            postPergunta(dataPerguntaSimulado)
+        } else {
+            toast.error("Escolha pelomenos uma opção")
         }
-        console.log("dataPerguntaSimulado", dataPerguntaSimulado)
-        postPergunta(dataPerguntaSimulado)
+
 
     };
 

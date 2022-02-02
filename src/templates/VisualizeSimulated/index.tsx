@@ -61,7 +61,7 @@ export default function VisualizeSimulated({ uuidSimulado }: Uuid) {
                         {simulated.linkYouTube &&
                             <iframe
                                 height="315"
-                                src="https://www.youtube.com/embed/1_h1D7GPwSw"
+                                src={simulated.linkYouTube}
                                 title="YouTube video player"
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
