@@ -61,6 +61,7 @@ export default function FormCreatedSimulated() {
     }
 
     const onFinish = (values) => {
+        setIsSpinning(true)
         console.log("onFinish", { values })
         if (values.linkYoutube) {
             const urlYoutube = values.linkYoutube.replace('watch?v=', 'embed/');
@@ -134,6 +135,7 @@ export default function FormCreatedSimulated() {
     async function postThumbnail(id) {
         const archive = new FormData()
         archive.append('arquivo', formDataThumbnail)
+        console.log("Upload", formDataThumbnail)
         await api.post(`api/Simulado/upload-thumbnail/${id}`, archive)
             .then(function (response) {
                 history.push(`/criar-perguntas/${id}`);

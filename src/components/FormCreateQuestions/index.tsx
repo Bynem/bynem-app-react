@@ -98,7 +98,7 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
             .then(response => {
                 setIsSpinning(false)
                 if (response) {
-                    console.log("response", { response })
+                    console.log("response id", { response })
                     postThumbnail(response.data.id)
                 }
 
@@ -110,17 +110,21 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
     }
 
     async function postThumbnail(id) {
+        console.log("post thumb id", { id })
+
         const archive = new FormData()
+
         archive.append('arquivo', formDataThumbnail)
-        await api.post(`api/pergunta/upload-thumbnail/${id}`, archive)
-            .then(function () {
+
+        await api.post(`api/Pergunta/upload-thumbnail/${id}`, archive)
+            .then(function (resposne) {
                 setIsSpinning(false)
-                console.log("Upload", uuiSimulado)
+                console.log("resposne resposne ", resposne)
                 toast.success('Pergunta salva com sucesso ')
                 history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
                 window.location.reload()
             }).catch(function (error) {
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                console.log(`Umresposneresposneresposneresposneresposneresposneu ${error}`)
                 setIsSpinning(false)
             });
     }
@@ -129,6 +133,7 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
         console.log("values", values)
         await api.post('api/pergunta', values)
             .then(response => {
+
                 setIsSpinning(false)
                 toast.success('Pergunta salva com sucesso ')
                 history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
@@ -137,14 +142,13 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
             }).catch(function (error) {
                 console.log("error", error)
 
-                // setIsSpinning(false)
-                // console.log(`Um erro inesperado aconteceu ${error.response.status}`)
-                // setIsSpinning(false)
+                setIsSpinning(false)
+                console.log(`Um erro inesperado aconteceu ${error.response.status}`)
             });
     }
 
-    const normFile = ({ file }) => {
-        setformDataThumbnail(file)
+    const normFile = (file: any, fileList: any) => {
+        setformDataThumbnail(file.file)
     };
 
     function addQuestion() {
@@ -171,7 +175,7 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
                 <S.ContainerDrop>
                     <Form.Item>
                         <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-                            <Upload.Dragger name="files" action="/upload.do">
+                            <Upload.Dragger beforeUpload={normFile} name="files" accept=".png" action="/upload.do">
                                 <p className="ant-upload-drag-icon">
                                     <InboxOutlined />
                                 </p>

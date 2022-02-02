@@ -20,8 +20,8 @@ export const Footer = styled.footer`
         width: 120px;
         height: 12px;
     }
-    
 `
+
 export const Wrapper = styled.div`
 
     display: flex;
@@ -31,7 +31,7 @@ export const Wrapper = styled.div`
     @media(max-width: 604px){
         flex-direction: column;
         align-items: center;
-    padding:  0 0 40px 0;
+        padding:  0 0 40px 0;
 
     }
 `
