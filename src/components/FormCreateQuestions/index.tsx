@@ -187,7 +187,7 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
                 <S.ContainerDrop>
                     <Form.Item>
                         <Form.Item name="dragger" valuePropName="file" noStyle>
-                            <Upload.Dragger beforeUpload={normFile} name="file" accept=".png" listType='picture'>
+                            <Upload.Dragger beforeUpload={normFile} name="file" listType='picture'>
                                 <p className="ant-upload-drag-icon">
                                     <InboxOutlined />
                                 </p>

@@ -41,20 +41,25 @@ export default function Input2({ form, setForm, index, deletarUltimo }: any) {
             }
         })
     }
+    let identacao = 'resposta'.concat(index + 1)
 
-    return <CheckContainer>
-        <DivCheckBox>
-            <input
-                type="checkbox"
-                name={`question${index}`}
-                className="form-check-input"
-                onChange={e => setQuestion(e)}
-            />
-        </DivCheckBox>
-        <Form.Item name={`question${index}`} className="question">
-            <Input.TextArea onChange={e => setQuestion(e)} rows={2} showCount maxLength={500} />
-        </Form.Item >
-    </CheckContainer>
+
+
+    return (
+        <CheckContainer>
+            <DivCheckBox>
+                <input
+                    type="checkbox"
+                    name={`question${index}`}
+                    className="form-check-input"
+                    onChange={e => setQuestion(e)}
+                />
+            </DivCheckBox>
+            <Form.Item name={`question${index}`} className="question">
+                <Input.TextArea onChange={e => setQuestion(e)} rows={2} showCount maxLength={500} />
+            </Form.Item >
+        </CheckContainer>
+    )
 }
 
 
