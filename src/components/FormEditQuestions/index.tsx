@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import Input2 from '../../components/InputCheckEdit'
 import { EditQuestions } from '../../templates/EditQuestions';
 import upload from 'antd/lib/upload';
+import { useHistory } from 'react-router-dom';
 
 const layout = {
     labelCol: {
@@ -73,32 +74,31 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
 
 
     const onFinish = (values) => {
-        const respostas = { respostas: arreiDeRespostas }
-
-        // setIsSpinning(true)
-
-
+        setIsSpinning(true)
         let novo = { id: uuidQuestao, simuladoId: uuidSimulado, descricao: values.descricao, multiplaEscolha: true, comentarioFinal: values.comentarioFinal, respostas: arreiDeRespostas }
-
         console.log("dataPerguntaSimulado", novo)
         putPergunta(novo)
-
     };
+    const history = useHistory();
+
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async function putPergunta(values) {
+        console.log({ values })
         await api.put('api/pergunta', values)
             .then(response => {
                 console.log("response", response)
-                setIsSpinning(false)
-                // if (response) {
-                //     postThumbnail(response.data.id)
-                // }
+                if (formDataThumbnail) {
+                    postThumbnail(uuidQuestao)
+                } else {
+                    history.push(`/vizualizar/simulado/${uuidSimulado}`)
+                    setIsSpinning(false)
+                }
 
             }).catch(function (error) {
                 setIsSpinning(false)
-                // toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
-                // setIsSpinning(false)
+                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                setIsSpinning(false)
             });
     }
 
@@ -113,11 +113,13 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
         archive.append('arquivo', formDataThumbnail)
 
         await api.post(`api/pergunta/upload-thumbnail/${id}`, archive)
-            .then(function () {
+            .then(function (response) {
+                console.log("response da thumn", response)
+                history.push(`/vizualizar/simulado/${uuidSimulado}`)
                 setIsSpinning(false)
                 toast.success('Pergunta salvo com sucesso ')
             }).catch(function (error) {
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                toast.error(`Um erro inesperado aconteceu ${error.response}`)
                 setIsSpinning(false)
             });
     }
