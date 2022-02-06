@@ -36,6 +36,8 @@ export type Simulated = {
     data: FormCreatedSimulated
 }
 
+
+
 export default function FormUpdateSimulated({ uuid }: Uuid) {
     const [simulated, setSimulated] = useState<FormCreatedSimulated | any>()
     const antIcon = <LoadingOutlined style={{ fontSize: 34, color: "#E414B2" }} spin />
@@ -43,6 +45,13 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
     const [OrderQuestionsSelected, setOrderQuestionsSelected] = useState<number>(0)
     const [ordemDasPerguntas, setOrdemDasPerguntas] = useState({ ordemDasPerguntas: 1 })
     const [form, setForm] = useState<any>()
+    const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
+
+
+    const normFile = (file: any, fileList: any) => {
+        setformDataThumbnail(file)
+    };
+
 
     useEffect(() => {
         if (simulated) {
@@ -120,9 +129,11 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
             });
 
-        console.log("dataRequest.file", dataRequest.file)
+        const archive = new FormData()
 
-        await api.post(`/api/Simulado/upload-thumbnail/${idSimulated.id}`, dataRequest.file)
+        archive.append('arquivo', formDataThumbnail)
+
+        await api.post(`/api/Simulado/upload-thumbnail/${idSimulated.id}`, archive)
             .then().catch(function (error) {
                 setIsSpinning(false)
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
@@ -152,10 +163,6 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         history.push("/meus-simulados")
     }
 
-    const normFile = (file: any, fileList: any) => {
-        console.log("file", URL.createObjectURL(file))
-        setSimulated(simulated => ({ ...simulated, filenameImagem: URL.createObjectURL(file) }))
-    }
     console.log("simulated", simulated)
     return (
         <Spin indicator={antIcon} spinning={isSpinning}>
@@ -220,7 +227,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                                         name='linkYoutube'
                                         label="Youtube Link"
                                     >
-                                        <Input defaultValue={simulated.linkYouTube} name="linkYouTube" onChange={e => criarObjeto(e)} addonBefore="youtube.com/" />
+                                        <Input defaultValue={simulated.linkYouTube} name="linkYouTube" onChange={e => criarObjeto(e)} placeholder="https://www.youtube.com/watch?v=xxxxx" />
                                     </Form.Item>
 
                                 ) : (null)
@@ -238,7 +245,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                                                     label="Quantidade de Perguntas Por Simulado"
                                                     rules={[{ required: true, message: 'Selecione a Quantidade de perguntas!' }]}
                                                 >
-                                                    <InputNumber name="qtdLimitePerguntasSimulado" onChange={e => (criarObjeto(e))} min={0} />
+                                                    <InputNumber name="qtdLimitePerguntasSimulado" onChange={e => (criarObjeto(e))} min={1} />
                                                 </Form.Item>
                                             ) :
                                             (
