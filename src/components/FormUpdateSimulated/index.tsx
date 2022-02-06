@@ -41,7 +41,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
     const antIcon = <LoadingOutlined style={{ fontSize: 34, color: "#E414B2" }} spin />
     const [isSpinning, setIsSpinning] = useState(false)
     const [OrderQuestionsSelected, setOrderQuestionsSelected] = useState<number>(0)
-    const ordemDasPerguntas = { ordemDasPerguntas: 1 }
+    const [ordemDasPerguntas, setOrdemDasPerguntas] = useState({ ordemDasPerguntas: 1 })
     const [form, setForm] = useState<any>()
 
     useEffect(() => {
@@ -54,8 +54,10 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                 ordemDasPerguntas: simulated.ordemDasPerguntas,
                 quantidade: "",
                 filenameImagem: simulated?.filenameImagem,
+                qtdLimitePerguntasSimulado: simulated?.qtdLimitePerguntasSimulado,
                 file: '',
             })
+            setOrdemDasPerguntas({ ordemDasPerguntas: simulated?.ordemDasPerguntas })
             setOrderQuestionsSelected(simulated.ordemDasPerguntas)
         }
     }, [simulated])
@@ -88,12 +90,13 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
             postSimuladoComImagem(newObject)
         }
         const newObject = Object.assign(ordemDasPerguntas, values)
+        console.log("newObject", { newObject })
         postSimulated(newObject)
     };
 
     function orderQuestions(e) {
         setOrderQuestionsSelected(e.target.value)
-        ordemDasPerguntas.ordemDasPerguntas = e.target.value
+        setOrdemDasPerguntas({ ordemDasPerguntas: e.target.value })
     }
 
     useEffect(() => {
@@ -107,7 +110,6 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         }
         getSimulatedById()
     }, [])
-
     async function postSimuladoComImagem(newObject) {
         const idSimulated = { id: uuid }
         const dataRequest = Object.assign(newObject, idSimulated)
@@ -118,8 +120,9 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
             });
 
+        console.log("dataRequest.file", dataRequest.file)
 
-        await api.post(`/api/Simulado/upload-thumbnail/${idSimulated}`, dataRequest.file)
+        await api.post(`/api/Simulado/upload-thumbnail/${idSimulated.id}`, dataRequest.file)
             .then().catch(function (error) {
                 setIsSpinning(false)
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
@@ -133,6 +136,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         if (newObject.titulo != undefined || newObject.descricao != undefined || newObject.linkYoutube != undefined) {
             const idSimulated = { id: uuid }
             const dataRequest = Object.assign(newObject, idSimulated)
+            console.log("dataRequest", { dataRequest })
             await api.put('api/Simulado', dataRequest)
                 .then().catch(function (error) {
                     setIsSpinning(false)
@@ -141,7 +145,6 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         }
 
         goToMySimulateds()
-        toast.success('Simulado salvo com sucesso ')
         setIsSpinning(false)
     }
 
@@ -153,7 +156,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         console.log("file", URL.createObjectURL(file))
         setSimulated(simulated => ({ ...simulated, filenameImagem: URL.createObjectURL(file) }))
     }
-
+    console.log("simulated", simulated)
     return (
         <Spin indicator={antIcon} spinning={isSpinning}>
             {simulated &&
@@ -167,7 +170,9 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                             initialValues={{
                                 titulo: simulated?.titulo,
                                 descricao: simulated?.descricao,
-                                linkYoutube: simulated?.linkYouTube
+                                linkYoutube: simulated?.linkYouTube,
+                                tempoPorProva: simulated.tempoPorProva,
+                                qtdLimitePerguntasSimulado: simulated?.qtdLimitePerguntasSimulado
                             }}
                             validateMessages={validateMessages}>
                             <Form.Item
@@ -191,7 +196,6 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                                 <Form.Item
                                     name="youtubeOuThumbnail"
                                     label="Capa do simulado"
-                                    rules={[{ required: true, message: 'Selecione uma das opções!' }]}
                                 >
                                     <S.Imagem
                                         src={simulated.filenameImagem}
@@ -200,7 +204,6 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                                 <Form.Item
                                     name='clientImage'
                                     label="Atulizar Capa do simulado"
-                                    rules={[{ required: true, message: 'Por favor insira uma imagem' }]}
                                 >
                                     <Upload
                                         listType="picture"
@@ -223,7 +226,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                                 ) : (null)
                             )}
                             <S.SubTitle>Ordem das perguntas</S.SubTitle>
-                            <Form.Item name="radio-group" rules={[{ required: true, message: 'Selecione uma das opções!' }]} >
+                            <Form.Item name="radio-group"  >
                                 <Radio.Group name="ordemDasPerguntas" defaultValue={simulated.ordemDasPerguntas} onChange={e => (criarObjeto(e))} style={{ width: "400px" }}>
                                     <Space direction="vertical">
                                         <Radio value={1}>Sequencial</Radio>
@@ -231,11 +234,11 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                                         {OrderQuestionsSelected === 2 ?
                                             (
                                                 <Form.Item
-                                                    name='aleatoria'
+                                                    name='qtdLimitePerguntasSimulado'
                                                     label="Quantidade de Perguntas Por Simulado"
                                                     rules={[{ required: true, message: 'Selecione a Quantidade de perguntas!' }]}
                                                 >
-                                                    <InputNumber name="quantidade" onChange={e => (criarObjeto(e))} min={0} />
+                                                    <InputNumber name="qtdLimitePerguntasSimulado" onChange={e => (criarObjeto(e))} min={0} />
                                                 </Form.Item>
                                             ) :
                                             (
