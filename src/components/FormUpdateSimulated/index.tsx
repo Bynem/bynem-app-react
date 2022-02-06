@@ -6,9 +6,9 @@ import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
 import { UploadOutlined } from '@ant-design/icons'
-
 import { toast } from 'react-toastify';
 import { Uuid } from '../../templates/UpdateSimulated';
+import TableVizualizeQuestions from '../TableVizualizeQuestionsExcluir';
 
 const layout = {
     labelCol: {
@@ -20,7 +20,6 @@ const layout = {
 };
 
 const validateMessages = {
-    // eslint-disable-next-line no-template-curly-in-string
     required: '${label} é obrigatorio',
 };
 
@@ -78,7 +77,6 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
             [name]: value
         })
     }
-
 
     const history = useHistory();
 
@@ -156,121 +154,120 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         setSimulated(simulated => ({ ...simulated, filenameImagem: URL.createObjectURL(file) }))
     }
 
-    console.log("simulated", simulated)
     return (
         <Spin indicator={antIcon} spinning={isSpinning}>
             {simulated &&
-                <S.Container>
-
-                    <Form
-                        {...layout}
-                        name="nest-messages"
-                        labelAlign={"left"}
-                        onFinish={onFinish}
-                        initialValues={{
-                            titulo: simulated?.titulo,
-                            descricao: simulated?.descricao,
-                            linkYoutube: simulated?.linkYouTube
-                        }}
-                        validateMessages={validateMessages}>
-                        <Form.Item
-                            name='titulo'
-                            label="Título"
-                            rules={[
-                                {
-                                    message: 'Insira seu titulo',
-                                },
-                            ]}
-                        >
-                            <Input name="titulo" onChange={e => criarObjeto(e)} placeholder="Insira seu título" />
-                        </Form.Item>
-                        <Form.Item
-                            name='descricao'
-                            label="Descriação"
-                        >
-                            <Input.TextArea name="descricao" onChange={e => criarObjeto(e)} placeholder="Insira sua descriação" />
-                        </Form.Item>
-                        {simulated.filenameImagem ? (<>
+                <>
+                    <S.Container>
+                        <Form
+                            {...layout}
+                            name="nest-messages"
+                            labelAlign={"left"}
+                            onFinish={onFinish}
+                            initialValues={{
+                                titulo: simulated?.titulo,
+                                descricao: simulated?.descricao,
+                                linkYoutube: simulated?.linkYouTube
+                            }}
+                            validateMessages={validateMessages}>
                             <Form.Item
-                                name="youtubeOuThumbnail"
-                                label="Capa do simulado"
-                                rules={[{ required: true, message: 'Selecione uma das opções!' }]}
+                                name='titulo'
+                                label="Título"
+                                rules={[
+                                    {
+                                        message: 'Insira seu titulo',
+                                    },
+                                ]}
                             >
-                                <S.Imagem
-                                    src={simulated.filenameImagem}
-                                />
-
+                                <Input name="titulo" onChange={e => criarObjeto(e)} placeholder="Insira seu título" />
                             </Form.Item>
                             <Form.Item
-                                name='clientImage'
-                                label="Atulizar Capa do simulado"
-                                rules={[{ required: true, message: 'Por favor insira uma imagem' }]}
+                                name='descricao'
+                                label="Descriação"
                             >
-                                <Upload
-                                    listType="picture"
-                                    beforeUpload={normFile}
-                                    accept=".png"
-                                >
-                                    <Button style={{ color: '#000000D9', border: '1px solid #d9d9d9' }} icon={<UploadOutlined />}>Click to upload</Button>
-                                </Upload>
+                                <Input.TextArea name="descricao" onChange={e => criarObjeto(e)} placeholder="Insira sua descriação" />
                             </Form.Item>
-                        </>
-                        ) : (
-                            simulated.linkYouTube ? (
+                            {simulated.filenameImagem ? (<>
                                 <Form.Item
-                                    name='linkYoutube'
-                                    label="Youtube Link"
+                                    name="youtubeOuThumbnail"
+                                    label="Capa do simulado"
+                                    rules={[{ required: true, message: 'Selecione uma das opções!' }]}
                                 >
-                                    <Input defaultValue={simulated.linkYouTube} name="linkYouTube" onChange={e => criarObjeto(e)} addonBefore="youtube.com/" />
+                                    <S.Imagem
+                                        src={simulated.filenameImagem}
+                                    />
                                 </Form.Item>
+                                <Form.Item
+                                    name='clientImage'
+                                    label="Atulizar Capa do simulado"
+                                    rules={[{ required: true, message: 'Por favor insira uma imagem' }]}
+                                >
+                                    <Upload
+                                        listType="picture"
+                                        beforeUpload={normFile}
+                                        accept=".png"
+                                    >
+                                        <Button style={{ color: '#000000D9', border: '1px solid #d9d9d9' }} icon={<UploadOutlined />}>Click to upload</Button>
+                                    </Upload>
+                                </Form.Item>
+                            </>
+                            ) : (
+                                simulated.linkYouTube ? (
+                                    <Form.Item
+                                        name='linkYoutube'
+                                        label="Youtube Link"
+                                    >
+                                        <Input defaultValue={simulated.linkYouTube} name="linkYouTube" onChange={e => criarObjeto(e)} addonBefore="youtube.com/" />
+                                    </Form.Item>
 
-                            ) : (null)
-                        )}
-                        <S.SubTitle>Ordem das perguntas</S.SubTitle>
-                        <Form.Item name="radio-group" rules={[{ required: true, message: 'Selecione uma das opções!' }]} >
-                            <Radio.Group name="ordemDasPerguntas" defaultValue={simulated.ordemDasPerguntas} onChange={e => (criarObjeto(e))} style={{ width: "400px" }}>
-                                <Space direction="vertical">
-                                    <Radio value={1}>Sequencial</Radio>
-                                    <Radio value={2}>Aleatória</Radio>
-                                    {OrderQuestionsSelected === 2 ?
-                                        (
-                                            <Form.Item
-                                                name='aleatoria'
-                                                label="Quantidade de Perguntas Por Simulado"
-                                                rules={[{ required: true, message: 'Selecione a Quantidade de perguntas!' }]}
-                                            >
-                                                <InputNumber name="quantidade" onChange={e => (criarObjeto(e))} min={0} />
-                                            </Form.Item>
-                                        ) :
-                                        (
-                                            null
-                                        )
-                                    }
+                                ) : (null)
+                            )}
+                            <S.SubTitle>Ordem das perguntas</S.SubTitle>
+                            <Form.Item name="radio-group" rules={[{ required: true, message: 'Selecione uma das opções!' }]} >
+                                <Radio.Group name="ordemDasPerguntas" defaultValue={simulated.ordemDasPerguntas} onChange={e => (criarObjeto(e))} style={{ width: "400px" }}>
+                                    <Space direction="vertical">
+                                        <Radio value={1}>Sequencial</Radio>
+                                        <Radio value={2}>Aleatória</Radio>
+                                        {OrderQuestionsSelected === 2 ?
+                                            (
+                                                <Form.Item
+                                                    name='aleatoria'
+                                                    label="Quantidade de Perguntas Por Simulado"
+                                                    rules={[{ required: true, message: 'Selecione a Quantidade de perguntas!' }]}
+                                                >
+                                                    <InputNumber name="quantidade" onChange={e => (criarObjeto(e))} min={0} />
+                                                </Form.Item>
+                                            ) :
+                                            (
+                                                null
+                                            )
+                                        }
 
-                                </Space>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item
-                            name="tempoPorProva"
-                            label="Tempo por prova /min"
-                        >
-                            <InputNumber min={0} />
-                        </Form.Item>
-                        <Divider style={{ borderTop: "2px solid rgba(0, 0, 0, 0.06)" }} />
-                        <Form.Item>
-                            <S.ContainerButton>
-                                <Button type="primary" danger onClick={goToMySimulateds} htmlType="submit">
-                                    VOLTAR
-                                </Button>
-                                <Button type="primary" htmlType="submit">
-                                    SALVAR
-                                </Button>
-                            </S.ContainerButton>
-                        </Form.Item>
-                        <br />
-                    </Form>
-                </S.Container>
-
+                                    </Space>
+                                </Radio.Group>
+                            </Form.Item>
+                            <Form.Item
+                                name="tempoPorProva"
+                                label="Tempo por prova /min"
+                            >
+                                <InputNumber min={0} />
+                            </Form.Item>
+                            <Divider style={{ borderTop: "2px solid rgba(0, 0, 0, 0.06)" }} />
+                            <Form.Item>
+                                <S.ContainerButton>
+                                    <Button type="primary" danger onClick={goToMySimulateds} htmlType="submit">
+                                        VOLTAR
+                                    </Button>
+                                    <Button type="primary" htmlType="submit">
+                                        SALVAR
+                                    </Button>
+                                </S.ContainerButton>
+                            </Form.Item>
+                            <br />
+                        </Form>
+                    </S.Container>
+                    <TableVizualizeQuestions uuidSimulado={uuid} perguntas={simulated.perguntas} />
+                </>
             }
         </Spin>
     );

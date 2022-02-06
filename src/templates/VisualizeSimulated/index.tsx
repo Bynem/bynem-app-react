@@ -3,7 +3,6 @@ import Head from "../../components/Head"
 import Footer from "../../components/Footer"
 import * as S from './styles'
 import { Button, Divider } from 'antd';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Input } from 'antd';
 import TableVizualizeQuestions from '../../components/TableVizualizeQuestions'

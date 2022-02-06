@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Input } from 'antd';
 import styled from 'styled-components';
+import { DeleteOutlined } from '@mui/icons-material';
 
 
 export default function Input2Edit({ arreiDeRespostas, setArreiDeRespostas, index, current }: any) {
@@ -21,9 +22,18 @@ export default function Input2Edit({ arreiDeRespostas, setArreiDeRespostas, inde
         setArreiDeRespostas(newArr)
         return
     }
-
-    return (
+    function deleteThis(index) {
+        console.log("opa", arreiDeRespostas.filter((item, indexI) => indexI !== index))
+        setArreiDeRespostas(arreiDeRespostas.filter((item, indexI) => indexI !== index))
+        // console.log(index)
+        // let temporario = arreiDeRespostas
+        // temporario.splice(index, 1)
+        // console.log(temporario)
+        // setArreiDeRespostas(temporario)
+    }
+    return (<>
         <CheckContainer>
+
             <DivCheckBox>
                 <input
                     type="checkbox"
@@ -35,8 +45,12 @@ export default function Input2Edit({ arreiDeRespostas, setArreiDeRespostas, inde
             </DivCheckBox>
             <Form.Item name={`question${index}`} className="question">
                 <Input.TextArea onChange={e => setQuestion(e)} defaultValue={current.descricao ? current.descricao : ""} rows={2} showCount maxLength={500} />
+                <DivLixeira onClick={() => deleteThis(index)}>
+                    <Lixeira />
+                </DivLixeira>
             </Form.Item >
         </CheckContainer>
+    </>
     )
 }
 
@@ -59,6 +73,22 @@ export const CheckContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-
 `
-
+export const Lixeira = styled(DeleteOutlined)`
+    color: red;
+    cursor: pointer;
+    &:hover{
+        color: #1890ff;
+        
+    }
+`
+export const DivLixeira = styled.div`
+    position: absolute;   
+    right: -35px; 
+    top: 13px;
+    
+    svg{
+        width: 30px;
+        height: 30px;
+    }
+`

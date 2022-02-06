@@ -74,6 +74,11 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
 
 
     const onFinish = (values) => {
+        if (arreiDeRespostas.length < 2) {
+            toast.error("A quantidade de respostas não pode ser menor que 2")
+            return
+
+        }
         setIsSpinning(true)
         let novo = { id: uuidQuestao, simuladoId: uuidSimulado, descricao: values.descricao, multiplaEscolha: true, comentarioFinal: values.comentarioFinal, respostas: arreiDeRespostas }
         console.log("dataPerguntaSimulado", novo)
@@ -142,7 +147,7 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
 
     function removeQuestion() {
         if (arreiDeRespostas.length === 2) {
-            toast.error("A quantidade de respostas não pode ser menor que 10")
+            toast.error("A quantidade de respostas não pode ser menor que 2")
             return
         }
         let indexQuestaoDeletada = arreiDeRespostas.length - 1  // copying the old datas array
@@ -205,6 +210,8 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
                         <Form.Item className="switch-form">
                             <S.Title>Respostas</S.Title>
                         </Form.Item>
+                        {console.log({ arreiDeRespostas })}
+
                         {arreiDeRespostas.map((position, index) => (
                             <Input2
                                 key={index}

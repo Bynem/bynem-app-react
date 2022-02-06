@@ -7,7 +7,7 @@ export const Content = styled.div`
     flex-direction: column !important;
     user-select: none;
     background-color: white !important;
-    height: 855px;
+    height: auto;
 `
 
 export const Title = styled.p`
