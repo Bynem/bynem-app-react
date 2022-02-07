@@ -254,12 +254,6 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
                     </Form.Item>
                     <Form.Item
                         name="comentarioFinal"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input Intro',
-                            },
-                        ]}
                     >
                         <Input.TextArea showCount rows={8} maxLength={500} />
                     </Form.Item>
