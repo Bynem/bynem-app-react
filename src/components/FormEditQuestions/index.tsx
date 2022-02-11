@@ -61,12 +61,13 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
         async function getQuestion() {
             await api.get(`api/pergunta/${uuidSimulado}/${uuidQuestao}`)
                 .then(response => {
+                    console.log("response", response)
                     setData(response.data)
                     setArreiDeRespostas(response.data.respostas)
                 }).catch(function (error) {
                     setIsSpinning(false)
-                    // toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
-                    // setIsSpinning(false)
+                    toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                    setIsSpinning(false)
                 });
         }
         getQuestion()

@@ -8,6 +8,7 @@ export type EditQuestions = {
     uuidSimulado: string
     uuidQuestao: string
 }
+ 
 export default function EditQuestions({ uuidSimulado, uuidQuestao }: EditQuestions) {
     const variavelQuestao = 1
     return (

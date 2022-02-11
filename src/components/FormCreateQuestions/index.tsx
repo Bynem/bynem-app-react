@@ -81,7 +81,6 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
 
             const respostas = { respostas: [] }
 
-
             Object.keys(form).forEach((item) => {
                 if (form[item].descricao != "") {
                     respostas.respostas.push(form[item]);
@@ -100,8 +99,6 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
         } else {
             toast.error("Escolha pelomenos uma opção")
         }
-
-
     };
 
     async function postPerguntaComThubnail(values) {
@@ -128,31 +125,25 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
         archive.append('arquivo', formDataThumbnail)
 
         await api.post(`api/Pergunta/upload-thumbnail/${id}`, archive)
-            .then(function (resposne) {
-                setIsSpinning(false)
-                console.log("resposne resposne ", resposne)
-                toast.success('Pergunta salva com sucesso ')
-                history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
-                window.location.reload()
-            }).catch(function (error) {
-                console.log(`Umresposneresposneresposneresposneresposneresposneu ${error}`)
-                setIsSpinning(false)
-            });
+        .then(function (resposne) {
+            setIsSpinning(false)
+            console.log("resposne resposne ", resposne)
+            toast.success('Pergunta salva com sucesso ')
+            history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
+            window.location.reload()
+        }).catch(function (error) {
+            setIsSpinning(false)
+        });
     }
 
     async function postPergunta(values) {
-        console.log("values", values)
         await api.post('api/pergunta', values)
             .then(response => {
-
                 setIsSpinning(false)
                 toast.success('Pergunta salva com sucesso ')
                 history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
                 window.location.reload()
-
             }).catch(function (error) {
-                console.log("error", error)
-
                 setIsSpinning(false)
                 console.log(`Um erro inesperado aconteceu ${error.response.status}`)
             });
@@ -296,26 +287,3 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
         </Spin>
     );
 }
-
-
-/// fake Data
-
-// {
-//     "id": "string",
-//         "titulo": "string",
-//             "descricao": "string",
-//                 "linkYouTube": "string",
-//                     "ordemDasPerguntas": 1,
-//                         "filenameImagem": "string",
-//                             "tempoPorProva": "string",
-//                                 "qtdLimitePerguntasSimulado": 0,
-//                                     "perguntas": [
-//                                         {
-//                                             "id": "string",
-//                                             "filenameImage": "string",
-//                                             "descricao": "string",
-//                                             "multiplaEscolha": true,
-//                                             "comentarioFinal": "string"
-//                                         }
-//                                     ]
-// }

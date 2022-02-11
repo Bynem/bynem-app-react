@@ -15,7 +15,7 @@ export default function Home() {
                 <S.SubTitle>Estude utilizando o sistema de simulados totalmente grátis</S.SubTitle>
                 <Table setBottom={setBottom} />
             </S.Content>
-            <Footer bottom={false} />
+            <Footer bottom={true} />
         </>
     )
 }
