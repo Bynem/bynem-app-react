@@ -100,3 +100,42 @@ export const SubTitle = styled.div`
     font-size: 1.3rem;
     color: white;
 `
+
+export const ContainerLogin = styled.div`
+    height: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+`
+export const ContainerGoogle = styled.div`
+    height: 50px;
+    width: 150px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    transition: 0.8s;
+    padding: 0 10px 0 10px;
+    &:hover{
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+    }
+    img{
+        width: 25px;
+    }
+    span{
+        margin-left: 10px;
+        font-weight: bold;
+        font-family: 'Roboto', sans-serif;
+        font-size: 18px;
+        color: #525252;
+        transition: 0.8s;
+        &:hover{
+            color: #46a6e6;
+            cursor: pointer;
+        }
+    }
+`
+
+
+

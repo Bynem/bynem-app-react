@@ -28,7 +28,7 @@ export const Hamburger = styled.div`
     margin-bottom: 4px;
     border-radius: 5px;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 958px) {
     display: flex;
   }
 `;
@@ -39,8 +39,11 @@ export const Menu = styled.div`
   align-items: center;
   position: relative;
   font-weight: bold;
-
-  @media (max-width: 768px) {
+    a{
+      margin-bottom: 20px;
+      transition: all 2s ease-in;
+    }
+  @media (max-width: 958px) {
     overflow-y: hidden;
     flex-direction: column;
     max-height: ${({ isOpen }: NavBar) => (isOpen ? "300px" : "0")};
@@ -57,7 +60,6 @@ export const MenuLink = styled.a`
   color: #E414B2;
   transition: all 0.3s ease-in;
   font-size: 0.9rem;
-
   &:hover {
     color: #4373cf;
   }

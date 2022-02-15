@@ -5,6 +5,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import GoogleIcon from '@mui/icons-material/Google'
+import GoogleLogin from 'react-google-login';
+import { Grid } from 'antd';
+import { Link } from 'react-router-dom';
 const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -57,6 +62,17 @@ const Login: React.FC = () => {
                                     control={<Checkbox value="remember" color="primary" />}
                                     label=""
                                 /> */}
+                                <S.ContainerLogin>
+                                    <S.ContainerGoogle>
+                                        <FacebookIcon style={{color: '#338BFF'}}/>
+                                        <span>Facebook</span>
+                                    </S.ContainerGoogle>
+                                    <S.ContainerGoogle>
+                                    <img src="https://img.icons8.com/fluency/48/000000/google-logo.png"/>
+                                        <span>Google</span>
+                                    </S.ContainerGoogle>
+                                </S.ContainerLogin>
+                                
                                 <Button
                                     type="submit"
                                     fullWidth
@@ -66,18 +82,7 @@ const Login: React.FC = () => {
                                 >
                                     Entrar
                                 </Button>
-                                {/* <Grid container>
-                                    <Grid item xs>
-                                        <Link href="#" variant="body2">
-                                            Forgot password?
-                                        </Link>
-                                    </Grid>
-                                    <Grid item>
-                                        <Link href="#" variant="body2">
-                                            {"Don't have an account? Sign Up"}
-                                        </Link>
-                                    </Grid>
-                                </Grid> */}
+                                 
                             </Box>
                         </Box>
                     </Container>
