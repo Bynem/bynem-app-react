@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { GoogleLogin, GoogleLogout } from 'react-google-login';
 
 
 export const Container = styled.div`
@@ -20,7 +21,7 @@ export const Content = styled.div`
 `
 
 export const ConteinerLeft = styled.div`
-    height: 750px;
+    height: 550px;
     width: 480px;
     background-color: rgba(255,255,255);
     border-top-left-radius: 40px;
@@ -59,8 +60,8 @@ export const ContainerImage = styled.div`
     }
 `
 export const ConteinerRight = styled.div`
-    height: 750px;
-    width: 800px;
+    height: 550px;
+    width: 600px;
     border-top-right-radius: 40px;
     border-bottom-right-radius: 40px;
     padding: 64px;
@@ -137,5 +138,47 @@ export const ContainerGoogle = styled.div`
     }
 `
 
+export const ContainerGoogle2 = styled(GoogleLogin)`
+    height: 50px !important;
+    width: 150px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: 0.8s !important;
+    padding: 0 10px 0 10px !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+        g{
+            width: 25px!important;
+            margin: 0 !important;
+            height: 25px!important;
+        }
+        svg{
+            margin: 0 !important;
+        }
+        div{
+            margin: 0 !important;
+            padding: 0!important;
+        }
+        &:hover{
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+
+        }
+        span{
+            margin-left: 10px !important;
+            margin-bottom: 3px !important;
+            font-weight: 600 !important;
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px;
+            color: #525252;
+            padding: 0!important;
+            transition: 0.8s;
+            &:hover{
+                color: #46a6e6;
+                cursor: pointer;
+            }
+        }
+`
 
 

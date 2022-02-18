@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as S from './styles'
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -6,10 +6,9 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import GoogleIcon from '@mui/icons-material/Google'
-import GoogleLogin from 'react-google-login';
-import { Grid } from 'antd';
-import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/auth';
+import { GoogleLogin, GoogleLogout } from 'react-google-login';
+
 const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -20,7 +19,22 @@ const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     });
 };
 
+const clientId = "1070994023100-9ecvg83b9skmrrhvdc5lod4va6pkmn32.apps.googleusercontent.com";
+
 const Login: React.FC = () => {
+    const { user } = useAuth()
+    console.log('user', user)
+
+    const [showloginButton, setShowloginButton] = useState(true);
+    const onLoginSuccess = (res) => {
+        console.log('Login Success:', res.profileObj);
+        setShowloginButton(false);
+    };
+
+    const onLoginFailure = (res) => {
+        console.log('Login Failed:', res);
+    };
+
     return <S.Container>
         <S.Content>
             <S.ConteinerLeft>
@@ -67,12 +81,16 @@ const Login: React.FC = () => {
                                         <FacebookIcon style={{color: '#338BFF'}}/>
                                         <span>Facebook</span>
                                     </S.ContainerGoogle>
-                                    <S.ContainerGoogle>
-                                    <img src="https://img.icons8.com/fluency/48/000000/google-logo.png"/>
-                                        <span>Google</span>
-                                    </S.ContainerGoogle>
+                                    <S.ContainerGoogle2
+                                            clientId={clientId}
+                                            buttonText="Google"
+                                            onSuccess={onLoginSuccess}
+                                            onFailure={onLoginFailure}
+                                            cookiePolicy={'single_host_origin'}
+                                            isSignedIn={true}
+                                        />
                                 </S.ContainerLogin>
-                                
+                                        
                                 <Button
                                     type="submit"
                                     fullWidth

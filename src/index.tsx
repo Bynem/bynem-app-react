@@ -1,32 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import ptBR from 'antd/lib/locale/pt_BR'
+import GlobalStyles from '../src/styles/global'
 import reportWebVitals from './reportWebVitals';
 import { ConfigProvider } from 'antd'
-import ptBR from 'antd/lib/locale/pt_BR'
 import { ToastContainer } from 'react-toastify';
-import GlobalStyles from '../src/styles/global'
+import { AuthProvider } from './hooks/auth'
 import 'antd/dist/antd.css'
 import 'react-toastify/dist/ReactToastify.css';
 import "./index.css"
 
 ReactDOM.render(
   <React.StrictMode>
-    <ConfigProvider locale={ptBR}>
-      <App />
-      <GlobalStyles />
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-    </ConfigProvider>
+    <AuthProvider>
+      <ConfigProvider locale={ptBR}>
+        <App />
+        <GlobalStyles />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          />
+      </ConfigProvider>
+      </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
