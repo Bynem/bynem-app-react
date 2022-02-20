@@ -28,7 +28,6 @@ export default function Footer({ bottom }: FooterProps) {
           <S.LinkedInIconc />
         </S.ContainerRedeSociais>
       </S.Wrapper>
-
     </S.Footer>
   )
 }
