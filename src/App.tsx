@@ -8,6 +8,7 @@ import CriarPerguntas from './pages/criar-perguntas'
 import EditarSimulado from './pages/editar/simulado'
 import EditarQuestaoDeSimulado from './pages/editar/questao/simulado'
 import Login from './pages/login'
+import CriarConta from './pages/criarConta'
 import RecuperarSenha from './pages/recuperarSenha'
 import NovaSenha from './pages/novaSenha'
 import EditQuestionsPage from './pages/editar/questao/simulado'
@@ -19,6 +20,8 @@ export default function App() {
         <Route path='/' exact component={Home} />
 
         <Route path='/login' exact component={Login} />
+
+        <Route path='/criar-conta' exact component={CriarConta} />
 
         <Route path='/recuperar-senha' exact component={RecuperarSenha} />
 

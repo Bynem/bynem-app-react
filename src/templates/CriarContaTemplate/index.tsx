@@ -21,7 +21,7 @@ const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 
 const clientId = "1070994023100-9ecvg83b9skmrrhvdc5lod4va6pkmn32.apps.googleusercontent.com";
 
-const Login: React.FC = () => {
+const CriarContaTemplate: React.FC = () => {
     const { user } = useAuth()
     console.log('user', user)
 
@@ -52,6 +52,16 @@ const Login: React.FC = () => {
                             }}
                         >
                             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                            <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="nome"
+                                    label="Nome"
+                                    name="nome"
+                                    autoComplete="nome"
+                                    autoFocus
+                                /> 
                                 <TextField
                                     margin="normal"
                                     required
@@ -72,24 +82,6 @@ const Login: React.FC = () => {
                                     id="password"
                                     autoComplete="current-password"
                                 />
-                                {/* <FormControlLabel
-                                    control={<Checkbox value="remember" color="primary" />}
-                                    label=""
-                                /> */}
-                                <S.ContainerLogin>
-                                    <S.ContainerGoogle>
-                                        <FacebookIcon style={{color: '#338BFF'}}/>
-                                        <span>Facebook</span>
-                                    </S.ContainerGoogle>
-                                    <S.ContainerGoogle2
-                                            clientId={clientId}
-                                            buttonText="Google"
-                                            onSuccess={onLoginSuccess}
-                                            onFailure={onLoginFailure}
-                                            cookiePolicy={'single_host_origin'}
-                                            isSignedIn={true}
-                                        />
-                                </S.ContainerLogin>
                                 <Button
                                     type="submit"
                                     fullWidth
@@ -97,13 +89,12 @@ const Login: React.FC = () => {
                                     sx={{ mt: 3, mb: 2 }}
                                     style={{ borderRadius: 20, backgroundColor: '#338BFF' }}
                                 >
-                                    Entrar
+                                    Cadastrar
                                 </Button>
                             </Box>
                         </Box>
-                    <a href="/criar-conta" style={{marginRight:'auto'}} >Criar Conta</a>
+                    <a href="/login" style={{marginRight:'auto'}}>{' << Voltar'}</a>
                     </Container>
-                    {/* <a>Esqueceu a Senha?</a> */}
                 </S.LoginContainer>
             </S.ConteinerLeft>
             <S.ConteinerRight>
@@ -118,4 +109,4 @@ const Login: React.FC = () => {
     </S.Container>
 }
 
-export default Login;
+export default CriarContaTemplate;
