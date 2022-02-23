@@ -12,12 +12,15 @@ export type Uuid = {
     uuidSimulado?: string | string[];
 }
 
+export type Pergunta = { id: string; descricao: string; correta: boolean }
+
 type Perguntas = {
     comentarioFinal: string
     descricao: string
     filenameImage?: string
     id: string
     multiplaEscolha: false
+    respostas: Pergunta[]
 }
 
 type NewType = {
@@ -39,7 +42,6 @@ export default function VisualizeSimulated({ uuidSimulado }: Uuid) {
     useEffect(() => {
         async function getSimulatedById() {
             await api.get(`api/Simulado/${uuidSimulado}`).then(function (response) {
-                console.log("response", response);
                 setSimulated(response.data)
             })
                 .catch(function (error) {
@@ -47,7 +49,7 @@ export default function VisualizeSimulated({ uuidSimulado }: Uuid) {
                 });
         }
         getSimulatedById()
-    }, [])
+    }, [uuidSimulado])
 
     return <>
         {simulated &&
@@ -89,7 +91,7 @@ export default function VisualizeSimulated({ uuidSimulado }: Uuid) {
                         <TableVizualizeQuestions uuidSimulado={uuidSimulado} perguntas={simulated.perguntas} />
                     </S.ContainerTableQuestions>
                 </S.Content>
-                <Footer bottom={false} />
+                <Footer bottom />
             </>
         }
     </>

@@ -14,7 +14,7 @@ export default function MySimulateds() {
                 <S.Title>Meus simulados</S.Title>
                 <Table setBottom={setBottom} />
             </S.Content>
-            <Footer bottom={bottom} />
+            <Footer bottom />
         </>
     )
 }

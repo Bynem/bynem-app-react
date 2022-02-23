@@ -8,8 +8,15 @@ export const Content = styled.main`
     user-select: none;
     background-color: white !important;
     min-height: 855px;
-    width: 100%;
     margin-bottom: 50px;
+    margin: 48px;
+    padding: 18px;
+    border-radius: 8px;
+
+    @media(max-width: 800px) {
+        margin: 8px;
+        padding: 8px;
+    }
 `
 export const ContainerCount = styled.div`
     margin: 0 2rem 0 2rem; 
@@ -104,7 +111,8 @@ export const ContainerSubTitle = styled.div`
 `
 export const ContainerOptions = styled.div`
     background-color: #f5f5f5;
-    width: 600px;
+    width: 100%;
+    max-width: 580px;
     margin: 0 auto 0 auto;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     @media (max-width: 600px) {
@@ -114,10 +122,18 @@ export const ContainerOptions = styled.div`
 
 `
 export const CheckContainer = styled.div`
-    margin: 0 0 0 2rem;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    flex-direction: column;
+    margin: 2rem;
+
+    .ant-row.ant-form-item {
+        width: 100%;
+    }
+    div {
+        display: flex;
+    }
 
 `
 
