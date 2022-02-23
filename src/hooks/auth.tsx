@@ -1,7 +1,5 @@
-import { createContext, ReactNode, useContext } from "react";
-
-
-
+import Context from "@mui/base/TabsUnstyled/TabsContext";
+import { createContext, ReactNode, useContext, useState } from "react";
 interface AuthProviderProps {
     children: ReactNode
 }
@@ -10,23 +8,32 @@ interface User {
    id: string
    name: string 
    email: string
+   token: string
 }
 
 interface AuthContextData {
     user: User
+    setUser: Function
 }
 
 const AuthContext = createContext({} as AuthContextData)
 
 function AuthProvider({children}:  AuthProviderProps){
-    const user = {
-        name: 'micaio valente',
-        id: 'aaa',
-        email: 'micaiovalente@gmail.com'
+    const [user, setUser] = useState({
+        name: '',
+        id: '',
+        token: '',
+        email: ''
+    })
 
+    const ContextValue = {
+        user,
+        setUser
     }
+
+    
     return(
-        <AuthContext.Provider value={{user}}>
+        <AuthContext.Provider value={ContextValue}>
             {children}
         </AuthContext.Provider>
     )

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useAuth } from "../../hooks/auth";
 import * as S from './styles'
 
 export type NavBar = {
@@ -11,7 +13,12 @@ export type Home = {
 
 export default function Head({ home }: Home) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
+    const history = useHistory();
+    const {setUser} = useAuth()
+  function sair() {
+    setUser({logout: true}) 
+    history.push('/login')
+  }
   return (<>
     <S.Nav>
       <div style={{ cursor: "pointer" }}>
@@ -53,9 +60,10 @@ export default function Head({ home }: Home) {
           </a>
         </a> */}
         <a href="/simulado/uuidSimulado">
-          <a>
             <S.MenuLink >Execução Simulado</S.MenuLink>
-          </a>
+        </a>
+        <a>
+            <S.MenuLink onClick={sair} >Sair</S.MenuLink>
         </a>
       </S.Menu>
     </S.Nav>

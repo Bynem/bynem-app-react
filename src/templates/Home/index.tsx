@@ -3,10 +3,12 @@ import Head from "../../components/Head"
 import Footer from "../../components/Footer"
 import * as S from './styles'
 import Table from '../../components/Table'
+import { useAuth } from '../../hooks/auth';
 
 export default function Home() {
     const [bottom, setBottom] = useState(false)
-
+    const { user, setUser } = useAuth()
+    console.log('user home', user)
     return (
         <>
             <Head home={false} />

@@ -1,40 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
 import * as S from './styles'
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import FacebookIcon from '@mui/icons-material/Facebook';
 import { useAuth } from '../../hooks/auth';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
-
-const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-        email: data.get('email'),
-        password: data.get('password'),
-    });
-};
-
-const clientId = "1070994023100-9ecvg83b9skmrrhvdc5lod4va6pkmn32.apps.googleusercontent.com";
+import api from '../../service/api';
+import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const CriarContaTemplate: React.FC = () => {
-    const { user } = useAuth()
-    console.log('user', user)
+    const history = useHistory();
 
-    const [showloginButton, setShowloginButton] = useState(true);
-    const onLoginSuccess = (res) => {
-        console.log('Login Success:', res.profileObj);
-        setShowloginButton(false);
+    const { setUser } = useAuth()
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const dataRequest = {
+            username: data.get('nome'),
+            email: data.get('email'),
+            password: data.get('password'),
+        };
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+            if (reg.test(dataRequest.email) === false) {
+              toast.error("Verifique se o email é valido");
+              return false;
+            }
+        await api.post('/api/User', dataRequest)
+        .then(function (response) {
+            toast.success('Conta Criada com Sucesso')
+            console.log("response ", response)
+            history.push(`/login`)
+        }).catch(function (error) {
+            console.log("error error ", error)
+        });
     };
-
-    const onLoginFailure = (res) => {
-        console.log('Login Failed:', res);
-    };
-
     return <S.Container>
         <S.Content>
             <S.ConteinerLeft>
@@ -52,7 +54,7 @@ const CriarContaTemplate: React.FC = () => {
                             }}
                         >
                             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                            <TextField
+                                <TextField
                                     margin="normal"
                                     required
                                     fullWidth
