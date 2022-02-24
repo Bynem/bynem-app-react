@@ -12,6 +12,7 @@ export const Content = styled.main`
     margin: 48px;
     padding: 18px;
     border-radius: 8px;
+    min-height: calc(100vh - 198px);
 
     @media(max-width: 800px) {
         margin: 8px;
@@ -49,7 +50,7 @@ export const SubTitle = styled.p`
 `
 
 export const ContainerVideoOrImage = styled.main`
-    margin: 2rem 6rem 2rem 0rem;
+    margin: 2rem;
     display: flex;
     @media (max-width: 768px) {
             margin: 0
@@ -101,7 +102,7 @@ export const ContainerIframe = styled.div`
 export const ContainerSubTitle = styled.div`
     font-size: 1.5rem;
     font-weight: bold;
-    margin: 24px 0 0 2rem;
+    margin: 2rem;
     color: #46a6e6;
     word-wrap: break-word;
     text-align: center;
@@ -115,6 +116,19 @@ export const ContainerOptions = styled.div`
     max-width: 580px;
     margin: 0 auto 0 auto;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    
+    h4 {
+        font-weight: bold;
+        margin-bottom: 18px;
+    }
+    .ant-radio-wrapper.ant-radio-wrapper-disabled {
+        span {
+            color: black !important;
+        }
+    }
+    form {
+        padding: 2rem;
+    }
     @media (max-width: 600px) {
         width: 100%;
 
@@ -126,7 +140,6 @@ export const CheckContainer = styled.div`
     align-items: flex-start;
     justify-content: center;
     flex-direction: column;
-    margin: 2rem;
 
     .ant-row.ant-form-item {
         width: 100%;
@@ -161,10 +174,11 @@ export const ContainerDescription = styled.div`
 `
 export const ContainerButton = styled.div`
     display: flex;
-    padding: 0 2rem 1rem 2rem;
+    padding-top: 2rem;
     justify-content: space-between;
     margin-right: auto;
     align-items: center;
+    border-top: 1px solid #ab9b9b;
      .ant-btn{
         margin: 2px;
         border-radius: 4px;

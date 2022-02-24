@@ -7,7 +7,7 @@ export type FooterProps = {
 
 export default function Footer({ bottom }: FooterProps) {
   return (
-    <S.Footer bottom={bottom}>
+    <S.Footer>
       <S.Wrapper>
         <S.ContainerLogo>
           <S.ContainerQuemSomos>

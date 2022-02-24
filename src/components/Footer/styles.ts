@@ -1,17 +1,10 @@
 import styled from 'styled-components'
-import { FooterProps } from '.'
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 export const Footer = styled.footer`
-    padding-top: 20px;
-    background: #F8F9FA;
-    position: absolute;
-    bottom: ${({ bottom }: FooterProps) => (bottom ? '0' : null)};
-    left: 0;
-    right: 0;
     p{
         font-size: 1rem;
         margin: 0;
