@@ -129,14 +129,22 @@ export default function FormCreatedSimulated() {
             newObject.tempoPorProva = newObject.tempoPorProva.toString();
         }
 
+        const simulatedToSave = {
+            descricao: newObject.descricao,
+            ordemDasPerguntas: newObject.ordemDasPerguntas,
+            tempoPorProva: newObject.tempoPorProva,
+            titulo: newObject.titulo,
+            youtubeOuThumbnail: newObject.youtubeOuThumbnail
+        };
 
-        await api.post('api/Simulado', newObject)
+        console.log("simulatedToSave", simulatedToSave)
+
+        await api.post('api/Simulado', simulatedToSave)
             .then(response => {
                 if (response) {
                     console.log("response do simulado", response)
                     postThumbnail(response.data.id)
                 }
-
             }).catch(function (error) {
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
                 setIsSpinning(false)
@@ -147,6 +155,7 @@ export default function FormCreatedSimulated() {
         const archive = new FormData()
         archive.append('arquivo', formDataThumbnail)
         console.log("Upload", formDataThumbnail)
+
         await api.post(`api/Simulado/upload-thumbnail/${id}`, archive)
             .then(function (response) {
                 history.push(`/criar-perguntas/${id}`);

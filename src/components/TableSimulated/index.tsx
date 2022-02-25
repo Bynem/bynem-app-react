@@ -110,7 +110,7 @@ export default function TableSimulated({ setBottom }: Table) {
     }, [params])
 
     async function getSimulateds() {
-        await api.get('https://bynem-app.herokuapp.com/api/Simulado', {
+        await api.get('api/Simulado', {
             params: { filter: params }
         })
             .then(function (response) {
