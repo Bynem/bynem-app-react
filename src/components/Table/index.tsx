@@ -24,7 +24,7 @@ export default function TableAnt({ setBottom }: Table) {
     const [isLoading, setIsLoading] = useState(true)
     const [params, setParams] = useState("")
     const { Search } = Input;
-
+console.log(data, data)
     const onSearch = value => { setParams(value) };
     const history = useHistory();
 
@@ -43,7 +43,6 @@ export default function TableAnt({ setBottom }: Table) {
             dataIndex: 'author',
             key: 'author',
         },
-
         {
             title: '',
             dataIndex: 'id',
