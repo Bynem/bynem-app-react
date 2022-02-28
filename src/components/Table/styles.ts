@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import {StarOutlined}  from '@mui/icons-material';
+import StarBorder from '@mui/icons-material/StarBorder';
 
 export const Tools = styled.div`
     width: 100%;
@@ -49,4 +51,14 @@ export const SearchContainer = styled.form`
 export const DivTable = styled.div`
     height: 591px;
     margin: 0 2rem 0 2rem;
+`
+
+export const Star = styled(StarOutlined)`
+    color: #bdb300;
+    cursor: pointer;
+`
+export const StartFavorito = styled(StarBorder)`
+    color: #bdb300;
+    cursor: pointer;
+
 `

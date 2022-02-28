@@ -7,6 +7,7 @@ import api from '../../service/api'
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 
+
 export type DataTable = {
     descricao: string
     id: number
@@ -15,14 +16,16 @@ export type DataTable = {
     titulo: string
 }
 export type Table = {
-    // eslint-disable-next-line @typescript-eslint/ban-types
     setBottom: Function
 }
+
 
 export default function TableAnt({ setBottom }: Table) {
     const [data, setData] = useState<DataTable[] | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [params, setParams] = useState("")
+    const [arraiDeFavoritosDoUsuario, setArraiDeFavoritosDoUsuario] = useState<string[]>(['478fa9a6-e107-4282-9bc1-5cfebcce559b', '9e71cda1-ad73-48bb-a512-9cb43c3e3554', '791e54b4-8532-4933-ad95-690f6f153c38'])
+    
     const { Search } = Input;
 console.log(data, data)
     const onSearch = value => { setParams(value) };
@@ -31,6 +34,16 @@ console.log(data, data)
     const editQuestion = (id) => {
         history.push(`/vizualizar/simulado/${id}`)
     }
+
+    function deleteOFavorito(id) {
+        const newData = arraiDeFavoritosDoUsuario.filter((value, index) => value !== id)
+        setArraiDeFavoritosDoUsuario(newData)
+    }
+
+    function addOFavorito(id) {
+        setArraiDeFavoritosDoUsuario([...arraiDeFavoritosDoUsuario, id])
+    }
+
 
     const columns = [
         {
@@ -44,14 +57,30 @@ console.log(data, data)
             key: 'author',
         },
         {
-            title: '',
+            title: 'Visualizar',
             dataIndex: 'id',
             key: 'id',
             render: (id) => (
                 <Space size="middle">
-                    <a onClick={() => editQuestion(id)}>Simular</a>
+                    <a onClick={() => editQuestion(id)}>Visualizar</a>
                 </Space>
             ),
+        },
+        {
+            title: 'Favoritar',
+            dataIndex: 'id',
+            key: 'id',
+            render: (id) => {
+                let verificado = arraiDeFavoritosDoUsuario.filter((item, index) => item === id)
+                if(verificado.length > 0){
+                    return <S.Star onClick={() => deleteOFavorito(id)}/>
+                }else{
+                    return <S.StartFavorito onClick={() => addOFavorito(id)}/>
+
+                }
+            },
+            
+
         },
     ];
 
