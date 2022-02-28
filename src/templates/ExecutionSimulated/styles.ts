@@ -133,21 +133,23 @@ export const ContainerOptions = styled.div`
         width: 100%;
 
     }
-
+    .ant-checkbox-group {
+        flex-direction: column;
+        width: 100%;
+        /* .ant-col.ant-col-12 {
+            flex: 1;
+            max-width: 100%;
+        } */
+    }
 `
 export const CheckContainer = styled.div`
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    flex-direction: column;
-
-    .ant-row.ant-form-item {
-        width: 100%;
+    .ant-col-8, .ant-col-12 {
+        flex: 1;
+        max-width: 100%;
     }
-    div {
-        display: flex;
+    .ant-row {
+        margin-bottom: 10px;
     }
-
 `
 
 export const DivCheckBox = styled.div`

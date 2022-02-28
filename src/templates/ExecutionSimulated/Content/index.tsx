@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Divider, Form, Radio } from 'antd';
+import { Button, Checkbox, Divider, Form, Modal, Col, Row, Radio  } from 'antd';
 import { toast } from 'react-toastify';
 import { useTimer } from 'react-timer-hook';
+import { useHistory } from 'react-router-dom';
 
 import Head from "../../../components/Head"
 import Footer from "../../../components/Footer"
@@ -12,12 +13,18 @@ import * as S from '../styles'
 
 export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { uuidSimulado: string, expiryTimestamp: Date }) {
     const [simulated, setSimulated] = useState<FormCreatedSimulated>()
-    const [selectedAnswer, setSelectedAnswer] = useState<Pergunta>()
+    const [selectedAnswer, setSelectedAnswer] = useState<Pergunta[]>([])
+    const [selectedAnswers, setSelectedAnswers] = useState<Pergunta[][]>([])
     const [showResponses, setShowResponses] = useState(false)
     const [current, setCurrent] = useState(0)
+    const [openModal, setOpenModal] = useState(false)
+
+    const history = useHistory();
 
     const { hours, minutes, seconds } = useTimer({ expiryTimestamp, onExpire: () => {
-      toast.error(`Seu tempo acabou`)
+        if (!openModal) {
+            toast.error(`Seu tempo acabou`)
+        }
     } })
 
     useEffect(() => {
@@ -26,7 +33,7 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
                 setSimulated(response.data)
             })
                 .catch(function (error) {
-                    toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                    toast.error(`Um erro inesperado aconteceu ${error.response?.status}`)
                 });
         }
         
@@ -37,8 +44,13 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
 
     function onFinishForm() {
         setShowResponses(false)
-        setSelectedAnswer(undefined)
         setCurrent(current + 1)
+        
+        setSelectedAnswers([...new Set([...selectedAnswers.filter(item => !selectedAnswer.find(i => item.find(answer => answer.id === i.id))), [...selectedAnswer]])])
+        setSelectedAnswer(selectedAnswers[current + 1] ?? [])
+        if (current + 1 >= simulated?.perguntas.length) {
+            setOpenModal(true)
+        }
     }
 
     const layout = {
@@ -63,11 +75,27 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
 
     function goBack() {
         setCurrent(current > 0 ? current - 1 : 0)
+        setSelectedAnswers([...new Set([...selectedAnswers.filter(item => !selectedAnswer.find(i => item.find(answer => answer.id === i.id))), [...selectedAnswer]])])
+        setSelectedAnswer(selectedAnswers[current > 0 ? current - 1 : 0])
     }
 
     const currentQuestion = useMemo(() => simulated?.perguntas && simulated.perguntas[current] ? simulated.perguntas[current] : undefined, [simulated, current])
-
+ console.log(selectedAnswers)
     return <>
+     <Modal title="Resultados" visible={openModal} onCancel={() => history.replace('/')}
+       footer={[
+        <Button key="submit" type="primary" onClick={() => history.replace('/')}>
+          Ok
+        </Button>]}
+    >
+        {simulated?.perguntas?.map((pergunta, index) => <div key={pergunta.id}>
+            <p style={{fontWeight: 'bold', color: '#40a1e0'}}>{pergunta.descricao}</p>
+            <p style={{fontWeight: 'bold', margin: 0}}>{pergunta.multiplaEscolha ? 'Resposta correta:' : 'Respostas corretas:'}</p>
+            {pergunta.respostas.filter(f => f.correta).map(resposta => <div key={resposta.id}><span>{resposta.descricao}</span></div>)}
+            <p style={{fontWeight: 'bold', margin: '10px 0 0 0'}}>{pergunta.multiplaEscolha ? 'Selecionadas:' : 'Selecionada:'}</p>
+            <p>{selectedAnswers[index]?.map(item => item.descricao).join(', ')}</p>
+        </div>)}
+      </Modal>
         <Head home={true} />
         <S.Content>
             <S.Title>{simulated?.titulo}</S.Title>
@@ -85,7 +113,6 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
                 <S.ContainerIframe>
                     <img src='/abertura.jpg'></img>
                 </S.ContainerIframe>
-                {/* } */}
             </S.ContainerVideoOrImage>
             <S.ContainerSubTitle><span>{simulated?.titulo}</span></S.ContainerSubTitle>
             <S.ContainerOptions>
@@ -93,28 +120,44 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
                 {currentQuestion ?
                             <S.CheckContainer>
                                 <h4>{currentQuestion.descricao}</h4>
-                                {currentQuestion?.respostas?.map(resposta => (
-                        <Form.Item name='question'  style={{backgroundColor: showResponses ? resposta.correta ? '#85e985' : '#e74c1c' : 'transparent' , width: '100%', padding: '8px',
-                                                            borderRadius: '8px'}}>
-                            <Radio.Group disabled={showResponses}>
-                                    <Radio
+                                    {currentQuestion.multiplaEscolha ? 
+                                    <Form.Item name={`checkbox-${currentQuestion.id}`}>
+                            <Checkbox.Group disabled={showResponses} style={{width: '100%'}}>
+                                {currentQuestion?.respostas?.map(resposta => 
+                                    <Row key={resposta.id}>
+                                    <Col span={12} style={{backgroundColor: showResponses ? resposta.correta ? '#85e985' : '#e74c1c' : 'transparent' , padding: '8px',
+                                    borderRadius: '8px'}}>
+                                    <Checkbox
+                                        defaultChecked={selectedAnswers[current] && selectedAnswers[current]?.find(item => item.id === resposta.id)?.correta}
                                         value={resposta}
-                                        onChange={() => setSelectedAnswer(resposta)}
+                                        onChange={e => e.target.checked ? setSelectedAnswer([...selectedAnswer, resposta]) : setSelectedAnswer(selectedAnswer.filter(item => item.id !== resposta.id))}
                                     >
                                         {resposta?.descricao}
-                                    </Radio>
-                            </Radio.Group>
-                        </Form.Item>))}
+                                    </Checkbox>
+                                    </Col>
+                                    </Row>
+                           )}</Checkbox.Group></Form.Item> : <>{currentQuestion?.respostas?.map(resposta => (
+                            <Form.Item name={`question-${currentQuestion.id}`} key={resposta.id}  style={{backgroundColor: showResponses ? resposta.correta ? '#85e985' : '#e74c1c' : 'transparent', width: '100%', padding: '8px',
+                                                                borderRadius: '8px'}}>
+                                <Radio.Group disabled={showResponses}>
+                                        <Radio
+                                            value={resposta}
+                                            onChange={() => setSelectedAnswer([resposta])}
+                                        >
+                                            {resposta?.descricao}
+                                        </Radio>
+                                </Radio.Group>
+                            </Form.Item>))}</>}
                             </S.CheckContainer>
                             : <p>Sem mais perguntas</p>}
                     <S.ContainerButton>
                         <Button type="primary" danger onClick={goBack} disabled={current === 0}>
                             VOLTAR
                         </Button>
-                        {!showResponses && selectedAnswer && <Button type="primary" style={{ backgroundColor: '#46a6e6', marginLeft: '10px' }} onClick={() => setShowResponses(true)} >
+                        {!showResponses && (selectedAnswer.length || selectedAnswers[current]) && <Button type="primary" style={{ backgroundColor: '#46a6e6', marginLeft: '10px' }} disabled={!selectedAnswer.length} onClick={() => setShowResponses(true)} >
                             VER RESPOSTAS
                         </Button>}
-                        {showResponses && selectedAnswer && <Button type="primary" htmlType="submit" style={{ backgroundColor: '#46a6e6', marginLeft: '10px' }}>
+                        {showResponses && (selectedAnswer.length || selectedAnswers[current]) && <Button type="primary" htmlType="submit" style={{ backgroundColor: '#46a6e6', marginLeft: '10px' }} disabled={!selectedAnswer.length}>
                             PRÓXIMO
                         </Button>}
                     </S.ContainerButton>
