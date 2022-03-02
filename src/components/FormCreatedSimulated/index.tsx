@@ -245,8 +245,8 @@ export default function FormCreatedSimulated() {
                 <Form.Item name="ordemDasPerguntas" rules={[{ required: true, message: 'Selecione uma das opções!' }]}>
                     <Radio.Group name="radiogroup" onChange={(e) => orderQuestions(e)} >
                         <Space direction="vertical">
-                            <Radio value={1}>Sequencial</Radio>
-                            <Radio value={2}>Aleatória</Radio>
+                            <Radio value={2}>Sequencial</Radio>
+                            <Radio value={1}>Aleatória</Radio>
                             {OrderQuestionsSelected == 2 ?
                                 (
                                     <Form.Item

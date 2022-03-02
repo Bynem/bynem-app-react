@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'antd';
-import 'antd/dist/antd.css';
-import * as S from './styles';
 import { Input, Space } from 'antd';
-import api from '../../service/api';
 import { toast } from 'react-toastify';
 import { useHistory } from "react-router-dom";
-
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+
+import api from '../../service/api';
+
+import * as S from './styles';
+import 'antd/dist/antd.css';
 
 export type DataTable = {
     descricao: string
@@ -17,11 +18,10 @@ export type DataTable = {
     ordemDasPerguntas: number
     titulo: string
 }
+
 export type Table = {
-    // eslint-disable-next-line @typescript-eslint/ban-types
     setBottom: Function
 }
-
 
 export default function TableSimulated({ setBottom }: Table) {
     const antIcon = <LoadingOutlined style={{ fontSize: 34, color: "#E414B2" }} spin />
@@ -41,14 +41,8 @@ export default function TableSimulated({ setBottom }: Table) {
         {
             title: 'Autor',
             dataIndex: 'author',
-            key: 'author',
+            key: 'autor',
         },
-        {
-            title: 'Autor',
-            dataIndex: 'author',
-            key: 'author',
-        },
-
         {
             title: '',
             dataIndex: 'id',
@@ -79,8 +73,7 @@ export default function TableSimulated({ setBottom }: Table) {
 
     async function DeleteSimulated(id) {
         setIsSpinning(true)
-        await api.delete(`api/Simulado/${id}`, {
-        })
+        await api.delete(`api/Simulado/${id}`)
             .then(function () {
                 setIsSpinning(false)
                 toast.success('Simulado Deletado com sucesso ')
@@ -105,30 +98,27 @@ export default function TableSimulated({ setBottom }: Table) {
     }
 
     useEffect(() => {
-
-        getSimulateds()
-    }, [params])
+        getSimulateds();
+    }, [params]);
 
     async function getSimulateds() {
         await api.get('api/Simulado', {
             params: { filter: params }
-        })
-            .then(function (response) {
-                if (response.data.length === 0) {
-                    setBottom(true)
-                } else {
-                    setBottom(false)
-                }
-                setData(response.data);
-                setIsLoading(false)
-            })
-            .catch(function (error) {
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
-            });
+        }).then(function (response) {
+            if (response.data.length === 0) {
+                setBottom(true)
+            } else {
+                setBottom(false)
+            }
+            console.log('ggadsdasds', response)
+            setData(response.data);
+            setIsLoading(false)
+        }).catch(function (error) {
+            toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+        });
     }
     return (
         <Spin indicator={antIcon} spinning={isSpinning}>
-
             <S.Tools>
                 <S.SearchContainer>
                     <Space direction="vertical">
