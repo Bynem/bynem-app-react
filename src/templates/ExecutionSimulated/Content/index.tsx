@@ -44,19 +44,7 @@ export default function ExecutionSimulated({
       await api
         .get(`api/Simulado/${uuidSimulado}`)
         .then(function (response) {
-          setSimulated({
-            ...response.data,
-            perguntas: [
-              ...response.data.perguntas.map((i) => ({
-                ...i,
-                id: Math.floor(Math.random() * 1000),
-              })),
-              ...response.data.perguntas.map((i) => ({
-                ...i,
-                id: Math.floor(Math.random() * 1000),
-              })),
-            ],
-          });
+          setSimulated(response.data);
         })
         .catch(function (error) {
           toast.error(`Um erro inesperado aconteceu ${error.response?.status}`);
@@ -72,17 +60,19 @@ export default function ExecutionSimulated({
     setShowResponses(false);
     setCurrent(current + 1);
 
-    setSelectedAnswers([
-      ...new Set([
-        ...selectedAnswers.filter(
-          (item) =>
-            !selectedAnswer.find((i) =>
-              item.find((answer) => answer.id === i.id)
-            )
-        ),
-        [...selectedAnswer],
-      ]),
-    ]);
+    if (selectedAnswers.length < current) {
+      setSelectedAnswers([
+        ...new Set([
+          ...selectedAnswers.filter(
+            (item) =>
+              !selectedAnswer.find((i) =>
+                item.find((answer) => answer.id === i.id)
+              )
+          ),
+          [...selectedAnswer],
+        ]),
+      ]);
+    }
 
     const newSelectedAnswer =
       current + 1 < selectedAnswers?.length ?? 0
@@ -94,7 +84,6 @@ export default function ExecutionSimulated({
       simulated?.perguntas && simulated.perguntas[current + 1]
         ? simulated.perguntas[current + 1]
         : undefined;
-    console.log(newSelectedAnswer, selectedAnswers);
     if (question && !newSelectedAnswer?.length) {
       form.setFieldsValue({
         [`question-${question.id}`]: null,
