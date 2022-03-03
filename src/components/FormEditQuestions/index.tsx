@@ -11,6 +11,7 @@ import Input2 from '../../components/InputCheckEdit'
 import { EditQuestions } from '../../templates/EditQuestions';
 import upload from 'antd/lib/upload';
 import { useHistory } from 'react-router-dom';
+import { useAuth } from '../../hooks/auth';
 
 const layout = {
     labelCol: {
@@ -56,6 +57,7 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
     const [data, setData] = useState<any>()
     const [arreiDeRespostas, setArreiDeRespostas] = useState([])
+    const { user } = useAuth()
 
     useEffect(() => {
         async function getQuestion() {
@@ -91,7 +93,7 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async function putPergunta(values) {
         console.log({ values })
-        await api.put('api/pergunta', values)
+        await api.put('api/pergunta', values, {headers: {'Authorization': 'Bearer ' + user.token }})
             .then(response => {
                 console.log("response", response)
                 if (formDataThumbnail) {
@@ -118,7 +120,7 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
         const archive = new FormData()
         archive.append('arquivo', formDataThumbnail)
 
-        await api.post(`api/pergunta/upload-thumbnail/${id}`, archive)
+        await api.post(`api/pergunta/upload-thumbnail/${id}`, archive, {headers: {'Authorization': 'Bearer ' + user.token }})
             .then(function (response) {
                 console.log("response da thumn", response)
                 history.push(`/vizualizar/simulado/${uuidSimulado}`)

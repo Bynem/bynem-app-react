@@ -9,6 +9,7 @@ import { UploadOutlined } from '@ant-design/icons'
 import { toast } from 'react-toastify';
 import { Uuid } from '../../templates/UpdateSimulated';
 import TableVizualizeQuestions from '../TableVizualizeQuestionsExcluir';
+import { useAuth } from '../../hooks/auth';
 
 const layout = {
     labelCol: {
@@ -46,6 +47,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
     const [ordemDasPerguntas, setOrdemDasPerguntas] = useState({ ordemDasPerguntas: 1 })
     const [form, setForm] = useState<any>()
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
+    const { user } = useAuth()
 
 
     const normFile = (file: any, fileList: any) => {
@@ -123,7 +125,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         const idSimulated = { id: uuid }
         const dataRequest = Object.assign(newObject, idSimulated)
 
-        await api.put('api/Simulado', dataRequest)
+        await api.put('api/Simulado', dataRequest, {headers: {'Authorization': 'Bearer ' + user.token }})
             .then().catch(function (error) {
                 setIsSpinning(false)
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
@@ -133,7 +135,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
 
         archive.append('arquivo', formDataThumbnail)
 
-        await api.post(`/api/Simulado/upload-thumbnail/${idSimulated.id}`, archive)
+        await api.post(`/api/Simulado/upload-thumbnail/${idSimulated.id}`, archive, {headers: {'Authorization': 'Bearer ' + user.token }})
             .then().catch(function (error) {
                 setIsSpinning(false)
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
@@ -148,7 +150,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
             const idSimulated = { id: uuid }
             const dataRequest = Object.assign(newObject, idSimulated)
             console.log("dataRequest", { dataRequest })
-            await api.put('api/Simulado', dataRequest)
+            await api.put('api/Simulado', dataRequest, {headers: {'Authorization': 'Bearer ' + user.token }})
                 .then().catch(function (error) {
                     setIsSpinning(false)
                     toast.error(`Um erro inesperado aconteceu ${error.response.status}`)

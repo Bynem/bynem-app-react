@@ -10,6 +10,7 @@ import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import api from '../../service/api';
 import { toast } from 'react-toastify';
 import Input2 from '../../components/InputCheck'
+import { useAuth } from '../../hooks/auth';
 
 const layout = {
     labelCol: {
@@ -53,6 +54,7 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
     const [deletarUltimo, setDeletarUltimo] = useState<any>(1)
     const [form, setForm] = useState<any>()
     const history = useHistory();
+    const { user } = useAuth()
 
     useEffect(() => {
         setForm({
@@ -102,7 +104,7 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
     };
 
     async function postPerguntaComThubnail(values) {
-        await api.post('api/pergunta', values)
+        await api.post('api/pergunta', values, {headers: {'Authorization': 'Bearer ' + user.token }})
             .then(response => {
                 setIsSpinning(false)
                 if (response) {
@@ -124,7 +126,7 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
 
         archive.append('arquivo', formDataThumbnail)
 
-        await api.post(`api/Pergunta/upload-thumbnail/${id}`, archive)
+        await api.post(`api/Pergunta/upload-thumbnail/${id}`, archive, {headers: {'Authorization': 'Bearer ' + user.token }})
         .then(function (resposne) {
             setIsSpinning(false)
             console.log("resposne resposne ", resposne)
@@ -137,7 +139,7 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
     }
 
     async function postPergunta(values) {
-        await api.post('api/pergunta', values)
+        await api.post('api/pergunta', values, {headers: {'Authorization': 'Bearer ' + user.token }})
             .then(response => {
                 setIsSpinning(false)
                 toast.success('Pergunta salva com sucesso ')
