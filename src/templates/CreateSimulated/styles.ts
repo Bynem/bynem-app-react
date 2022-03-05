@@ -9,6 +9,14 @@ export const Content = styled.div`
     background-color: white !important;
     height: 855px;
     overflow-X: hidden;
+    margin: 48px;
+    padding: 18px;
+    border-radius: 8px;
+
+    @media(max-width: 800px) {
+        margin: 8px;
+        padding: 8px;
+    }
 `
 
 export const Title = styled.p`

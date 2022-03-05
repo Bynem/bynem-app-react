@@ -11,10 +11,9 @@ type Perguntas = {
 }
 type PerguntasType = {
     perguntas: Perguntas[]
-    uuidSimulado: string | string[]
 }
 
-export default function TableVizualizeQuestions({ perguntas, uuidSimulado }: PerguntasType) {
+export default function TableVizualizeQuestions({ perguntas }: PerguntasType) {
     console.log("Perguntas", perguntas)
     const antIcon = <LoadingOutlined style={{ fontSize: 34, color: "#E414B2" }} spin />
 

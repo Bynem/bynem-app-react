@@ -7,6 +7,15 @@ export const Content = styled.div`
     flex-direction: column !important;
     user-select: none;
     background-color: white !important;
+    margin: 48px;
+    padding: 18px;
+    border-radius: 8px;
+    min-height: calc(100vh - 198px);
+
+    @media(max-width: 800px) {
+        margin: 8px;
+        padding: 8px;
+    }
 `
 
 export const Title = styled.p`

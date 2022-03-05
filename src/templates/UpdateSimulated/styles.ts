@@ -8,6 +8,9 @@ export const Content = styled.div`
     user-select: none;
     background-color: white !important;
     height: auto;
+    margin: 48px;
+    border-radius: 8px;
+    min-height: calc(100vh - 198px);
 `
 
 export const Title = styled.p`

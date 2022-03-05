@@ -7,6 +7,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import { UploadOutlined } from '@ant-design/icons'
 import { useHistory } from "react-router-dom";
+import { useAuth } from '../../hooks/auth';
 
 const layout = {
     labelCol: {
@@ -50,6 +51,7 @@ export default function FormCreatedSimulated() {
     const [youtubeOrThumbnailSelected, setYoutubeOrThumbnailSelected] = useState("")
     const [OrderQuestionsSelected, setOrderQuestionsSelected] = useState<number>(0)
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
+    const { user } = useAuth()
 
     const history = useHistory();
 
@@ -87,7 +89,7 @@ export default function FormCreatedSimulated() {
             newObject.tempoPorProva = newObject.tempoPorProva.toString();
         }
 
-        await api.post('api/Simulado', newObject)
+        await api.post('api/Simulado', newObject,  {headers: {'Authorization': 'Bearer ' + user.token }})
             .then(response => {
                 if (response) {
 
@@ -108,7 +110,7 @@ export default function FormCreatedSimulated() {
             newObject.tempoPorProva = newObject.tempoPorProva.toString();
         }
 
-        await api.post('api/Simulado', newObject)
+        await api.post('api/Simulado', newObject, {headers: {'Authorization': 'Bearer ' + user.token }})
             .then(response => {
                 if (response) {
                     console.log("entro no push")
@@ -129,14 +131,22 @@ export default function FormCreatedSimulated() {
             newObject.tempoPorProva = newObject.tempoPorProva.toString();
         }
 
+        const simulatedToSave = {
+            descricao: newObject.descricao,
+            ordemDasPerguntas: newObject.ordemDasPerguntas,
+            tempoPorProva: newObject.tempoPorProva,
+            titulo: newObject.titulo,
+            youtubeOuThumbnail: newObject.youtubeOuThumbnail
+        };
 
-        await api.post('api/Simulado', newObject)
+        console.log("simulatedToSave", simulatedToSave)
+
+        await api.post('api/Simulado', simulatedToSave, {headers: {'Authorization': 'Bearer ' + user.token }})
             .then(response => {
                 if (response) {
                     console.log("response do simulado", response)
                     postThumbnail(response.data.id)
                 }
-
             }).catch(function (error) {
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
                 setIsSpinning(false)
@@ -147,7 +157,8 @@ export default function FormCreatedSimulated() {
         const archive = new FormData()
         archive.append('arquivo', formDataThumbnail)
         console.log("Upload", formDataThumbnail)
-        await api.post(`api/Simulado/upload-thumbnail/${id}`, archive)
+
+        await api.post(`api/Simulado/upload-thumbnail/${id}`, archive, {headers: {'Authorization': 'Bearer ' + user.token }})
             .then(function (response) {
                 history.push(`/criar-perguntas/${id}`);
                 toast.success('Simulado salvo com sucesso ')
@@ -236,8 +247,8 @@ export default function FormCreatedSimulated() {
                 <Form.Item name="ordemDasPerguntas" rules={[{ required: true, message: 'Selecione uma das opções!' }]}>
                     <Radio.Group name="radiogroup" onChange={(e) => orderQuestions(e)} >
                         <Space direction="vertical">
-                            <Radio value={1}>Sequencial</Radio>
-                            <Radio value={2}>Aleatória</Radio>
+                            <Radio value={2}>Sequencial</Radio>
+                            <Radio value={1}>Aleatória</Radio>
                             {OrderQuestionsSelected == 2 ?
                                 (
                                     <Form.Item

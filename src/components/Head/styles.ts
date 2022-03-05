@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { NavBar } from '.';
 
 export const Nav = styled.header`
@@ -33,16 +33,21 @@ export const Hamburger = styled.div`
   }
 `;
 
-export const Menu = styled.div`
+export const Menu = styled.div<{isOpen: boolean}>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
   font-weight: bold;
-    a{
-      margin-bottom: 20px;
+  ${({ isOpen }) => isOpen && css`
+      padding: 20px;
+  `}
+  a {
+      ${({ isOpen }) => isOpen && css`
+        margin-bottom: 20px;
+      `}
       transition: all 2s ease-in;
-    }
+  }
   @media (max-width: 958px) {
     overflow-y: hidden;
     flex-direction: column;
@@ -50,11 +55,16 @@ export const Menu = styled.div`
     transition: max-height 0.3s ease-in;
     width: 100%;
   }
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 export const MenuLink = styled.a`
-  padding: 1rem 2rem;
   cursor: pointer;
+  padding: 1rem 2rem;
   text-align: center;
   text-decoration: none;
   color: #E414B2;

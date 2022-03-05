@@ -21,9 +21,9 @@ export default function Head({ home }: Home) {
   }
   return (<>
     <S.Nav>
-      <div style={{ cursor: "pointer" }}>
+      <div style={{ cursor: "pointer", padding: '8px' }}>
         <a href="/" >
-          <img style={{ height: "70px", width: "170px" }} src='/bynem01.png' />
+          <img style={{ height: "40px", width: "100px" }} src='/bynem01.png' />
         </a>
       </div>
       <S.Hamburger onClick={() => setIsOpen(!isOpen)}>

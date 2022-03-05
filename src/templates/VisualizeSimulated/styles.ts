@@ -8,6 +8,14 @@ export const Content = styled.main`
     user-select: none;
     background-color: white !important;
     min-height: 855px;
+    margin: 48px;
+    padding: 18px;
+    min-height: calc(100vh - 198px);
+
+    @media(max-width: 800px) {
+        margin: 8px;
+        padding: 8px;
+    }
 `
 
 export const Title = styled.p`

@@ -12,8 +12,7 @@ import { toast } from 'react-toastify';
 
 const CriarContaTemplate: React.FC = () => {
     const history = useHistory();
-
-    const { setUser } = useAuth()
+    const { user } = useAuth()
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,7 +27,7 @@ const CriarContaTemplate: React.FC = () => {
               toast.error("Verifique se o email é valido");
               return false;
             }
-        await api.post('/api/User', dataRequest)
+        await api.post('/api/User', dataRequest, {headers: {'Authorization': 'Bearer ' + user.token }})
         .then(function (response) {
             toast.success('Conta Criada com Sucesso')
             history.push(`/login`)

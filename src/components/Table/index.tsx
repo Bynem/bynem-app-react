@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'antd';
-import 'antd/dist/antd.css';
-import * as S from './styles';
 import { Input, Space } from 'antd';
 import api from '../../service/api'
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 
+import 'antd/dist/antd.css';
+import * as S from './styles';
 
 export type DataTable = {
     descricao: string
@@ -15,6 +15,7 @@ export type DataTable = {
     ordemDasPerguntas: number
     titulo: string
 }
+
 export type Table = {
     setBottom: Function
 }
@@ -53,8 +54,8 @@ console.log(data, data)
         },
         {
             title: 'Autor',
-            dataIndex: 'author',
-            key: 'author',
+            dataIndex: 'autor',
+            key: 'autor',
         },
         {
             title: 'Visualizar',
@@ -94,21 +95,21 @@ console.log(data, data)
         async function getSimulateds() {
             await api.get('api/Simulado', {
                 params: { filter: params }
-
             }).then(function (response) {
                 if (response.data.length === 0) {
                     setBottom(true)
                 } else {
                     setBottom(false)
                 }
+                console.log('sadasdsadsdsa', response)
                 setData(response.data);
                 setIsLoading(false)
-            })
-                .catch(function (error) {
-                    toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
-                });
+            }).catch(function (error) {
+                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+            });
         }
-        getSimulateds()
+
+        getSimulateds();
     }, [params])
 
     return (<>

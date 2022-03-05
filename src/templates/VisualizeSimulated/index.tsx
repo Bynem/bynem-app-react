@@ -4,13 +4,16 @@ import Footer from "../../components/Footer"
 import * as S from './styles'
 import { Button, Divider } from 'antd';
 import { toast } from 'react-toastify';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Input } from 'antd';
 import TableVizualizeQuestions from '../../components/TableVizualizeQuestions'
 import api from '../../service/api';
 
 export type Uuid = {
-    uuidSimulado?: string | string[];
+    uuidSimulado?: string;
 }
+
+export type Pergunta = { id: string; descricao: string; correta: boolean }
 
 type Perguntas = {
     comentarioFinal: string
@@ -18,6 +21,7 @@ type Perguntas = {
     filenameImage?: string
     id: string
     multiplaEscolha: false
+    respostas: Pergunta[]
 }
 
 type NewType = {
@@ -32,22 +36,27 @@ type NewType = {
 
 export type FormCreatedSimulated = NewType
 
-export default function VisualizeSimulated({ uuidSimulado }: Uuid) {
+export default function VisualizeSimulated() {
     const { TextArea } = Input
     const [simulated, setSimulated] = useState<FormCreatedSimulated>()
 
+    const { params } = useRouteMatch<Uuid>()
+    const history = useHistory()
+
     useEffect(() => {
         async function getSimulatedById() {
-            await api.get(`api/Simulado/${uuidSimulado}`).then(function (response) {
-                console.log("response", response);
+            await api.get(`api/Simulado/${params?.uuidSimulado}`).then(function (response) {
                 setSimulated(response.data)
             })
                 .catch(function (error) {
                     toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
                 });
         }
-        getSimulatedById()
-    }, [])
+
+        if (params.uuidSimulado) {
+            getSimulatedById()
+        }
+    }, [params])
 
     return <>
         {simulated &&
@@ -83,13 +92,16 @@ export default function VisualizeSimulated({ uuidSimulado }: Uuid) {
                                 border: "none",
                             }}
                             size="large"
-                        >Iniciar Simulado</Button>
+                            onClick={() => { history.replace(`/simulado/${params.uuidSimulado}`) }}
+                        >
+                            Iniciar Simulado
+                        </Button>
                     </S.ContainerButton>
                     <S.ContainerTableQuestions>
-                        <TableVizualizeQuestions uuidSimulado={uuidSimulado} perguntas={simulated.perguntas} />
+                        <TableVizualizeQuestions perguntas={simulated.perguntas} />
                     </S.ContainerTableQuestions>
                 </S.Content>
-                <Footer bottom={false} />
+                <Footer bottom />
             </>
         }
     </>

@@ -18,6 +18,7 @@ const Login: React.FC = () => {
     const { user, setUser } = useAuth()
     const history = useHistory();
     const [showloginButton, setShowloginButton] = useState(true);
+
     
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -32,7 +33,7 @@ const Login: React.FC = () => {
               toast.error("Verifique se o email é valido");
               return false;
             }
-                await api.post('/api/Auth/login', dataRequest)
+                await api.post('/api/Auth/login', dataRequest, {headers: {'Authorization': 'Bearer ' + user.token }})
                 .then(function (response) {
                     setUser(response.data)
                     history.push(`/`)
@@ -55,7 +56,7 @@ const Login: React.FC = () => {
             name: res.profileObj.name,
             tipoLogin: 1
         }
-        await api.post('/api/Auth/login', data)
+        await api.post('/api/Auth/login', data, {headers: {'Authorization': 'Bearer ' + user.token }})
         .then(function (response) {
             setUser(response.data)
             history.push(`/`)
