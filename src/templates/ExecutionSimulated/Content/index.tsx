@@ -78,18 +78,21 @@ export default function ExecutionSimulated({
       current + 1 < selectedAnswers?.length ?? 0
         ? selectedAnswers[current + 1] ?? []
         : [];
+
     setSelectedAnswer(newSelectedAnswer);
 
     const question =
       simulated?.perguntas && simulated.perguntas[current + 1]
         ? simulated.perguntas[current + 1]
         : undefined;
+
     if (question && !newSelectedAnswer?.length) {
       form.setFieldsValue({
         [`question-${question.id}`]: null,
         [`checkbox-${question.id}`]: null,
       });
     }
+
     if (current + 1 >= simulated?.perguntas?.length) {
       setOpenModal(true);
     }
@@ -153,7 +156,7 @@ export default function ExecutionSimulated({
           }{" "}
           de {simulated?.perguntas?.length}
         </p>
-        {simulated?.perguntas?.map((pergunta, index) => (
+        {/* {simulated?.perguntas?.map((pergunta, index) => (
           <div key={pergunta.id}>
             <p style={{ fontWeight: "bold", color: "#40a1e0" }}>
               {pergunta.descricao}
@@ -177,7 +180,7 @@ export default function ExecutionSimulated({
               {selectedAnswers[index]?.map((item) => item.descricao).join(", ")}
             </p>
           </div>
-        ))}
+        ))} */}
       </Modal>
       <Head home={true} />
       <S.Content>

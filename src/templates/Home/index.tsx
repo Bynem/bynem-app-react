@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import Head from "../../components/Head"
 import Footer from "../../components/Footer"
 import Table from '../../components/Table'
-import { useAuth } from '../../hooks/auth';
 
 import * as S from './styles'
 
 export default function Home() {
-    const [bottom, setBottom] = useState(false)
-    const { user, setUser } = useAuth()
+    const [bottom, setBottom] = useState(false);
+
     return (
         <>
             <Head home={false} />
