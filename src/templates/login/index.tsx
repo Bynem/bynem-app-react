@@ -1,5 +1,5 @@
+import * as S from './styles';
 import React, { useState } from 'react';
-import * as S from './styles'
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -7,8 +7,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { useAuth } from '../../hooks/auth';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
-import api from '../../service/api'
+import api from '../../service/api';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -36,6 +35,7 @@ const Login: React.FC = () => {
                 await api.post('/api/Auth/login', dataRequest, {headers: {'Authorization': 'Bearer ' + user.token }})
                 .then(function (response) {
                     setUser(response.data)
+                    localStorage.setItem("user",JSON.stringify(response.data))
                     history.push(`/`)
                 }).catch(function (error) {
                     toast.error("Email ou senha esta errado")
@@ -56,9 +56,9 @@ const Login: React.FC = () => {
             name: res.profileObj.name,
             tipoLogin: 1
         }
-        await api.post('/api/Auth/login', data, {headers: {'Authorization': 'Bearer ' + user.token }})
+        await api.post('/api/Auth/login', data)
         .then(function (response) {
-            setUser(response.data)
+            localStorage.setItem("user",JSON.stringify(response.data))
             history.push(`/`)
         }).catch(function (error) {
             console.log("error error ", error)

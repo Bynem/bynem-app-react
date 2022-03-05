@@ -19,12 +19,7 @@ interface AuthContextData {
 const AuthContext = createContext({} as AuthContextData)
 
 function AuthProvider({children}:  AuthProviderProps){
-    const [user, setUser] = useState({
-        name: '',
-        id: '',
-        token: '',
-        email: ''
-    })
+    const [user, setUser] = useState<User>({} as User)
 
     const ContextValue = {
         user,

@@ -46,7 +46,7 @@ export const Menu = styled.div<{isOpen: boolean}>`
       ${({ isOpen }) => isOpen && css`
         margin-bottom: 20px;
       `}
-      transition: all 2s ease-in;
+      transition: all 0.8s ease-in;
   }
   @media (max-width: 958px) {
     overflow-y: hidden;

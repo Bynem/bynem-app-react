@@ -54,7 +54,7 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
     const [deletarUltimo, setDeletarUltimo] = useState<any>(1)
     const [form, setForm] = useState<any>()
     const history = useHistory();
-    const { user } = useAuth()
+    const user = JSON.parse(localStorage.getItem("user"))
 
     useEffect(() => {
         setForm({
@@ -131,8 +131,8 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
             setIsSpinning(false)
             console.log("resposne resposne ", resposne)
             toast.success('Pergunta salva com sucesso ')
-            history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
-            window.location.reload()
+            // history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
+            // window.location.reload()
         }).catch(function (error) {
             setIsSpinning(false)
         });
@@ -141,10 +141,11 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
     async function postPergunta(values) {
         await api.post('api/pergunta', values, {headers: {'Authorization': 'Bearer ' + user.token }})
             .then(response => {
+                console.log(`Um erro inesperado aconteceu $response`, response)
                 setIsSpinning(false)
                 toast.success('Pergunta salva com sucesso ')
-                history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
-                window.location.reload()
+                // history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
+                // window.location.reload()
             }).catch(function (error) {
                 setIsSpinning(false)
                 console.log(`Um erro inesperado aconteceu ${error.response.status}`)

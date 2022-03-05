@@ -66,3 +66,4 @@ export const StartFavorito = styled(StarBorder)`
         color: #E414B2;
     }
 `
+

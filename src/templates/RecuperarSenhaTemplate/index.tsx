@@ -22,7 +22,7 @@ const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 const clientId = "1070994023100-9ecvg83b9skmrrhvdc5lod4va6pkmn32.apps.googleusercontent.com";
 
 const RecuperarSenhaTemplate: React.FC = () => {
-    const { user } = useAuth()
+    const user = JSON.parse(localStorage.getItem("user"))
     console.log('user', user)
 
     const [showloginButton, setShowloginButton] = useState(true);

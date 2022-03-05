@@ -51,7 +51,7 @@ export default function FormCreatedSimulated() {
     const [youtubeOrThumbnailSelected, setYoutubeOrThumbnailSelected] = useState("")
     const [OrderQuestionsSelected, setOrderQuestionsSelected] = useState<number>(0)
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
-    const { user } = useAuth()
+    const user = JSON.parse(localStorage.getItem("user"))
 
     const history = useHistory();
 

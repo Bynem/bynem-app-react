@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 
 const CriarContaTemplate: React.FC = () => {
     const history = useHistory();
-    const { user } = useAuth()
+    const user = JSON.parse(localStorage.getItem("user"))
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

@@ -24,7 +24,7 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
     const { hours, minutes, seconds } = useTimer({ expiryTimestamp, onExpire: () => {
         if (!openModal) {
             toast.error(`Seu tempo acabou`)
-            setOpenModal(true)
+            // setOpenModal(true)
         }
     } })
 
@@ -50,7 +50,7 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
         setSelectedAnswers([...new Set([...selectedAnswers.filter(item => !selectedAnswer.find(i => item.find(answer => answer.id === i.id))), [...selectedAnswer]])])
         setSelectedAnswer(current < selectedAnswers.length ? selectedAnswers[current] ?? [] : selectedAnswers[current + 1] ?? [])
         if (current + 1 >= simulated?.perguntas.length) {
-            setOpenModal(true)
+            // setOpenModal(true)
         }
     }
 
@@ -80,7 +80,7 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
     }
 
     const currentQuestion = useMemo(() => simulated?.perguntas && simulated.perguntas[current] ? simulated.perguntas[current] : undefined, [simulated, current])
-    
+        console.log('simulated' , simulated)
     return <>
      <Modal title="Resultados" visible={openModal} onCancel={() => history.replace('/')}
        footer={[
@@ -100,27 +100,22 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
         <Head home={true} />
         <S.Content>
             <S.Title>{simulated?.titulo}</S.Title>
-            <Divider />
             <S.ContainerCount>
                 <S.ContainerCountQuestions>
-                    <p>{`Questão ${1}/${10}`}</p>
+                    <p>Questão <S.NumberQuestion>1/10</S.NumberQuestion></p>
                 </S.ContainerCountQuestions>
-                <S.ContainerCountTimer>
-                  <span>{hours === 0 ? '00' : hours}</span>:<span>{minutes === 0 ? '00' : minutes}</span>:<span>{seconds < 10 ? `0${seconds}` : seconds}</span>
-                </S.ContainerCountTimer>
+                
             </S.ContainerCount>
-            <Divider />
             <S.ContainerVideoOrImage>
                 <S.ContainerIframe>
                     <img src='/abertura.jpg'></img>
                 </S.ContainerIframe>
             </S.ContainerVideoOrImage>
-            <S.ContainerSubTitle><span>{simulated?.titulo}</span></S.ContainerSubTitle>
-            <S.ContainerOptions>
+            <S.ContainerSubTitle><span>{currentQuestion?.descricao}</span></S.ContainerSubTitle>
                 <Form {...layout} name="nest-messages" labelAlign={"left"} onFinish={onFinishForm} validateMessages={validateMessages}>
+            <S.ContainerOptions>
                 {currentQuestion ?
                             <S.CheckContainer>
-                                <h4>{currentQuestion.descricao}</h4>
                                     {currentQuestion.multiplaEscolha ? 
                                     <Form.Item name={`checkbox-${currentQuestion.id}`}>
                             <Checkbox.Group disabled={showResponses || !!selectedAnswers[current]} style={{width: '100%'}}>
@@ -151,19 +146,26 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
                             </Form.Item>))}</>}
                             </S.CheckContainer>
                             : <p>Sem mais perguntas</p>}
+            </S.ContainerOptions>
                     <S.ContainerButton>
                         <Button type="primary" danger onClick={goBack} disabled={current === 0}>
                             VOLTAR
                         </Button>
-                        {!selectedAnswers[current] && !showResponses && selectedAnswer.length ? <Button type="primary" style={{ backgroundColor: '#46a6e6', marginLeft: '10px' }} disabled={!selectedAnswer.length} onClick={() => setShowResponses(true)} >
-                            VER RESPOSTAS
+                        {!selectedAnswers[current] && !showResponses && selectedAnswer.length ? <Button type="primary" style={{ backgroundColor: '#46a6e6'}} disabled={!selectedAnswer.length} onClick={() => setShowResponses(true)} >
+                            CONFIRMAR RESPOSTA
                         </Button> : undefined}
                         {(selectedAnswers[current] || (showResponses && (selectedAnswer.length || selectedAnswers[current]))) && <Button type="primary" htmlType="submit" style={{ backgroundColor: '#46a6e6', marginLeft: '10px' }} disabled={!selectedAnswer.length || (!selectedAnswer.length && !!selectedAnswers[current])}>
                             PRÓXIMO
                         </Button>}
+                        
+                        <S.ContainerCountTimer>
+                            <span>{hours === 0 ? '00' : hours}</span>:<span>{minutes === 0 ? '00' : minutes}</span>:<span>{seconds < 10 ? `0${seconds}` : seconds}</span>
+                        <svg style={{width: 24, height: 24, marginLeft: 10}} viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M19.03 7.39L20.45 5.97C20 5.46 19.55 5 19.04 4.56L17.62 6C16.07 4.74 14.12 4 12 4C7.03 4 3 8.03 3 13S7.03 22 12 22C17 22 21 17.97 21 13C21 10.88 20.26 8.93 19.03 7.39M13 14H11V7H13V14M15 1H9V3H15V1Z" />
+                        </svg>
+                        </S.ContainerCountTimer>
                     </S.ContainerButton>
                 </Form>
-            </S.ContainerOptions>
         </S.Content>
         <Footer bottom />
     </>

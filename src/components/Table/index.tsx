@@ -26,23 +26,41 @@ export default function TableAnt({ setBottom }: Table) {
     const [isLoading, setIsLoading] = useState(true)
     const [params, setParams] = useState("")
     const [arraiDeFavoritosDoUsuario, setArraiDeFavoritosDoUsuario] = useState<string[]>(['478fa9a6-e107-4282-9bc1-5cfebcce559b', '9e71cda1-ad73-48bb-a512-9cb43c3e3554', '791e54b4-8532-4933-ad95-690f6f153c38'])
-    
+    const user = JSON.parse(localStorage.getItem("user"))
     const { Search } = Input;
-console.log(data, data)
     const onSearch = value => { setParams(value) };
     const history = useHistory();
-
+    console.log(data, data)
     const editQuestion = (id) => {
         history.push(`/vizualizar/simulado/${id}`)
     }
-
-    function deleteOFavorito(id) {
+    async function deleteOFavorito(id) {
         const newData = arraiDeFavoritosDoUsuario.filter((value, index) => value !== id)
         setArraiDeFavoritosDoUsuario(newData)
+
+        await api.delete(`api/Simulado/SimuladosFavoritos/${user.id}/${id}`, {headers: {'Authorization': 'Bearer ' + user.token }})
+            .then(function (response) {
+                console.log('detetado ' , {response})
+            }).catch(function (error) {
+                console.log('error detetado' , error)
+            });
+
+
     }
 
-    function addOFavorito(id) {
+    async function addOFavorito(id) {
         setArraiDeFavoritosDoUsuario([...arraiDeFavoritosDoUsuario, id])
+        let dataRequest = {
+            userId: user.id ,
+            simuladoId: id 
+          }
+          console.log('{headers: Bearer ' + user.token )
+        await api.post(`api/Simulado/SimuladosFavoritos`, dataRequest, {headers: {'Authorization': 'Bearer ' + user.token }})
+            .then(function (response) {
+                console.log('favorito' , response)
+            }).catch(function (error) {
+                console.log('error favorito' , {error})
+            });
     }
 
 
@@ -56,6 +74,7 @@ console.log(data, data)
             title: 'Autor',
             dataIndex: 'autor',
             key: 'autor',
+            
         },
         {
             title: 'Visualizar',
@@ -101,7 +120,6 @@ console.log(data, data)
                 } else {
                     setBottom(false)
                 }
-                console.log('sadasdsadsdsa', response)
                 setData(response.data);
                 setIsLoading(false)
             }).catch(function (error) {
