@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'antd';
 import { Input, Space } from 'antd';
-import api from '../../service/api'
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 
 import 'antd/dist/antd.css';
 import * as S from './styles';
-import { useAuth } from '../../hooks/auth';
+
+import api from '../../service/api'
 
 export type DataTable = {
-    descricao: string
-    id: number
-    linkYouTube: string
-    ordemDasPerguntas: number
-    titulo: string
+    descricao: string;
+    id: number;
+    linkYouTube: string;
+    ordemDasPerguntas: number;
+    titulo: string;
 }
 
 export type Table = {
-    setBottom: Function
+    setBottom: Function;
 }
-
 
 export default function TableAnt({ setBottom }: Table) {
     const [data, setData] = useState<DataTable[] | null>(null)
@@ -28,7 +27,7 @@ export default function TableAnt({ setBottom }: Table) {
     const [params, setParams] = useState("")
     const [arraiDeFavoritosDoUsuario, setArraiDeFavoritosDoUsuario] = useState<string[]>()
     const user = JSON.parse(localStorage.getItem("user"))
-    
+
     const { Search } = Input;
     const onSearch = value => { setParams(value) };
     const history = useHistory();
@@ -38,33 +37,29 @@ export default function TableAnt({ setBottom }: Table) {
     }
 
     async function deleteOFavorito(id) {
-        const newData = arraiDeFavoritosDoUsuario.filter((value, index) => value !== id)
-        setArraiDeFavoritosDoUsuario(newData)
-
-        await api.delete(`/api/Simulado/SimuladosFavoritos/${user.id}/${id}`, {headers: {'Authorization': 'Bearer ' + user.token }})
-            .then(function (response) {
-                console.log('response simulados ' , {response})
+        await api.delete(`/api/Simulado/SimuladosFavoritos/${user.id}/${id}`, { headers: { 'Authorization': 'Bearer ' + user.token } })
+            .then(function () {
+                const idsSimuladosFavoritos = arraiDeFavoritosDoUsuario.filter((value) => value !== id)
+                setArraiDeFavoritosDoUsuario(idsSimuladosFavoritos);
             }).catch(function (error) {
-                console.log('error detetado' , error)
+                console.log('error detetado', error);
             });
-
-
     }
 
     async function addOFavorito(id) {
-        setArraiDeFavoritosDoUsuario([...arraiDeFavoritosDoUsuario, id])
+        setArraiDeFavoritosDoUsuario([...arraiDeFavoritosDoUsuario, id]);
+
         let dataRequest = {
-            userId: user.id ,
-            simuladoId: id 
-          }
-        await api.post(`/api/Simulado/SimuladosFavoritos`, dataRequest, {headers: {'Authorization': 'Bearer ' + user.token }})
-            .then(function (response) {
-                console.log('favorito' , response)
-            }).catch(function (error) {
-                console.log('error favorito' , {error})
+            userId: user.id,
+            simuladoId: id
+        };
+
+        await api.post(`/api/Simulado/SimuladosFavoritos`, dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
+            .then()
+            .catch(function (error) {
+                console.log('error favorito', { error })
             });
     }
-
 
     const columns = [
         {
@@ -92,62 +87,56 @@ export default function TableAnt({ setBottom }: Table) {
             dataIndex: 'id',
             key: 'id',
             render: (id) => {
-                let verificado = arraiDeFavoritosDoUsuario.filter((item, index) => item === id)
-                if(verificado.length > 0){
-                    return <S.Star onClick={() => deleteOFavorito(id)}/>
-                }else{
-                    return <S.StartFavorito onClick={() => addOFavorito(id)}/>
-
+                let verificados = arraiDeFavoritosDoUsuario.filter((item) => item === id)
+                if (verificados.length > 0) {
+                    return <S.Star onClick={() => deleteOFavorito(id)} />
+                } else {
+                    return <S.StartFavorito onClick={() => addOFavorito(id)} />
                 }
-            },
-            
-
+            }
         },
     ];
 
     function onSearchEnter(e) {
         e.preventDefault();
-        setIsLoading(true)
-        setParams(e.target.value)
+        setIsLoading(true);
+        setParams(e.target.value);
     }
 
+    async function getSimulateds() {
+        await api.get(`api/Simulado/SimuladosFavoritos?userId=${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } }).then(function (response) {
+            console.log('dasdsdsasd', response)
+            if (response.data.length === 0) {
+                setBottom(true);
+            } else {
+                setBottom(false);
+            }
+
+            setData(response.data);
+            setIsLoading(false)
+        }).catch(function (error) {
+            toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+        });
+    };
+
+    async function getFavoritor() {
+        await api.get(`/api/Simulado/SimuladosFavoritosIds?userId=${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } }).then(function (response) {
+            if (response.data.length === 0) {
+                setBottom(true);
+            } else {
+                setBottom(false);
+            }
+
+            setArraiDeFavoritosDoUsuario(response.data);
+        }).catch(function (error) {
+            toast.error(`Um erro inesperado aconteceu ${error.response.status}`);
+        });
+    };
+
     useEffect(() => {
-        const data = {
-            userId: user.id
-        }
-        async function getFavoritor() {
-
-            await api.get(`/api/Simulado/SimuladosFavoritosIds?userId=${user.id}`,  {headers: {'Authorization': 'Bearer ' + user.token }}).then(function (response) {
-                if (response.data.length === 0) {
-                    setBottom(true)
-                } else {
-                    setBottom(false)
-                }
-                console.log('resposne daatttaa', response)
-                setArraiDeFavoritosDoUsuario(response.data)
-                getSimulateds()
-            }).catch(function (error) {
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
-            });
-        }
-        getFavoritor()
-        async function getSimulateds() {
-
-            await api.get(`api/Simulado/SimuladosFavoritos?userId=${user.id}`,  {headers: {'Authorization': 'Bearer ' + user.token }}).then(function (response) {
-                if (response.data.length === 0) {
-                    setBottom(true)
-                } else {
-                    setBottom(false)
-                }
-    console.log(response.data)
-    setData(response.data);
-                setIsLoading(false)
-            }).catch(function (error) {
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
-            });
-        }
-    }, [params])
-
+        getSimulateds();
+        getFavoritor();
+    }, [params]);
 
     return (<>
         <S.Tools>
