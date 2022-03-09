@@ -1,4 +1,3 @@
-import * as S from './styles';
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -8,8 +7,6 @@ import Container from '@mui/material/Container';
 import FacebookIcon from '@mui/icons-material/Facebook';
 
 import { useAuth } from '../../hooks/auth';
-
-import api from '../../service/api';
 
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -42,30 +39,10 @@ const Login: React.FC = () => {
             return false;
         }
 
-            let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-            if (reg.test(dataRequest.email) === false) {
-              toast.error("Verifique se o email é valido");
-              return false;
-            }
-                await api.post('/api/Auth/login', dataRequest, {headers: {'Authorization': 'Bearer ' + user.token }})
-                .then(function (response) {
-                    setUser(response.data)
-                    localStorage.setItem("user",JSON.stringify(response.data))
-                    history.push(`/`)
-                }).catch(function (error) {
-                    toast.error("Email ou senha esta errado")
-                });
-            
-       
-    }
-
-
-        await api.post('/api/Auth/login', dataRequest,
-            {
-                headers: { 'Authorization': 'Bearer ' + user.token }
-            })
+        await api.post('/api/Auth/login', dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(function (response) {
                 setUser(response.data)
+                localStorage.setItem("user", JSON.stringify(response.data))
                 history.push(`/`)
             }).catch(function (error) {
                 toast.error("Email ou senha esta errado")
@@ -86,14 +63,13 @@ const Login: React.FC = () => {
 
         };
 
-        
         await api.post('/api/Auth/login', data)
-        .then(function (response) {
-            localStorage.setItem("user", JSON.stringify(response.data))
-            history.push(`/`)
-        }).catch(function (error) {
-            console.log("error error ", error)
-        });
+            .then(function (response) {
+                localStorage.setItem("user", JSON.stringify(response.data))
+                history.push(`/`)
+            }).catch(function (error) {
+                console.log("error error ", error)
+            });
         setShowloginButton(false);
     };
 
