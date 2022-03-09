@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-
+import { Button } from 'antd'
 export const Container = styled.main``
 
 export const Content = styled.main`
@@ -27,12 +27,24 @@ export const ContainerCount = styled.div`
     align-items: center;
 `
 export const ContainerCountQuestions = styled.div`
+    flex-direction: row;
     p{
         margin: 0;
+        font-size: 1.5rem;
+        font-weight: bold;
     }
+`
+export const NumberQuestion = styled.span`
+    color: #E414B2;
 `
 
 export const ContainerCountTimer = styled.div`
+    margin-left: auto;
+    display:flex;
+    align-items: center;
+    padding: 7px 14px ;
+    background-color: #ffcb49;
+    border-radius: 4px;
 `
 
 
@@ -52,6 +64,10 @@ export const SubTitle = styled.p`
 export const ContainerVideoOrImage = styled.main`
     margin: 2rem;
     display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    padding: 20px ;
+    border: 1px solid #E414B2;
     @media (max-width: 768px) {
             margin: 0
 
@@ -100,23 +116,23 @@ export const ContainerIframe = styled.div`
 `
 
 export const ContainerSubTitle = styled.div`
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: bold;
     margin: 2rem;
-    color: #46a6e6;
     word-wrap: break-word;
     text-align: center;
-    p{
-
-    }
+    margin-right: auto ;
+    
 `
 export const ContainerOptions = styled.div`
     background-color: #f5f5f5;
-    width: 100%;
-    max-width: 580px;
-    margin: 0 auto 0 auto;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    
+    margin: 0 2rem;
+    border-radius: 20px;
+    padding:  2rem;
+    @media (max-width: 768px) {
+        margin: 0
+
+    }
     h4 {
         font-weight: bold;
         margin-bottom: 18px;
@@ -142,6 +158,8 @@ export const ContainerOptions = styled.div`
         } */
     }
 `
+
+
 export const CheckContainer = styled.div`
     .ant-col-8, .ant-col-12 {
         flex: 1;
@@ -176,11 +194,10 @@ export const ContainerDescription = styled.div`
 `
 export const ContainerButton = styled.div`
     display: flex;
-    padding-top: 2rem;
-    justify-content: space-between;
-    margin-right: auto;
+    padding-top: 1rem;
+    margin-left:2rem ;
+    margin-right: 2rem;
     align-items: center;
-    border-top: 1px solid #ab9b9b;
      .ant-btn{
         margin: 2px;
         border-radius: 4px;
@@ -188,4 +205,9 @@ export const ContainerButton = styled.div`
     .labelYoutube{
         padding: 0 21px 0 22px;
     }
+`
+
+export const buttonTimer = styled.div`
+
+
 `

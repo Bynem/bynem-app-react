@@ -6,8 +6,8 @@ import Table from '../../components/Table'
 import * as S from './styles'
 
 export default function Home() {
-    const [bottom, setBottom] = useState(false);
 
+    const [bottom, setBottom] = useState(false);
     return (
         <>
             <Head home={false} />

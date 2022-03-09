@@ -15,7 +15,7 @@ import * as S from './styles';
 
 const CriarContaTemplate: React.FC = () => {
     const history = useHistory();
-    const { user } = useAuth()
+    const user = JSON.parse(localStorage.getItem("user"))
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -28,23 +28,18 @@ const CriarContaTemplate: React.FC = () => {
         };
 
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-
         if (reg.test(dataRequest.email) === false) {
             toast.error("Verifique se o email é valido");
             return false;
         }
 
-        await api.post('/api/User', dataRequest,
-            {
-                headers:
-                    { 'Authorization': 'Bearer ' + user.token }
-            })
-            .then(function (response) {
-                toast.success('Conta Criada com Sucesso')
-                history.push(`/login`)
-            }).catch(function (error) {
-                console.log("error error ", error)
-            });
+        await api.post('/api/User', dataRequest, {headers: {'Authorization': 'Bearer ' + user.token }})
+        .then(function (response) {
+            toast.success('Conta Criada com Sucesso')
+            history.push(`/login`)
+        }).catch(function (error) {
+            console.log("error error ", error)
+        });
     };
 
     return (

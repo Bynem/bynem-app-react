@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useState } from "react";
 import { Button, Checkbox, Divider, Form, Modal, Col, Row, Radio } from "antd";
 import { toast } from "react-toastify";
@@ -91,6 +92,7 @@ export default function ExecutionSimulated({
         [`question-${question.id}`]: null,
         [`checkbox-${question.id}`]: null,
       });
+
     }
 
     if (current + 1 >= simulated?.perguntas?.length) {
@@ -130,6 +132,7 @@ export default function ExecutionSimulated({
         : undefined,
     [simulated, current]
   );
+
 
   return (
     <>
@@ -362,6 +365,7 @@ export default function ExecutionSimulated({
         </S.ContainerOptions>
       </S.Content>
       <Footer bottom />
+
     </>
   );
 }

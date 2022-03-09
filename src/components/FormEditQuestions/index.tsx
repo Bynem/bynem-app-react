@@ -57,7 +57,7 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
     const [data, setData] = useState<any>()
     const [arreiDeRespostas, setArreiDeRespostas] = useState([])
-    const { user } = useAuth()
+    const user = JSON.parse(localStorage.getItem("user"))
 
     useEffect(() => {
         async function getQuestion() {

@@ -51,7 +51,7 @@ export default function FormCreatedSimulated() {
     const [youtubeOrThumbnailSelected, setYoutubeOrThumbnailSelected] = useState("")
     const [OrderQuestionsSelected, setOrderQuestionsSelected] = useState<number>(0)
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
-    const { user } = useAuth()
+    const user = JSON.parse(localStorage.getItem("user"))
 
     const history = useHistory();
 
@@ -89,13 +89,11 @@ export default function FormCreatedSimulated() {
             newObject.tempoPorProva = newObject.tempoPorProva.toString();
         }
 
-        await api.post('api/Simulado', newObject,  {headers: {'Authorization': 'Bearer ' + user.token }})
+        await api.post('api/Simulado', newObject, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(response => {
                 if (response) {
-
                     history.push(`/criar-perguntas/${response.data.id}`);
                 }
-
             }).catch(function (error) {
                 console.log("entro no push", error)
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
@@ -110,7 +108,7 @@ export default function FormCreatedSimulated() {
             newObject.tempoPorProva = newObject.tempoPorProva.toString();
         }
 
-        await api.post('api/Simulado', newObject, {headers: {'Authorization': 'Bearer ' + user.token }})
+        await api.post('api/Simulado', newObject, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(response => {
                 if (response) {
                     console.log("entro no push")
@@ -141,7 +139,7 @@ export default function FormCreatedSimulated() {
 
         console.log("simulatedToSave", simulatedToSave)
 
-        await api.post('api/Simulado', simulatedToSave, {headers: {'Authorization': 'Bearer ' + user.token }})
+        await api.post('api/Simulado', simulatedToSave, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(response => {
                 if (response) {
                     console.log("response do simulado", response)
@@ -158,7 +156,7 @@ export default function FormCreatedSimulated() {
         archive.append('arquivo', formDataThumbnail)
         console.log("Upload", formDataThumbnail)
 
-        await api.post(`api/Simulado/upload-thumbnail/${id}`, archive, {headers: {'Authorization': 'Bearer ' + user.token }})
+        await api.post(`api/Simulado/upload-thumbnail/${id}`, archive, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(function (response) {
                 history.push(`/criar-perguntas/${id}`);
                 toast.success('Simulado salvo com sucesso ')

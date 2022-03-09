@@ -59,8 +59,8 @@ export default function Head({ home }: Home) {
             <S.MenuLink >Vizualizar Simulado</S.MenuLink>
           </a>
         </a> */}
-        <a href="/simulado/uuidSimulado">
-            <S.MenuLink >Execução Simulado</S.MenuLink>
+        <a href="/simulados-favoritos">
+            <S.MenuLink >Meus Simulados favoritos</S.MenuLink>
         </a>
         <a>
             <S.MenuLink onClick={sair} >Sair</S.MenuLink>

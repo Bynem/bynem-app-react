@@ -47,7 +47,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
     const [ordemDasPerguntas, setOrdemDasPerguntas] = useState({ ordemDasPerguntas: 1 })
     const [form, setForm] = useState<any>()
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
-    const { user } = useAuth()
+    const user = JSON.parse(localStorage.getItem("user"))
 
 
     const normFile = (file: any, fileList: any) => {
