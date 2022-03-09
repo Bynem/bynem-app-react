@@ -10,7 +10,5 @@ export default function UpdateSimulatedPage() {
     const history = useHistory();
     let { uuidSimulado } = useParams();
 
-    console.log(uuidSimulado)
     return <ExecutionSimulated uuid={uuidSimulado} />
-
 }

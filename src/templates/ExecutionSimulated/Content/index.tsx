@@ -1,172 +1,371 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Checkbox, Divider, Form, Modal, Col, Row, Radio  } from 'antd';
-import { toast } from 'react-toastify';
-import { useTimer } from 'react-timer-hook';
-import { useHistory } from 'react-router-dom';
 
-import Head from "../../../components/Head"
-import Footer from "../../../components/Footer"
-import api from '../../../service/api';
-import { FormCreatedSimulated, Pergunta } from '../../VisualizeSimulated';
-import * as S from '../styles'
+import React, { useEffect, useMemo, useState } from "react";
+import { Button, Checkbox, Divider, Form, Modal, Col, Row, Radio } from "antd";
+import { toast } from "react-toastify";
+import { useTimer } from "react-timer-hook";
+import { useHistory } from "react-router-dom";
 
+import Head from "../../../components/Head";
+import Footer from "../../../components/Footer";
+import api from "../../../service/api";
+import { FormCreatedSimulated, Pergunta } from "../../VisualizeSimulated";
+import * as S from "../styles";
 
-export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { uuidSimulado: string, expiryTimestamp: Date }) {
-    const [simulated, setSimulated] = useState<FormCreatedSimulated>()
-    const [selectedAnswer, setSelectedAnswer] = useState<Pergunta[]>([])
-    const [selectedAnswers, setSelectedAnswers] = useState<Pergunta[][]>([])
-    const [showResponses, setShowResponses] = useState(false)
-    const [current, setCurrent] = useState(0)
-    const [openModal, setOpenModal] = useState(false)
+const { useForm } = Form;
 
-    const history = useHistory();
+export default function ExecutionSimulated({
+  uuidSimulado,
+  expiryTimestamp,
+}: {
+  uuidSimulado: string;
+  expiryTimestamp: Date;
+}) {
+  const [simulated, setSimulated] = useState<FormCreatedSimulated>();
+  const [selectedAnswer, setSelectedAnswer] = useState<Pergunta[]>([]);
+  const [selectedAnswers, setSelectedAnswers] = useState<Pergunta[][]>([]);
+  const [showResponses, setShowResponses] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
 
-    const { hours, minutes, seconds } = useTimer({ expiryTimestamp, onExpire: () => {
-        if (!openModal) {
-            toast.error(`Seu tempo acabou`)
-            // setOpenModal(true)
-        }
-    } })
+  const history = useHistory();
+  const [form] = useForm();
 
-    useEffect(() => {
-        async function getSimulatedById() {
-            await api.get(`api/Simulado/${uuidSimulado}`).then(function (response) {
-                setSimulated(response.data)
-            })
-                .catch(function (error) {
-                    toast.error(`Um erro inesperado aconteceu ${error.response?.status}`)
-                });
-        }
-        
-        if (uuidSimulado) {
-        getSimulatedById()
-        }
-    }, [uuidSimulado])
+  const { hours, minutes, seconds } = useTimer({
+    expiryTimestamp,
+    onExpire: () => {
+      if (!openModal) {
+        toast.error(`Seu tempo acabou`);
+        setOpenModal(true);
+      }
+    },
+  });
 
-    function onFinishForm() {
-        setShowResponses(false)
-        setCurrent(current + 1)
-        
-        setSelectedAnswers([...new Set([...selectedAnswers.filter(item => !selectedAnswer.find(i => item.find(answer => answer.id === i.id))), [...selectedAnswer]])])
-        setSelectedAnswer(current < selectedAnswers.length ? selectedAnswers[current] ?? [] : selectedAnswers[current + 1] ?? [])
-        if (current + 1 >= simulated?.perguntas.length) {
-            // setOpenModal(true)
-        }
+  useEffect(() => {
+    async function getSimulatedById() {
+      await api
+        .get(`api/Simulado/${uuidSimulado}`)
+        .then(function (response) {
+          setSimulated(response.data);
+        })
+        .catch(function (error) {
+          toast.error(`Um erro inesperado aconteceu ${error.response?.status}`);
+        });
     }
 
-    const layout = {
-        labelCol: {
-            span: 8,
-        },
-        wrapperCol: {
-            span: 8,
-        },
-    };
+    if (uuidSimulado) {
+      getSimulatedById();
+    }
+  }, [uuidSimulado]);
 
-    const validateMessages = {
-        required: '${label} is required!',
-        types: {
-            email: '${label} is not a valid email!',
-            number: '${label} is not a valid number!',
-        },
-        number: {
-            range: '${label} must be between ${min} and ${max}',
-        },
-    };
+  function onFinishForm() {
+    setShowResponses(false);
+    setCurrent(current + 1);
 
-    function goBack() {
-        setCurrent(current > 0 ? current - 1 : 0)
-        setSelectedAnswer(selectedAnswers[current > 0 ? current - 1 : 0])
+    if (selectedAnswers.length < current) {
+      setSelectedAnswers([
+        ...new Set([
+          ...selectedAnswers.filter(
+            (item) =>
+              !selectedAnswer.find((i) =>
+                item.find((answer) => answer.id === i.id)
+              )
+          ),
+          [...selectedAnswer],
+        ]),
+      ]);
     }
 
-    const currentQuestion = useMemo(() => simulated?.perguntas && simulated.perguntas[current] ? simulated.perguntas[current] : undefined, [simulated, current])
-        console.log('simulated' , simulated)
-    return <>
-     <Modal title="Resultados" visible={openModal} onCancel={() => history.replace('/')}
-       footer={[
-        <Button key="submit" type="primary" onClick={() => history.replace('/')}>
-          Ok
-        </Button>]}
-    >
-        <p>Acertou {selectedAnswers?.filter(item => item.filter(i => i.correta).length).flat().length} de {simulated?.perguntas?.length}</p>
-        {simulated?.perguntas?.map((pergunta, index) => <div key={pergunta.id}>
-            <p style={{fontWeight: 'bold', color: '#40a1e0'}}>{pergunta.descricao}</p>
-            <p style={{fontWeight: 'bold', margin: 0}}>{pergunta.multiplaEscolha ? 'Resposta correta:' : 'Respostas corretas:'}</p>
-            {pergunta.respostas.filter(f => f.correta).map(resposta => <div key={resposta.id}><span>{resposta.descricao}</span></div>)}
-            <p style={{fontWeight: 'bold', margin: '10px 0 0 0'}}>{pergunta.multiplaEscolha ? 'Selecionadas:' : 'Selecionada:'}</p>
-            <p>{selectedAnswers[index]?.map(item => item.descricao).join(', ')}</p>
-        </div>)}
+    const newSelectedAnswer =
+      current + 1 < selectedAnswers?.length ?? 0
+        ? selectedAnswers[current + 1] ?? []
+        : [];
+
+    setSelectedAnswer(newSelectedAnswer);
+
+    const question =
+      simulated?.perguntas && simulated.perguntas[current + 1]
+        ? simulated.perguntas[current + 1]
+        : undefined;
+
+    if (question && !newSelectedAnswer?.length) {
+      form.setFieldsValue({
+        [`question-${question.id}`]: null,
+        [`checkbox-${question.id}`]: null,
+      });
+
+    }
+
+    if (current + 1 >= simulated?.perguntas?.length) {
+      setOpenModal(true);
+    }
+  }
+
+  const layout = {
+    labelCol: {
+      span: 8,
+    },
+    wrapperCol: {
+      span: 8,
+    },
+  };
+
+  const validateMessages = {
+    required: "${label} is required!",
+    types: {
+      email: "${label} is not a valid email!",
+      number: "${label} is not a valid number!",
+    },
+    number: {
+      range: "${label} must be between ${min} and ${max}",
+    },
+  };
+
+  function goBack() {
+    setCurrent(current > 0 ? current - 1 : 0);
+    setSelectedAnswer(selectedAnswers[current > 0 ? current - 1 : 0] ?? []);
+  }
+
+  const currentQuestion = useMemo(
+    () =>
+      simulated?.perguntas && simulated.perguntas[current]
+        ? simulated.perguntas[current]
+        : undefined,
+    [simulated, current]
+  );
+
+
+  return (
+    <>
+      <Modal
+        title="Resultados"
+        visible={openModal}
+        onCancel={() => history.replace("/")}
+        footer={[
+          <Button
+            key="submit"
+            type="primary"
+            onClick={() => history.replace("/")}
+          >
+            Ok
+          </Button>,
+        ]}
+      >
+        <p>
+          Acertou{" "}
+          {
+            selectedAnswers
+              ?.filter((item) => item.filter((i) => i.correta)?.length)
+              .flat()?.length
+          }{" "}
+          de {simulated?.perguntas?.length}
+        </p>
+        {/* {simulated?.perguntas?.map((pergunta, index) => (
+          <div key={pergunta.id}>
+            <p style={{ fontWeight: "bold", color: "#40a1e0" }}>
+              {pergunta.descricao}
+            </p>
+            <p style={{ fontWeight: "bold", margin: 0 }}>
+              {pergunta.multiplaEscolha
+                ? "Resposta correta:"
+                : "Respostas corretas:"}
+            </p>
+            {pergunta.respostas
+              .filter((f) => f.correta)
+              .map((resposta) => (
+                <div key={resposta.id}>
+                  <span>{resposta.descricao}</span>
+                </div>
+              ))}
+            <p style={{ fontWeight: "bold", margin: "10px 0 0 0" }}>
+              {pergunta.multiplaEscolha ? "Selecionadas:" : "Selecionada:"}
+            </p>
+            <p>
+              {selectedAnswers[index]?.map((item) => item.descricao).join(", ")}
+            </p>
+          </div>
+        ))} */}
       </Modal>
-        <Head home={true} />
-        <S.Content>
-            <S.Title>{simulated?.titulo}</S.Title>
-            <S.ContainerCount>
-                <S.ContainerCountQuestions>
-                    <p>Questão <S.NumberQuestion>1/10</S.NumberQuestion></p>
-                </S.ContainerCountQuestions>
-                
-            </S.ContainerCount>
-            <S.ContainerVideoOrImage>
-                <S.ContainerIframe>
-                    <img src='/abertura.jpg'></img>
-                </S.ContainerIframe>
-            </S.ContainerVideoOrImage>
-            <S.ContainerSubTitle><span>{currentQuestion?.descricao}</span></S.ContainerSubTitle>
-                <Form {...layout} name="nest-messages" labelAlign={"left"} onFinish={onFinishForm} validateMessages={validateMessages}>
-            <S.ContainerOptions>
-                {currentQuestion ?
-                            <S.CheckContainer>
-                                    {currentQuestion.multiplaEscolha ? 
-                                    <Form.Item name={`checkbox-${currentQuestion.id}`}>
-                            <Checkbox.Group disabled={showResponses || !!selectedAnswers[current]} style={{width: '100%'}}>
-                                {currentQuestion?.respostas?.map(resposta => 
-                                    <Row key={resposta.id}>
-                                    <Col span={12} style={{backgroundColor: showResponses ? resposta.correta ? '#85e985' : '#e74c1c' : selectedAnswers[current] ? resposta.correta ? '#85e985' : '#e74c1c' : 'transparent' , padding: '8px',
-                                    borderRadius: '8px'}}>
-                                    <Checkbox
-                                        defaultChecked={selectedAnswers[current] && selectedAnswers[current]?.find(item => item.id === resposta.id)?.correta}
-                                        value={resposta}
-                                        onChange={e => e.target.checked ? setSelectedAnswer([...selectedAnswer, resposta]) : setSelectedAnswer(selectedAnswer.filter(item => item.id !== resposta.id))}
-                                    >
-                                        {resposta?.descricao}
-                                    </Checkbox>
-                                    </Col>
-                                    </Row>
-                           )}</Checkbox.Group></Form.Item> : <>{currentQuestion?.respostas?.map(resposta => (
-                            <Form.Item name={`question-${currentQuestion.id}`} key={resposta.id}  style={{backgroundColor: showResponses ? resposta.correta ? '#85e985' : '#e74c1c' : selectedAnswers[current] ? resposta.correta ? '#85e985' : '#e74c1c' : 'transparent', width: '100%', padding: '8px',
-                                                                borderRadius: '8px'}}>
-                                <Radio.Group disabled={showResponses || !!selectedAnswers[current]}>
-                                        <Radio
-                                            value={resposta}
-                                            onChange={() => setSelectedAnswer([resposta])}
-                                        >
-                                            {resposta?.descricao}
-                                        </Radio>
-                                </Radio.Group>
-                            </Form.Item>))}</>}
-                            </S.CheckContainer>
-                            : <p>Sem mais perguntas</p>}
-            </S.ContainerOptions>
-                    <S.ContainerButton>
-                        <Button type="primary" danger onClick={goBack} disabled={current === 0}>
-                            VOLTAR
-                        </Button>
-                        {!selectedAnswers[current] && !showResponses && selectedAnswer.length ? <Button type="primary" style={{ backgroundColor: '#46a6e6'}} disabled={!selectedAnswer.length} onClick={() => setShowResponses(true)} >
-                            CONFIRMAR RESPOSTA
-                        </Button> : undefined}
-                        {(selectedAnswers[current] || (showResponses && (selectedAnswer.length || selectedAnswers[current]))) && <Button type="primary" htmlType="submit" style={{ backgroundColor: '#46a6e6', marginLeft: '10px' }} disabled={!selectedAnswer.length || (!selectedAnswer.length && !!selectedAnswers[current])}>
-                            PRÓXIMO
-                        </Button>}
-                        
-                        <S.ContainerCountTimer>
-                            <span>{hours === 0 ? '00' : hours}</span>:<span>{minutes === 0 ? '00' : minutes}</span>:<span>{seconds < 10 ? `0${seconds}` : seconds}</span>
-                        <svg style={{width: 24, height: 24, marginLeft: 10}} viewBox="0 0 24 24">
-                            <path fill="currentColor" d="M19.03 7.39L20.45 5.97C20 5.46 19.55 5 19.04 4.56L17.62 6C16.07 4.74 14.12 4 12 4C7.03 4 3 8.03 3 13S7.03 22 12 22C17 22 21 17.97 21 13C21 10.88 20.26 8.93 19.03 7.39M13 14H11V7H13V14M15 1H9V3H15V1Z" />
-                        </svg>
-                        </S.ContainerCountTimer>
-                    </S.ContainerButton>
-                </Form>
-        </S.Content>
-        <Footer bottom />
+      <Head home={true} />
+      <S.Content>
+        <S.Title>{simulated?.titulo}</S.Title>
+        <Divider />
+        <S.ContainerCount>
+          <S.ContainerCountQuestions>
+            <p>{`Questão ${1}/${10}`}</p>
+          </S.ContainerCountQuestions>
+          <S.ContainerCountTimer>
+            <span>{hours === 0 ? "00" : hours}</span>:
+            <span>{minutes === 0 ? "00" : minutes}</span>:
+            <span>{seconds < 10 ? `0${seconds}` : seconds}</span>
+          </S.ContainerCountTimer>
+        </S.ContainerCount>
+        <Divider />
+        <S.ContainerVideoOrImage>
+          <S.ContainerIframe>
+            <img src="/abertura.jpg"></img>
+          </S.ContainerIframe>
+        </S.ContainerVideoOrImage>
+        <S.ContainerSubTitle>
+          <span>{simulated?.titulo}</span>
+        </S.ContainerSubTitle>
+        <S.ContainerOptions>
+          <Form
+            {...layout}
+            form={form}
+            name="nest-messages"
+            labelAlign={"left"}
+            onFinish={onFinishForm}
+            validateMessages={validateMessages}
+          >
+            {currentQuestion ? (
+              <S.CheckContainer>
+                <h4>{currentQuestion.descricao}</h4>
+                {currentQuestion.multiplaEscolha ? (
+                  <Form.Item name={`checkbox-${currentQuestion.id}`}>
+                    <Checkbox.Group
+                      disabled={showResponses || !!selectedAnswers[current]}
+                      style={{ width: "100%" }}
+                    >
+                      {currentQuestion?.respostas?.map((resposta) => (
+                        <Row key={resposta.id}>
+                          <Col
+                            span={12}
+                            style={{
+                              backgroundColor: showResponses
+                                ? resposta.correta
+                                  ? "#85e985"
+                                  : "#e74c1c"
+                                : selectedAnswers[current]
+                                ? resposta.correta
+                                  ? "#85e985"
+                                  : "#e74c1c"
+                                : "transparent",
+                              padding: "8px",
+                              borderRadius: "8px",
+                            }}
+                          >
+                            <Checkbox
+                              defaultChecked={
+                                selectedAnswers[current] &&
+                                selectedAnswers[current]?.find(
+                                  (item) => item.id === resposta.id
+                                )?.correta
+                              }
+                              value={resposta}
+                              onChange={(e) =>
+                                e.target.checked
+                                  ? setSelectedAnswer([
+                                      ...selectedAnswer,
+                                      resposta,
+                                    ])
+                                  : setSelectedAnswer(
+                                      selectedAnswer.filter(
+                                        (item) => item.id !== resposta.id
+                                      )
+                                    )
+                              }
+                            >
+                              {resposta?.descricao}
+                            </Checkbox>
+                          </Col>
+                        </Row>
+                      ))}
+                    </Checkbox.Group>
+                  </Form.Item>
+                ) : (
+                  <>
+                    {currentQuestion?.respostas?.map((resposta) => (
+                      <Form.Item
+                        name={`question-${currentQuestion.id}`}
+                        key={resposta.id}
+                        style={{
+                          backgroundColor: showResponses
+                            ? resposta.correta
+                              ? "#85e985"
+                              : "#e74c1c"
+                            : selectedAnswers[current]
+                            ? resposta.correta
+                              ? "#85e985"
+                              : "#e74c1c"
+                            : "transparent",
+                          width: "100%",
+                          padding: "8px",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <Radio.Group
+                          disabled={showResponses || !!selectedAnswers[current]}
+                        >
+                          <Radio
+                            value={resposta}
+                            onChange={() => setSelectedAnswer([resposta])}
+                          >
+                            {resposta?.descricao}
+                          </Radio>
+                        </Radio.Group>
+                      </Form.Item>
+                    ))}
+                  </>
+                )}
+              </S.CheckContainer>
+            ) : (
+              <p>Sem mais perguntas</p>
+            )}
+            <S.ContainerButton>
+              <Button
+                type="primary"
+                danger
+                onClick={goBack}
+                disabled={current === 0}
+              >
+                VOLTAR
+              </Button>
+              {!selectedAnswers[current] &&
+              !showResponses &&
+              selectedAnswer?.length ? (
+                <Button
+                  type="primary"
+                  style={{ backgroundColor: "#46a6e6", marginLeft: "10px" }}
+                  disabled={!selectedAnswer?.length}
+                  onClick={() => {
+                    setShowResponses(true);
+                    setSelectedAnswers([
+                      ...new Set([
+                        ...selectedAnswers.filter(
+                          (item) =>
+                            !selectedAnswer.find((i) =>
+                              item.find((answer) => answer.id === i.id)
+                            )
+                        ),
+                        [...selectedAnswer],
+                      ]),
+                    ]);
+                  }}
+                >
+                  VER RESPOSTAS
+                </Button>
+              ) : undefined}
+              {(selectedAnswers[current] ||
+                (showResponses &&
+                  (selectedAnswer?.length || selectedAnswers[current]))) && (
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{ backgroundColor: "#46a6e6", marginLeft: "10px" }}
+                  disabled={
+                    !selectedAnswer?.length ||
+                    (!selectedAnswer?.length && !!selectedAnswers[current])
+                  }
+                >
+                  PRÓXIMO
+                </Button>
+              )}
+            </S.ContainerButton>
+          </Form>
+        </S.ContainerOptions>
+      </S.Content>
+      <Footer bottom />
+
     </>
+  );
 }

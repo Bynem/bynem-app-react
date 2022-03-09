@@ -6,10 +6,17 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import FacebookIcon from '@mui/icons-material/Facebook';
+
 import { useAuth } from '../../hooks/auth';
+
 import api from '../../service/api';
+
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
+import api from '../../service/api'
+
+import * as S from './styles';
 
 const clientId = "1070994023100-9ecvg83b9skmrrhvdc5lod4va6pkmn32.apps.googleusercontent.com";
 
@@ -18,15 +25,23 @@ const Login: React.FC = () => {
     const history = useHistory();
     const [showloginButton, setShowloginButton] = useState(true);
 
-    
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
         const data = new FormData(event.currentTarget);
         const dataRequest = {
             email: data.get('email'),
             password: data.get('password'),
             tipoLogin: 3
+        };
+
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+
+        if (reg.test(dataRequest.email) === false) {
+            toast.error("Verifique se o email é valido");
+            return false;
         }
+
             let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
             if (reg.test(dataRequest.email) === false) {
               toast.error("Verifique se o email é valido");
@@ -45,20 +60,36 @@ const Login: React.FC = () => {
     }
 
 
-    async function onLoginSuccess(res){
-        if(user.logout){
-            setUser({logout: false})
+        await api.post('/api/Auth/login', dataRequest,
+            {
+                headers: { 'Authorization': 'Bearer ' + user.token }
+            })
+            .then(function (response) {
+                setUser(response.data)
+                history.push(`/`)
+            }).catch(function (error) {
+                toast.error("Email ou senha esta errado")
+            });
+    }
+
+    async function onLoginSuccess(res) {
+        if (user.logout) {
+            setUser({ logout: false })
             return
         }
+
         let data = {
             email: res.profileObj.email,
             password: res.profileObj.googleId,
             name: res.profileObj.name,
             tipoLogin: 1
-        }
+
+        };
+
+        
         await api.post('/api/Auth/login', data)
         .then(function (response) {
-            localStorage.setItem("user",JSON.stringify(response.data))
+            localStorage.setItem("user", JSON.stringify(response.data))
             history.push(`/`)
         }).catch(function (error) {
             console.log("error error ", error)
@@ -70,7 +101,7 @@ const Login: React.FC = () => {
         console.log('Login Failed:', res);
     };
 
-    return(
+    return (
         <S.Container>
             <S.Content>
                 <S.ConteinerLeft>
@@ -114,17 +145,17 @@ const Login: React.FC = () => {
                                     /> */}
                                     <S.ContainerLogin>
                                         <S.ContainerGoogle>
-                                            <FacebookIcon style={{color: '#338BFF'}}/>
+                                            <FacebookIcon style={{ color: '#338BFF' }} />
                                             <span>Facebook</span>
                                         </S.ContainerGoogle>
                                         <S.ContainerGoogle2
-                                                clientId={clientId}
-                                                buttonText="Google"
-                                                onSuccess={(e) => onLoginSuccess(e)}
-                                                onFailure={onLoginFailure}
-                                                cookiePolicy={'single_host_origin'}
-                                                isSignedIn={true}
-                                            />
+                                            clientId={clientId}
+                                            buttonText="Google"
+                                            onSuccess={(e) => onLoginSuccess(e)}
+                                            onFailure={onLoginFailure}
+                                            cookiePolicy={'single_host_origin'}
+                                            isSignedIn={true}
+                                        />
                                     </S.ContainerLogin>
                                     <Button
                                         type="submit"
@@ -137,7 +168,7 @@ const Login: React.FC = () => {
                                     </Button>
                                 </Box>
                             </Box>
-                        <a href="/criar-conta" style={{marginRight:'auto'}} >Criar Conta</a>
+                            <a href="/criar-conta" style={{ marginRight: 'auto' }} >Criar Conta</a>
                         </Container>
                         {/* <a>Esqueceu a Senha?</a> */}
                     </S.LoginContainer>
@@ -152,8 +183,7 @@ const Login: React.FC = () => {
                 </S.ConteinerRight>
             </S.Content>
         </S.Container>
-    ) 
-    
+    )
 }
 
 export default Login;
