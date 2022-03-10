@@ -136,12 +136,20 @@ export default function TableAnt({ setBottom }: Table) {
         getIdsSimuladosFavoritosUsuario();
     }, [params])
 
+    function verificaLogadoEredirect(){
+        if(user){
+            history.push(`/criar-simulados`)
+            return
+        }else{
+            toast.warning('Você precisa ter uma conta antes')
+        }
+        
+    }
+
     return (<>
         <S.Tools>
             <S.divButton>
-                <a href="/criar-simulados">
-                    <Button type="default" >Criar Simulado</Button>
-                </a>
+                    <Button onClick={() => verificaLogadoEredirect()} type="default" >Criar Simulado</Button>
             </S.divButton>
             <S.SearchContainer>
                 <Space direction="vertical">

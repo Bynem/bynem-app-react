@@ -101,7 +101,6 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
             toast.error("Escolha pelomenos uma opção")
         }
     };
-
     async function postPerguntaComThubnail(values) {
         await api.post('api/pergunta', values, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(response => {

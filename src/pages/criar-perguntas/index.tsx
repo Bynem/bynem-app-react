@@ -24,7 +24,7 @@ export default function CreateQuestionsPage() {
         setLoading(true)
         setTimeout(() => {
             setLoading(false)
-        }, 1000)
+        }, 1500)
     }, [])
 
     return <>

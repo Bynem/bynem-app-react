@@ -9,6 +9,26 @@ import { useParams } from "react-router-dom";
 export default function UpdateSimulatedPage() {
     const history = useHistory();
     let { uuidSimulado } = useParams();
+    const [loading, setLoading] = useState(true)
 
-    return <ExecutionSimulated uuid={uuidSimulado} />
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false)
+        }, 1500)
+    }, [])
+
+    return (
+        <>
+         {
+            loading ?
+                (
+                    <Loading />
+                ) :
+                (<>
+                    <ExecutionSimulated uuid={uuidSimulado} />
+                </>
+                )
+        }
+    </>
+    )
 }

@@ -50,6 +50,7 @@ export default function FormCreatedSimulated() {
     const [youtubeOrThumbnailSelected, setYoutubeOrThumbnailSelected] = useState("")
     const [OrderQuestionsSelected, setOrderQuestionsSelected] = useState<number>(0)
     const [formDataThumbnail, setformDataThumbnail] = useState<any>(null)
+    const [isLoadingButton, setIsLoadingButton] = useState<boolean>(false)
     const user = JSON.parse(localStorage.getItem("user"))
 
     const history = useHistory();
@@ -59,6 +60,7 @@ export default function FormCreatedSimulated() {
     }
 
     const onFinish = (values) => {
+        setIsLoadingButton(true)
         if (values.linkYoutube) {
             const urlYoutube = values.linkYoutube.replace('watch?v=', 'embed/');
             values.linkYoutube = urlYoutube;
@@ -108,9 +110,9 @@ export default function FormCreatedSimulated() {
             }).catch(function (error) {
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
                 setIsSpinning(false)
+                setIsLoadingButton(false)
             });
     }
-
     async function postSimulated(newObject) {
         if (newObject.tempoPorProva) {
             newObject.tempoPorProva = newObject.tempoPorProva.toString();
@@ -132,6 +134,8 @@ export default function FormCreatedSimulated() {
             }).catch(function (error) {
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
                 setIsSpinning(false)
+                setIsLoadingButton(false)
+
             });
     }
 
@@ -259,7 +263,7 @@ export default function FormCreatedSimulated() {
                         <Button type="primary" danger onClick={goTohome} >
                             VOLTAR
                         </Button>
-                        <Button type="primary" htmlType="submit" style={{ backgroundColor: '#46a6e6', marginLeft: '10px' }}>
+                        <Button type="primary" htmlType="submit"  loading={isLoadingButton} style={{ backgroundColor: '#46a6e6', marginLeft: '10px' }}>
                             PROXIMO
                         </Button>
                     </S.ContainerButton>

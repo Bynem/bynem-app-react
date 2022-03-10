@@ -15,8 +15,11 @@ export default function Head({ home }: Home) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
     const history = useHistory();
     const {setUser} = useAuth()
+    const user = JSON.parse(localStorage.getItem("user"))
+    
   function sair() {
     setUser({logout: true}) 
+    localStorage.removeItem("user")
     history.push('/login')
   }
   return (<>
@@ -54,17 +57,20 @@ export default function Head({ home }: Home) {
             <S.MenuLink >Criar Simulados</S.MenuLink>
           </a>
         </a>
-        {/* <a href="/vizualizar/simulado/5">
-          <a>
-            <S.MenuLink >Vizualizar Simulado</S.MenuLink>
-          </a>
-        </a> */}
+        
+
         <a href="/simulados-favoritos">
             <S.MenuLink >Meus Simulados favoritos</S.MenuLink>
         </a>
+        {user ? 
         <a>
-            <S.MenuLink onClick={sair} >Sair</S.MenuLink>
+          <S.MenuLink onClick={sair} >Sair</S.MenuLink>
+        </a> :
+        <a href="/login">
+            <S.MenuLink >Login</S.MenuLink>
         </a>
+      }
+        
       </S.Menu>
     </S.Nav>
   </>
