@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Checkbox, Divider, Form, Modal, Col, Row, Radio  } from 'antd';
+import { Button, Checkbox, Divider, Form, Modal, Col, Row, Radio  , Steps} from 'antd';
 import { toast } from 'react-toastify';
 import { useTimer } from 'react-timer-hook';
 import { useHistory } from 'react-router-dom';
@@ -18,13 +18,13 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
     const [showResponses, setShowResponses] = useState(false)
     const [current, setCurrent] = useState(0)
     const [openModal, setOpenModal] = useState(false)
-
+    const { Step } = Steps;
     const history = useHistory();
 
     const { hours, minutes, seconds } = useTimer({ expiryTimestamp, onExpire: () => {
         if (!openModal) {
             toast.error(`Seu tempo acabou`)
-            // setOpenModal(true)
+            setOpenModal(true)
         }
     } })
 
@@ -50,7 +50,7 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
         setSelectedAnswers([...new Set([...selectedAnswers.filter(item => !selectedAnswer.find(i => item.find(answer => answer.id === i.id))), [...selectedAnswer]])])
         setSelectedAnswer(current < selectedAnswers.length ? selectedAnswers[current] ?? [] : selectedAnswers[current + 1] ?? [])
         if (current + 1 >= simulated?.perguntas.length) {
-            // setOpenModal(true)
+            setOpenModal(true)
         }
     }
 
@@ -80,7 +80,12 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
     }
 
     const currentQuestion = useMemo(() => simulated?.perguntas && simulated.perguntas[current] ? simulated.perguntas[current] : undefined, [simulated, current])
-        console.log('simulated' , simulated)
+        
+    function stepChange(e:any) {
+        
+    }
+    
+    console.log('simulated' , simulated)
     return <>
      <Modal title="Resultados" visible={openModal} onCancel={() => history.replace('/')}
        footer={[
@@ -106,11 +111,33 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp }: { 
                 </S.ContainerCountQuestions>
                 
             </S.ContainerCount>
-            <S.ContainerVideoOrImage>
-                <S.ContainerIframe>
-                    <img src='/abertura.jpg'></img>
-                </S.ContainerIframe>
-            </S.ContainerVideoOrImage>
+            <S.ContainerCountAndSteps>
+                <S.StepContainer>
+                    <Steps
+                    size="small"
+                    status="process"
+                    className="KKKKKKKKK"
+                    current={current}
+                    onChange={(e) => stepChange(e)}
+                    direction="vertical"
+                    >
+                    <Step />
+                    <Step />
+                    <Step />
+                    <Step />
+                    <Step />
+                    <Step />
+                    <Step />
+                    </Steps>
+                </S.StepContainer>
+                <S.ContainerVideoOrImage>
+                    <S.ContainerIframe>
+                        <img src='/abertura.jpg'></img>
+                    </S.ContainerIframe>
+                </S.ContainerVideoOrImage>
+                <S.Spacer />
+            </S.ContainerCountAndSteps>
+
             <S.ContainerSubTitle><span>{currentQuestion?.descricao}</span></S.ContainerSubTitle>
                 <Form {...layout} name="nest-messages" labelAlign={"left"} onFinish={onFinishForm} validateMessages={validateMessages}>
             <S.ContainerOptions>

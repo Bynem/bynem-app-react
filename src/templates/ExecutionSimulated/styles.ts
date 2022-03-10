@@ -61,13 +61,14 @@ export const SubTitle = styled.p`
     color: black;
 `
 
-export const ContainerVideoOrImage = styled.main`
-    margin: 2rem;
+export const ContainerVideoOrImage = styled.div`
+    margin: 0 auto 0 auto;
     display: flex;
     flex-direction: column;
     border-radius: 20px;
     padding: 20px ;
     border: 1px solid #E414B2;
+    width: 100%;
     @media (max-width: 768px) {
             margin: 0
 
@@ -77,9 +78,7 @@ export const ContainerVideoOrImage = styled.main`
 `
 
 export const StepContainer = styled.div`
-    position: relative;
     width: 6rem;
-    right: 0;
     
     .ant-steps {
         margin-left: auto !important;
@@ -88,9 +87,21 @@ export const StepContainer = styled.div`
         margin: 0;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 850px) {
         display: none;
     }
+
+`
+export const Spacer = styled.div`
+    width: 6rem;
+    @media (max-width: 850px) {
+        display: none;
+    }
+
+`
+export const ContainerCountAndSteps = styled.div`
+    display: flex;
+    width: 100%;
 
 `
 
