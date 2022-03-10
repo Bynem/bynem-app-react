@@ -87,8 +87,8 @@ export default function TableAnt({ setBottom }: Table) {
             dataIndex: 'id',
             key: 'id',
             render: (id) => {
-                let verificado = arraiDeFavoritosDoUsuario.filter((item, index) => item === id)
-                if (verificado.length > 0) {
+                let verificados = arraiDeFavoritosDoUsuario.filter((item) => item === id)
+                if (verificados.length > 0) {
                     return <S.Star onClick={() => deleteOFavorito(id)} />
                 } else {
                     return <S.StartFavorito onClick={() => addOFavorito(id)} />
@@ -108,12 +108,13 @@ export default function TableAnt({ setBottom }: Table) {
             params: { filter: params }
         }).then(function (response) {
             if (response.data.length === 0) {
-                setBottom(true)
+                setBottom(true);
             } else {
-                setBottom(false)
+                setBottom(false);
             }
             setData(response.data);
-            setIsLoading(false)
+            console.log('responseee', response)
+            setIsLoading(false);
         }).catch(function (error) {
             toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
         });
