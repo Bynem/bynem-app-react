@@ -96,7 +96,6 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
                 postPerguntaComThubnail(dataPerguntaSimulado)
                 return
             }
-            console.log("dataPerguntaSimulado", dataPerguntaSimulado)
             postPergunta(dataPerguntaSimulado)
         } else {
             toast.error("Escolha pelomenos uma opção")
@@ -104,11 +103,10 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
     };
 
     async function postPerguntaComThubnail(values) {
-        await api.post('api/pergunta', values, {headers: {'Authorization': 'Bearer ' + user.token }})
+        await api.post('api/pergunta', values, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(response => {
                 setIsSpinning(false)
                 if (response) {
-                    console.log("response id", { response })
                     postThumbnail(response.data.id)
                 }
 
@@ -120,40 +118,33 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
     }
 
     async function postThumbnail(id) {
-        console.log("post thumb id", formDataThumbnail)
-
         const archive = new FormData()
-
         archive.append('arquivo', formDataThumbnail)
 
-        await api.post(`api/Pergunta/upload-thumbnail/${id}`, archive, {headers: {'Authorization': 'Bearer ' + user.token }})
-        .then(function (resposne) {
-            setIsSpinning(false)
-            console.log("resposne resposne ", resposne)
-            toast.success('Pergunta salva com sucesso ')
-            // history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
-            // window.location.reload()
-        }).catch(function (error) {
-            setIsSpinning(false)
-        });
-    }
-
-    async function postPergunta(values) {
-        await api.post('api/pergunta', values, {headers: {'Authorization': 'Bearer ' + user.token }})
-            .then(response => {
-                console.log(`Um erro inesperado aconteceu $response`, response)
+        await api.post(`api/Pergunta/upload-thumbnail/${id}`, archive, { headers: { 'Authorization': 'Bearer ' + user.token } })
+            .then(function () {
                 setIsSpinning(false)
                 toast.success('Pergunta salva com sucesso ')
                 history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
                 window.location.reload()
             }).catch(function (error) {
                 setIsSpinning(false)
-                console.log(`Um erro inesperado aconteceu ${error.response.status}`)
+            });
+    }
+
+    async function postPergunta(values) {
+        await api.post('api/pergunta', values, { headers: { 'Authorization': 'Bearer ' + user.token } })
+            .then(response => {
+                setIsSpinning(false)
+                toast.success('Pergunta salva com sucesso ')
+                history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
+                window.location.reload()
+            }).catch(function (error) {
+                setIsSpinning(false)
             });
     }
 
     const normFile = (file: any, fileList: any) => {
-        console.log('fileee', file)
         setformDataThumbnail(file)
     };
 

@@ -7,7 +7,6 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import { UploadOutlined } from '@ant-design/icons'
 import { useHistory } from "react-router-dom";
-import { useAuth } from '../../hooks/auth';
 
 const layout = {
     labelCol: {
@@ -60,21 +59,18 @@ export default function FormCreatedSimulated() {
     }
 
     const onFinish = (values) => {
-        // setIsSpinning(true)
-        console.log("onFinish", { values })
         if (values.linkYoutube) {
             const urlYoutube = values.linkYoutube.replace('watch?v=', 'embed/');
-            values.linkYoutube = urlYoutube
-            console.log("values.linkYoutube", values.linkYoutube)
+            values.linkYoutube = urlYoutube;
 
-            postSimulatedLinkYoutube(values)
-            return
+            postSimulatedLinkYoutube(values);
+            return;
         } else if (formDataThumbnail) {
-            console.log("formDataThumbnail", formDataThumbnail)
-            postSimulated(values)
-            return
+            postSimulated(values);
+            return;
         }
-        postSimulatedSemNada(values)
+
+        postSimulatedSemNada(values);
     };
 
     function orderQuestions(e) {
@@ -83,8 +79,6 @@ export default function FormCreatedSimulated() {
     }
 
     async function postSimulatedSemNada(newObject) {
-        console.log("postSimulatedSemNada", newObject)
-
         if (newObject.tempoPorProva) {
             newObject.tempoPorProva = newObject.tempoPorProva.toString();
         }
@@ -95,15 +89,12 @@ export default function FormCreatedSimulated() {
                     history.push(`/criar-perguntas/${response.data.id}`);
                 }
             }).catch(function (error) {
-                console.log("entro no push", error)
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
                 setIsSpinning(false)
             });
     }
 
     async function postSimulatedLinkYoutube(newObject) {
-        console.log("postSimulatedSemNada", newObject)
-
         if (newObject.tempoPorProva) {
             newObject.tempoPorProva = newObject.tempoPorProva.toString();
         }
@@ -111,20 +102,16 @@ export default function FormCreatedSimulated() {
         await api.post('api/Simulado', newObject, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(response => {
                 if (response) {
-                    console.log("entro no push")
-
                     history.push(`/criar-perguntas/${response.data.id}`);
                 }
 
             }).catch(function (error) {
-                console.log("entro no push", error)
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
                 setIsSpinning(false)
             });
     }
 
     async function postSimulated(newObject) {
-        console.log("postSimulated", newObject)
         if (newObject.tempoPorProva) {
             newObject.tempoPorProva = newObject.tempoPorProva.toString();
         }
@@ -137,12 +124,9 @@ export default function FormCreatedSimulated() {
             youtubeOuThumbnail: newObject.youtubeOuThumbnail
         };
 
-        console.log("simulatedToSave", simulatedToSave)
-
         await api.post('api/Simulado', simulatedToSave, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(response => {
                 if (response) {
-                    console.log("response do simulado", response)
                     postThumbnail(response.data.id)
                 }
             }).catch(function (error) {
@@ -154,7 +138,6 @@ export default function FormCreatedSimulated() {
     async function postThumbnail(id) {
         const archive = new FormData()
         archive.append('arquivo', formDataThumbnail)
-        console.log("Upload", formDataThumbnail)
 
         await api.post(`api/Simulado/upload-thumbnail/${id}`, archive, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(function (response) {

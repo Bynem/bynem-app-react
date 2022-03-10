@@ -111,7 +111,7 @@ export default function TableSimulated({ setBottom }: Table) {
             } else {
                 setBottom(false)
             }
-            console.log('ggadsdasds', response)
+            
             setData(response.data);
             setIsLoading(false)
         }).catch(function (error) {

@@ -97,11 +97,10 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         if (values.clientImage) {
             setIsSpinning(true)
             const newObject = Object.assign(ordemDasPerguntas, form, values.clientImage)
-            console.log("newObject", { newObject })
             postSimuladoComImagem(newObject)
         }
+
         const newObject = Object.assign(ordemDasPerguntas, values)
-        console.log("newObject", { newObject })
         postSimulated(newObject)
     };
 
@@ -125,21 +124,21 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         const idSimulated = { id: uuid }
         const dataRequest = Object.assign(newObject, idSimulated)
 
-        await api.put('api/Simulado', dataRequest, {headers: {'Authorization': 'Bearer ' + user.token }})
+        await api.put('api/Simulado', dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then().catch(function (error) {
                 setIsSpinning(false)
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
             });
 
         const archive = new FormData()
-
         archive.append('arquivo', formDataThumbnail)
 
-        await api.post(`/api/Simulado/upload-thumbnail/${idSimulated.id}`, archive, {headers: {'Authorization': 'Bearer ' + user.token }})
+        await api.post(`/api/Simulado/upload-thumbnail/${idSimulated.id}`, archive, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then().catch(function (error) {
                 setIsSpinning(false)
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
             });
+
         goToMySimulateds()
         toast.success('Simulado salvo com sucesso ')
         setIsSpinning(false)
@@ -149,8 +148,8 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         if (newObject.titulo != undefined || newObject.descricao != undefined || newObject.linkYoutube != undefined) {
             const idSimulated = { id: uuid }
             const dataRequest = Object.assign(newObject, idSimulated)
-            console.log("dataRequest", { dataRequest })
-            await api.put('api/Simulado', dataRequest, {headers: {'Authorization': 'Bearer ' + user.token }})
+
+            await api.put('api/Simulado', dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
                 .then().catch(function (error) {
                     setIsSpinning(false)
                     toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
@@ -165,7 +164,6 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         history.push("/meus-simulados")
     }
 
-    console.log("simulated", simulated)
     return (
         <Spin indicator={antIcon} spinning={isSpinning}>
             {simulated &&

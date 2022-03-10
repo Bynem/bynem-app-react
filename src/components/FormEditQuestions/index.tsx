@@ -63,7 +63,6 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
         async function getQuestion() {
             await api.get(`api/pergunta/${uuidSimulado}/${uuidQuestao}`)
                 .then(response => {
-                    console.log("response", response)
                     setData(response.data)
                     setArreiDeRespostas(response.data.respostas)
                 }).catch(function (error) {
@@ -72,37 +71,32 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
                     setIsSpinning(false)
                 });
         }
-        getQuestion()
-    }, [])
 
+        getQuestion();
+    }, []);
 
     const onFinish = (values) => {
         if (arreiDeRespostas.length < 2) {
             toast.error("A quantidade de respostas não pode ser menor que 2")
             return
-
         }
+
         setIsSpinning(true)
         let novo = { id: uuidQuestao, simuladoId: uuidSimulado, descricao: values.descricao, multiplaEscolha: true, comentarioFinal: values.comentarioFinal, respostas: arreiDeRespostas }
-        console.log("dataPerguntaSimulado", novo)
         putPergunta(novo)
     };
+
     const history = useHistory();
 
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async function putPergunta(values) {
-        console.log({ values })
-        await api.put('api/pergunta', values, {headers: {'Authorization': 'Bearer ' + user.token }})
+        await api.put('api/pergunta', values, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(response => {
-                console.log("response", response)
                 if (formDataThumbnail) {
                     postThumbnail(uuidQuestao)
                 } else {
                     history.push(`/vizualizar/simulado/${uuidSimulado}`)
                     setIsSpinning(false)
                 }
-
             }).catch(function (error) {
                 setIsSpinning(false)
                 toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
@@ -110,19 +104,16 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
             });
     }
 
-
     const normFile = (file: any, fileList: any) => {
         setformDataThumbnail(file)
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async function postThumbnail(id) {
         const archive = new FormData()
         archive.append('arquivo', formDataThumbnail)
 
-        await api.post(`api/pergunta/upload-thumbnail/${id}`, archive, {headers: {'Authorization': 'Bearer ' + user.token }})
+        await api.post(`api/pergunta/upload-thumbnail/${id}`, archive, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(function (response) {
-                console.log("response da thumn", response)
                 history.push(`/vizualizar/simulado/${uuidSimulado}`)
                 setIsSpinning(false)
                 toast.success('Pergunta salvo com sucesso ')
@@ -132,20 +123,17 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
             });
     }
 
-
     function addQuestion() {
         if (arreiDeRespostas.length === 10) {
             toast.error("A quantidade de respostas não pode passar de 10")
             return
         }
+
         let novaposicao = { id: '', descricao: '', correta: false }
-        let newArr = [...arreiDeRespostas]; // copying the old datas array
+        let newArr = [...arreiDeRespostas];
+
         newArr.push(novaposicao)
         setArreiDeRespostas(newArr)
-
-        // newArr[index] = { ...newArr[index], correta: checked }
-        // setArreiDeRespostas(newArr)
-        // arreiDeRespostas
     }
 
     function removeQuestion() {
@@ -153,15 +141,11 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
             toast.error("A quantidade de respostas não pode ser menor que 2")
             return
         }
-        let indexQuestaoDeletada = arreiDeRespostas.length - 1  // copying the old datas array
-        let newArr = arreiDeRespostas.slice(0, -1)
-        deletarUltimo(indexQuestaoDeletada)
-        setArreiDeRespostas(newArr)
-    }
-    function deletarUltimo(index) {
 
+        let newArr = arreiDeRespostas.slice(0, -1);
+        setArreiDeRespostas(newArr);
     }
-    console.log("arreiDeRespostas", arreiDeRespostas)
+
     return (
         <Spin indicator={antIcon} spinning={isSpinning}>
             {data &&
@@ -213,8 +197,6 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
                         <Form.Item className="switch-form">
                             <S.Title>Respostas</S.Title>
                         </Form.Item>
-                        {console.log({ arreiDeRespostas })}
-
                         {arreiDeRespostas.map((position, index) => (
                             <Input2
                                 key={index}

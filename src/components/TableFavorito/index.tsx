@@ -40,10 +40,8 @@ export default function TableAnt({ setBottom }: Table) {
         await api.delete(`/api/Simulado/SimuladosFavoritos/${user.id}/${id}`, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(function () {
                 const idsSimuladosFavoritos = arraiDeFavoritosDoUsuario.filter((value) => value !== id);
-                console.log('idsSimuladosFavoritos', idsSimuladosFavoritos)
                 setArraiDeFavoritosDoUsuario(idsSimuladosFavoritos);
             }).catch(function (error) {
-                console.log('error detetado', error);
             });
     }
 
@@ -57,7 +55,6 @@ export default function TableAnt({ setBottom }: Table) {
 
         await api.post(`/api/Simulado/SimuladosFavoritos`, dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then().catch(function (error) {
-                console.log('error favorito', { error })
             });
     }
 
@@ -105,13 +102,12 @@ export default function TableAnt({ setBottom }: Table) {
 
     async function getSimulateds() {
         await api.get(`api/Simulado/SimuladosFavoritos?userId=${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } }).then(function (response) {
-            console.log('dasdsdsasd', response)
             if (response.data.length === 0) {
                 setBottom(true);
             } else {
                 setBottom(false);
             }
-            console.log('responseee favvv', response)
+
             setData(response.data);
             getFavoritos();
             setIsLoading(false);

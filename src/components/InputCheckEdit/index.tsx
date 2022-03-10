@@ -3,12 +3,11 @@ import { Form, Input } from 'antd';
 import styled from 'styled-components';
 import { DeleteOutlined } from '@mui/icons-material';
 
-
 export default function Input2Edit({ arreiDeRespostas, setArreiDeRespostas, index, current }: any) {
     function setQuestionChecked(e) {
         if (e.target.checked === false || e.target.checked) {
             let { checked } = e.target
-            let newArr = [...arreiDeRespostas]; // copying the old datas array
+            let newArr = [...arreiDeRespostas];
             newArr[index] = { ...newArr[index], correta: checked }
             setArreiDeRespostas(newArr)
             return
@@ -17,43 +16,39 @@ export default function Input2Edit({ arreiDeRespostas, setArreiDeRespostas, inde
 
     function setQuestion(e) {
         const { value } = e.target
-        let newArr = [...arreiDeRespostas]; // copying the old datas array
+        let newArr = [...arreiDeRespostas];
         newArr[index] = { ...newArr[index], descricao: value }
         setArreiDeRespostas(newArr)
         return
     }
-    function deleteThis(index) {
-        console.log("opa", arreiDeRespostas.filter((item, indexI) => indexI !== index))
-        setArreiDeRespostas(arreiDeRespostas.filter((item, indexI) => indexI !== index))
-        // console.log(index)
-        // let temporario = arreiDeRespostas
-        // temporario.splice(index, 1)
-        // console.log(temporario)
-        // setArreiDeRespostas(temporario)
-    }
-    return (<>
-        <CheckContainer>
 
-            <DivCheckBox>
-                <input
-                    type="checkbox"
-                    name={`question${index}`}
-                    className="form-check-input"
-                    checked={current.correta ? current.correta : false}
-                    onChange={e => setQuestionChecked(e)}
-                />
-            </DivCheckBox>
-            <Form.Item name={`question${index}`} className="question">
-                <Input.TextArea onChange={e => setQuestion(e)} defaultValue={current.descricao ? current.descricao : ""} rows={2} showCount maxLength={500} />
-                <DivLixeira onClick={() => deleteThis(index)}>
-                    <Lixeira />
-                </DivLixeira>
-            </Form.Item >
-        </CheckContainer>
-    </>
+    function deleteThis(index) {
+        setArreiDeRespostas(arreiDeRespostas.filter((item, indexI) => indexI !== index))
+    }
+
+    return (
+        <>
+            <CheckContainer>
+
+                <DivCheckBox>
+                    <input
+                        type="checkbox"
+                        name={`question${index}`}
+                        className="form-check-input"
+                        checked={current.correta ? current.correta : false}
+                        onChange={e => setQuestionChecked(e)}
+                    />
+                </DivCheckBox>
+                <Form.Item name={`question${index}`} className="question">
+                    <Input.TextArea onChange={e => setQuestion(e)} defaultValue={current.descricao ? current.descricao : ""} rows={2} showCount maxLength={500} />
+                    <DivLixeira onClick={() => deleteThis(index)}>
+                        <Lixeira />
+                    </DivLixeira>
+                </Form.Item >
+            </CheckContainer>
+        </>
     )
 }
-
 
 export const DivCheckBox = styled.div`
     display: flex;

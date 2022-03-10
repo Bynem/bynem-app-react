@@ -43,7 +43,6 @@ const Login: React.FC = () => {
             .then(function (response) {
                 setUser(response.data)
                 localStorage.setItem("user", JSON.stringify(response.data))
-                console.log('logou por aqui 3', response)
                 history.push(`/`)
             }).catch(function (error) {
                 toast.error("Email ou senha esta errado")
@@ -66,17 +65,14 @@ const Login: React.FC = () => {
         await api.post('/api/Auth/login', data)
             .then(function (response) {
                 localStorage.setItem("user", JSON.stringify(response.data))
-                console.log('logou por aqui 1', response)
                 history.push(`/`)
             }).catch(function (error) {
-                console.log("error error ", error)
             });
 
         setShowloginButton(false);
     };
 
     const onLoginFailure = (res) => {
-        console.log('Login Failed:', res);
     };
 
     return (

@@ -33,13 +33,12 @@ const CriarContaTemplate: React.FC = () => {
             return false;
         }
 
-        await api.post('/api/User', dataRequest, {headers: {'Authorization': 'Bearer ' + user.token }})
-        .then(function (response) {
-            toast.success('Conta Criada com Sucesso')
-            history.push(`/login`)
-        }).catch(function (error) {
-            console.log("error error ", error)
-        });
+        await api.post('/api/User', dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
+            .then(function (response) {
+                toast.success('Conta Criada com Sucesso')
+                history.push(`/login`)
+            }).catch(function (error) {
+            });
     };
 
     return (

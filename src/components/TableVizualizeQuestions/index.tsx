@@ -9,12 +9,12 @@ type Perguntas = {
     id: string
     multiplaEscolha: false
 }
+
 type PerguntasType = {
     perguntas: Perguntas[]
 }
 
 export default function TableVizualizeQuestions({ perguntas }: PerguntasType) {
-    console.log("Perguntas", perguntas)
     const antIcon = <LoadingOutlined style={{ fontSize: 34, color: "#E414B2" }} spin />
 
     const columns = [
@@ -25,10 +25,11 @@ export default function TableVizualizeQuestions({ perguntas }: PerguntasType) {
         },
     ];
 
-    return (<>
-        <Spin indicator={antIcon} spinning={false}>
-            <Table pagination={{ pageSize: 6 }} loading={false} columns={columns} dataSource={perguntas} scroll={{ y: 430 }} />
-        </Spin>
-    </>
+    return (
+        <>
+            <Spin indicator={antIcon} spinning={false}>
+                <Table pagination={{ pageSize: 6 }} loading={false} columns={columns} dataSource={perguntas} scroll={{ y: 430 }} />
+            </Spin>
+        </>
     )
 }

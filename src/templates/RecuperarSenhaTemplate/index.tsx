@@ -5,34 +5,22 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import { useAuth } from '../../hooks/auth';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
 
 const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-        email: data.get('email'),
-        password: data.get('password'),
-    });
 };
 
 const clientId = "1070994023100-9ecvg83b9skmrrhvdc5lod4va6pkmn32.apps.googleusercontent.com";
 
 const RecuperarSenhaTemplate: React.FC = () => {
     const user = JSON.parse(localStorage.getItem("user"))
-    console.log('user', user)
 
     const [showloginButton, setShowloginButton] = useState(true);
     const onLoginSuccess = (res) => {
-        console.log('Login Success:', res.profileObj);
         setShowloginButton(false);
     };
 
     const onLoginFailure = (res) => {
-        console.log('Login Failed:', res);
     };
 
     return <S.Container>
