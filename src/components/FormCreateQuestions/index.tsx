@@ -144,8 +144,8 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
                 console.log(`Um erro inesperado aconteceu $response`, response)
                 setIsSpinning(false)
                 toast.success('Pergunta salva com sucesso ')
-                // history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
-                // window.location.reload()
+                history.push(`/criar-perguntas/${uuiSimulado}/${numeroDaPergunta + 1}`)
+                window.location.reload()
             }).catch(function (error) {
                 setIsSpinning(false)
                 console.log(`Um erro inesperado aconteceu ${error.response.status}`)

@@ -87,11 +87,13 @@ export default function TableAnt({ setBottom }: Table) {
             dataIndex: 'id',
             key: 'id',
             render: (id) => {
-                let verificados = arraiDeFavoritosDoUsuario.filter((item) => item === id)
-                if (verificados.length > 0) {
-                    return <S.Star onClick={() => deleteOFavorito(id)} />
-                } else {
-                    return <S.StartFavorito onClick={() => addOFavorito(id)} />
+                if (arraiDeFavoritosDoUsuario && arraiDeFavoritosDoUsuario.length > 0) {
+                    let verificados = arraiDeFavoritosDoUsuario.filter((item) => item === id)
+                    if (verificados.length > 0) {
+                        return <S.Star onClick={() => deleteOFavorito(id)} />
+                    } else {
+                        return <S.StartFavorito onClick={() => addOFavorito(id)} />
+                    }
                 }
             }
         },
@@ -113,20 +115,21 @@ export default function TableAnt({ setBottom }: Table) {
             }
 
             setData(response.data);
-            setIsLoading(false)
+            getFavoritos();
+            setIsLoading(false);
         }).catch(function (error) {
             toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
         });
     };
 
-    async function getFavoritor() {
+    async function getFavoritos() {
         await api.get(`/api/Simulado/SimuladosFavoritosIds?userId=${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } }).then(function (response) {
             if (response.data.length === 0) {
                 setBottom(true);
             } else {
                 setBottom(false);
             }
-
+            console.log('arrai de favoritos', response)
             setArraiDeFavoritosDoUsuario(response.data);
         }).catch(function (error) {
             toast.error(`Um erro inesperado aconteceu ${error.response.status}`);
@@ -135,7 +138,6 @@ export default function TableAnt({ setBottom }: Table) {
 
     useEffect(() => {
         getSimulateds();
-        getFavoritor();
     }, [params]);
 
     return (<>

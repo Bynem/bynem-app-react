@@ -30,6 +30,7 @@ export default function TableSimulated({ setBottom }: Table) {
     const [isLoading, setIsLoading] = useState(true)
     const [params, setParams] = useState("")
     const { Search } = Input;
+    const user = JSON.parse(localStorage.getItem("user"))
     const history = useHistory();
 
     const columns = [
@@ -73,7 +74,7 @@ export default function TableSimulated({ setBottom }: Table) {
 
     async function DeleteSimulated(id) {
         setIsSpinning(true)
-        await api.delete(`api/Simulado/${id}`)
+        await api.delete(`api/Simulado/${id}`, {headers: {'Authorization': 'Bearer ' + user.token }})
             .then(function () {
                 setIsSpinning(false)
                 toast.success('Simulado Deletado com sucesso ')

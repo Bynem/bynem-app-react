@@ -238,9 +238,9 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                             <Form.Item name="radio-group"  >
                                 <Radio.Group name="ordemDasPerguntas" defaultValue={simulated.ordemDasPerguntas} onChange={e => (criarObjeto(e))} style={{ width: "400px" }}>
                                     <Space direction="vertical">
-                                        <Radio value={1}>Sequencial</Radio>
-                                        <Radio value={2}>Aleatória</Radio>
-                                        {OrderQuestionsSelected === 2 ?
+                                        <Radio value={2}>Sequencial</Radio>
+                                        <Radio value={1}>Aleatória</Radio>
+                                        {OrderQuestionsSelected === 1 ?
                                             (
                                                 <Form.Item
                                                     name='qtdLimitePerguntasSimulado'

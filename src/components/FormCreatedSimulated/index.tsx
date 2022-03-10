@@ -247,7 +247,7 @@ export default function FormCreatedSimulated() {
                         <Space direction="vertical">
                             <Radio value={2}>Sequencial</Radio>
                             <Radio value={1}>Aleatória</Radio>
-                            {OrderQuestionsSelected == 2 ?
+                            {OrderQuestionsSelected == 1 ?
                                 (
                                     <Form.Item
                                         name='qtdLimitePerguntasSimulado'
