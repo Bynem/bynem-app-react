@@ -5,17 +5,14 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
-import { useAuth } from '../../hooks/auth';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import api from '../../service/api';
-
 import * as S from './styles';
 
 const CriarContaTemplate: React.FC = () => {
     const history = useHistory();
-    const user = JSON.parse(localStorage.getItem("user"))
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -33,7 +30,7 @@ const CriarContaTemplate: React.FC = () => {
             return false;
         }
 
-        await api.post('/api/User', dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
+        await api.post('/api/User', dataRequest)
             .then(function (response) {
                 toast.success('Conta Criada com Sucesso')
                 history.push(`/login`)
