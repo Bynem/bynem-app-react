@@ -22,6 +22,7 @@ const CriarContaTemplate: React.FC = () => {
             username: data.get('nome'),
             email: data.get('email'),
             password: data.get('password'),
+            tipoLogin: 1
         };
 
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
