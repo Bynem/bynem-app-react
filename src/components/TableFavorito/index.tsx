@@ -101,19 +101,22 @@ export default function TableAnt({ setBottom }: Table) {
     }
 
     async function getSimulateds() {
-        await api.get(`api/Simulado/SimuladosFavoritos?userId=${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } }).then(function (response) {
-            if (response.data.length === 0) {
-                setBottom(true);
-            } else {
-                setBottom(false);
-            }
-
-            setData(response.data);
-            getFavoritos();
-            setIsLoading(false);
-        }).catch(function (error) {
-            toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
-        });
+        if(user){
+            await api.get(`api/Simulado/SimuladosFavoritos?userId=${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } }).then(function (response) {
+                if (response.data.length === 0) {
+                    setBottom(true);
+                } else {
+                    setBottom(false);
+                }
+    
+                setData(response.data);
+                getFavoritos();
+                setIsLoading(false);
+            }).catch(function (error) {
+                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+            });
+        }
+        setIsLoading(false);
     };
 
     async function getFavoritos() {

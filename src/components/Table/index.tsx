@@ -110,7 +110,7 @@ export default function TableAnt({ setBottom }: Table) {
             } else {
                 setBottom(false);
             }
-            
+
             setData(response.data);
             setIsLoading(false);
         }).catch(function (error) {
@@ -136,30 +136,30 @@ export default function TableAnt({ setBottom }: Table) {
         getIdsSimuladosFavoritosUsuario();
     }, [params])
 
-    function verificaLogadoEredirect(){
-        if(user){
+    function verificaLogadoEredirect() {
+        if (user) {
             history.push(`/criar-simulados`)
             return
-        }else{
+        } else {
             toast.warning('Você precisa ter uma conta antes')
         }
-        
     }
 
-    return (<>
-        <S.Tools>
-            <S.divButton>
-                    <Button onClick={() => verificaLogadoEredirect()} type="default" >Criar Simulado</Button>
-            </S.divButton>
-            <S.SearchContainer>
-                <Space direction="vertical">
-                    <Search placeholder="Pesquisar" onPressEnter={e => onSearchEnter(e)} onSearch={onSearch} enterButton />
-                </Space>
-            </S.SearchContainer>
-        </S.Tools>
-        <S.DivTable>
-            <Table pagination={{ pageSize: 7 }} loading={isLoading} columns={columns} dataSource={data} />
-        </S.DivTable>
-    </>
+    return (
+        <>
+            <S.Tools>
+                <S.divButton>
+                    <Button onClick={() => verificaLogadoEredirect()} type="default">Criar Simulado</Button>
+                </S.divButton>
+                <S.SearchContainer>
+                    <Space direction="vertical">
+                        <Search placeholder="Pesquisar" onPressEnter={e => onSearchEnter(e)} onSearch={onSearch} enterButton />
+                    </Space>
+                </S.SearchContainer>
+            </S.Tools>
+            <S.DivTable>
+                <Table pagination={{ pageSize: 7 }} loading={isLoading} columns={columns} dataSource={data} />
+            </S.DivTable>
+        </>
     )
 }
