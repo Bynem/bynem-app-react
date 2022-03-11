@@ -119,16 +119,18 @@ export default function TableAnt({ setBottom }: Table) {
     }
 
     async function getIdsSimuladosFavoritosUsuario() {
-        await api.get(`api/Simulado/SimuladosFavoritosIds?userId=${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } })
-            .then(function (response) {
-                if (response.data.length > 0) {
-                    setArraiDeFavoritosDoUsuario(response.data);
-                }
+        if (user) {
+            await api.get(`api/Simulado/SimuladosFavoritosIds?userId=${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } })
+                .then(function (response) {
+                    if (response.data.length > 0) {
+                        setArraiDeFavoritosDoUsuario(response.data);
+                    }
 
-                setIsLoading(false);
-            }).catch(function (error) {
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
-            });
+                    setIsLoading(false);
+                }).catch(function (error) {
+                    toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                });
+        }
     }
 
     useEffect(() => {
