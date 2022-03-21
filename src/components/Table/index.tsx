@@ -48,17 +48,21 @@ export default function TableAnt({ setBottom }: Table) {
     }
 
     async function addOFavorito(id) {
-        setArraiDeFavoritosDoUsuario([...arraiDeFavoritosDoUsuario, id])
-
-        let dataRequest = {
-            userId: user.id,
-            simuladoId: id
-        };
-
-        await api.post(`api/Simulado/SimuladosFavoritos`, dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
-            .then().catch(function (error) {
-            setIsLoading(false);
-            });
+        if(user){
+            setArraiDeFavoritosDoUsuario([...arraiDeFavoritosDoUsuario, id])
+            
+            let dataRequest = {
+                userId: user.id,
+                simuladoId: id
+            };
+    
+            await api.post(`api/Simulado/SimuladosFavoritos`, dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
+                .then().catch(function (error) {
+                setIsLoading(false);
+                });
+        }else{
+            toast.error('Você precisa fazer Login antes')
+        }
     }
 
     const columns = [

@@ -35,33 +35,33 @@ export default function Head({ home }: Home) {
         <span className='spanHamburger' />
       </S.Hamburger>
       <S.Menu isOpen={isOpen}>
-        {home ?
-          (
+          {home ?
             <a href="/">
               <S.MenuLink >Inicio</S.MenuLink>
             </a>
-          ) : (null)}
+          : 
+          null}
 
         <a href="http://bynem.com.br/">
           <a target="_blank">
             <S.MenuLink >Blog</S.MenuLink>
           </a>
         </a>
+        {user &&   
         <a href="/meus-simulados">
           <a>
             <S.MenuLink >Meus Simulados</S.MenuLink>
           </a>
-        </a>
+        </a>}
         <a href="/criar-simulados">
           <a>
             <S.MenuLink >Criar Simulados</S.MenuLink>
           </a>
         </a>
-        
-
+        {user &&  
         <a href="/simulados-favoritos">
             <S.MenuLink >Meus Simulados favoritos</S.MenuLink>
-        </a>
+        </a>}
         {user ? 
         <a>
           <S.MenuLink onClick={sair} >Sair</S.MenuLink>
@@ -70,7 +70,6 @@ export default function Head({ home }: Home) {
             <S.MenuLink >Login</S.MenuLink>
         </a>
       }
-        
       </S.Menu>
     </S.Nav>
   </>
