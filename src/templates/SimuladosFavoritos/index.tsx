@@ -11,7 +11,7 @@ export default function SimuladosFavoritos() {
     const { user, setUser } = useAuth()
     return (
         <>
-            <Head home={false} />
+            <Head home={true} />
             <S.Content>
                 <S.Title>Simulados Favoritos</S.Title>
                 <S.SubTitle>Adicione seus simulados que ama em um só lugar</S.SubTitle>

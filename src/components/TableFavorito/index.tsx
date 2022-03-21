@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Table } from 'antd';
-import { Input, Space } from 'antd';
+import api from '../../service/api'
+import { Space, Table } from 'antd';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
-
-import 'antd/dist/antd.css';
 import * as S from './styles';
 
-import api from '../../service/api'
+import 'antd/dist/antd.css';
 
 export type DataTable = {
     descricao: string;
@@ -21,15 +19,12 @@ export type Table = {
     setBottom: Function;
 }
 
-export default function TableAnt({ setBottom }: Table) {
+export default function TableAnt() {
     const [data, setData] = useState<DataTable[] | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [params, setParams] = useState("")
-    const [arraiDeFavoritosDoUsuario, setArraiDeFavoritosDoUsuario] = useState<string[]>([])
+    const [arraiDeFavoritosDoUsuario, setArraiDeFavoritosDoUsuario] = useState<any[]>([])
     const user = JSON.parse(localStorage.getItem("user"))
-
-    const { Search } = Input;
-    const onSearch = value => { setParams(value) };
     const history = useHistory();
 
     const editQuestion = (id) => {
@@ -38,26 +33,33 @@ export default function TableAnt({ setBottom }: Table) {
 
     async function deleteOFavorito(id) {
         await api.delete(`api/Simulado/SimuladosFavoritos/${user.id}/${id}`, { headers: { 'Authorization': 'Bearer ' + user.token } })
-            .then(function () {
-                const idsSimuladosFavoritos = arraiDeFavoritosDoUsuario.filter((value) => value !== id);
+            .then(function (response) {
+                const idsSimuladosFavoritos = arraiDeFavoritosDoUsuario.filter((value) => value.id !== id);
                 setArraiDeFavoritosDoUsuario(idsSimuladosFavoritos);
             }).catch(function (error) {
-            });
+            setIsLoading(false);
+        });
     }
 
     async function addOFavorito(id) {
-        setArraiDeFavoritosDoUsuario([...arraiDeFavoritosDoUsuario, id]);
-
-        let dataRequest = {
-            userId: user.id,
-            simuladoId: id
-        };
-
-        await api.post(`api/Simulado/SimuladosFavoritos`, dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
-            .then().catch(function (error) {
-            });
+        const idNovoSimulado = { id: id}
+        if(user){
+            arraiDeFavoritosDoUsuario.push(idNovoSimulado)
+            setArraiDeFavoritosDoUsuario(arraiDeFavoritosDoUsuario)
+            let dataRequest = {
+                userId: user.id,
+                simuladoId: id
+            };
+    
+            await api.post(`api/Simulado/SimuladosFavoritos`, dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
+                .then(function (response) {
+                }).catch(function (error) {
+                setIsLoading(false);
+                });
+        }else{
+            toast.error('Você precisa fazer Login antes')
+        }
     }
-
     const columns = [
         {
             title: 'Nome',
@@ -84,7 +86,7 @@ export default function TableAnt({ setBottom }: Table) {
             dataIndex: 'id',
             key: 'id',
             render: (id) => {
-                let verificados = arraiDeFavoritosDoUsuario.filter((item) => item === id);
+                let verificados = arraiDeFavoritosDoUsuario.filter((item) => item.id === id)
                 if (verificados.length > 0) {
                     return <S.Star onClick={() => deleteOFavorito(id)} />
                 } else {
@@ -94,61 +96,31 @@ export default function TableAnt({ setBottom }: Table) {
         },
     ];
 
-    function onSearchEnter(e) {
-        e.preventDefault();
-        setIsLoading(true);
-        setParams(e.target.value);
-    }
-
     async function getSimulateds() {
-        if(user){
-            await api.get(`api/Simulado/SimuladosFavoritos?userId=${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } }).then(function (response) {
-                if (response.data.length === 0) {
-                    setBottom(true);
-                } else {
-                    setBottom(false);
-                }
-    
-                setData(response.data);
-                getFavoritos();
-                setIsLoading(false);
-            }).catch(function (error) {
-                toast.error(`Um erro inesperado aconteceu ${error.response }`)
-            });
-        }
-        setIsLoading(false);
-    };
-
-    async function getFavoritos() {
-        await api.get(`/api/Simulado/SimuladosFavoritosIds?userId=${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } }).then(function (response) {
+        await api.get(`api/Simulado/SimuladosFavoritos/${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } }).then(function (response) {
             if (response.data.length > 0) {
+                setData(response.data)
                 setArraiDeFavoritosDoUsuario(response.data);
             }
+
+            setIsLoading(false);
         }).catch(function (error) {
-            toast.error(`Um erro inesperado aconteceu ${error.response }`);
+            setIsLoading(false);
+            toast.error(`Um erro inesperado aconteceu ${error.response }`)
         });
-    };
+    }
 
     useEffect(() => {
         getSimulateds();
-    }, [params]);
+    }, [params])
 
-    return (<>
-        <S.Tools>
-            <S.divButton>
-                <a href="/criar-simulados">
-                    <Button type="default" >Criar Simulado</Button>
-                </a>
-            </S.divButton>
-            <S.SearchContainer>
-                <Space direction="vertical">
-                    <Search placeholder="Pesquisar" onPressEnter={e => onSearchEnter(e)} onSearch={onSearch} enterButton />
-                </Space>
-            </S.SearchContainer>
-        </S.Tools>
-        <S.DivTable>
-            <Table pagination={{ pageSize: 7 }} loading={isLoading} columns={columns} dataSource={data} />
-        </S.DivTable>
-    </>
+    return (
+        <>
+            <S.Tools>
+            </S.Tools>
+            <S.DivTable>
+                <Table pagination={{ pageSize: 7 }} loading={isLoading} columns={columns} dataSource={data} />
+            </S.DivTable>
+        </>
     )
 }

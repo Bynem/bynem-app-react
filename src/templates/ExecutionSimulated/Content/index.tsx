@@ -9,9 +9,10 @@ import Footer from "../../../components/Footer"
 import api from '../../../service/api';
 import { FormCreatedSimulated, Pergunta } from '../../VisualizeSimulated';
 import * as S from '../styles'
+import { ConstructionOutlined } from '@mui/icons-material';
 
 
-export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp, timeSeconds }: { uuidSimulado: string, expiryTimestamp: Date, timeSeconds: number}) {
+export default function ExecutionSimulated({ uuidSimulado }: { uuidSimulado: string}) {
     const [simulated, setSimulated] = useState<FormCreatedSimulated>()
     const [selectedAnswer, setSelectedAnswer] = useState<Pergunta[]>([])
     const [selectedAnswers, setSelectedAnswers] = useState<Pergunta[][]>([])
@@ -22,11 +23,13 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp, time
     const [percentualAcerto, setPercentualAcerto] = useState(0);
     const { Step } = Steps;
     const history = useHistory();
+    const expiryTimestamp = new Date()
+
 
     const { hours, minutes, seconds } = useTimer({
         expiryTimestamp, onExpire: () => {
             if (!openModal) {
-                if(timeSeconds > 0) {
+                if(simulated.tempoPorProva > 0) {
                     toast.error(`Seu tempo acabou`)
                     setOpenModal(true)
                 }else{
@@ -40,6 +43,9 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp, time
         async function getSimulatedById() {
             await api.get(`api/Simulado/${uuidSimulado}`).then(function (response) {
                 setSimulated(response.data)
+                expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + response.data.tempoPorProva * 60);
+
+                console.log('response', response)
             }).catch(function (error) {
                 toast.error(`Um erro inesperado aconteceu ${error.response}`)
             });
@@ -258,7 +264,7 @@ export default function ExecutionSimulated({ uuidSimulado, expiryTimestamp, time
                             {(selectedAnswers[current] || (showResponses && (selectedAnswer.length || selectedAnswers[current]))) && <Button type="primary" htmlType="submit" style={{ backgroundColor: '#46a6e6', marginLeft: '10px' }} disabled={!selectedAnswer.length || (!selectedAnswer.length && !!selectedAnswers[current])}>
                                 PRÓXIMO
                             </Button>}
-                                {timeSeconds > 0 && 
+                                {simulated.tempoPorProva > 0 && 
                                 <S.ContainerCountTimer>
                                     <span>{hours === 0 ? '00' : hours}</span>:<span>{minutes === 0 ? '00' : minutes}</span>:<span>{seconds < 10 ? `0${seconds}` : seconds}</span>
                                     <svg style={{ width: 24, height: 24, marginLeft: 10 }} viewBox="0 0 24 24">

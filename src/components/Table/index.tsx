@@ -8,6 +8,7 @@ import 'antd/dist/antd.css';
 import * as S from './styles';
 
 import api from '../../service/api'
+import { ConstructionOutlined } from '@mui/icons-material';
 
 export type DataTable = {
     descricao: string;
@@ -25,7 +26,7 @@ export default function TableAnt({ setBottom }: Table) {
     const [data, setData] = useState<DataTable[] | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [params, setParams] = useState("")
-    const [arraiDeFavoritosDoUsuario, setArraiDeFavoritosDoUsuario] = useState<string[]>([])
+    const [arraiDeFavoritosDoUsuario, setArraiDeFavoritosDoUsuario] = useState<any[]>([])
     const { Search } = Input;
 
     const user = JSON.parse(localStorage.getItem("user"))
@@ -39,8 +40,8 @@ export default function TableAnt({ setBottom }: Table) {
 
     async function deleteOFavorito(id) {
         await api.delete(`api/Simulado/SimuladosFavoritos/${user.id}/${id}`, { headers: { 'Authorization': 'Bearer ' + user.token } })
-            .then(function () {
-                const idsSimuladosFavoritos = arraiDeFavoritosDoUsuario.filter((value) => value !== id);
+            .then(function (response) {
+                const idsSimuladosFavoritos = arraiDeFavoritosDoUsuario.filter((value) => value.id !== id);
                 setArraiDeFavoritosDoUsuario(idsSimuladosFavoritos);
             }).catch(function (error) {
             setIsLoading(false);
@@ -48,23 +49,24 @@ export default function TableAnt({ setBottom }: Table) {
     }
 
     async function addOFavorito(id) {
+        const idNovoSimulado = { id: id}
         if(user){
-            setArraiDeFavoritosDoUsuario([...arraiDeFavoritosDoUsuario, id])
-            
+            arraiDeFavoritosDoUsuario.push(idNovoSimulado)
+            setArraiDeFavoritosDoUsuario(arraiDeFavoritosDoUsuario)
             let dataRequest = {
                 userId: user.id,
                 simuladoId: id
             };
     
             await api.post(`api/Simulado/SimuladosFavoritos`, dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
-                .then().catch(function (error) {
+                .then(function (response) {
+                }).catch(function (error) {
                 setIsLoading(false);
                 });
         }else{
             toast.error('Você precisa fazer Login antes')
         }
     }
-
     const columns = [
         {
             title: 'Nome',
@@ -91,7 +93,7 @@ export default function TableAnt({ setBottom }: Table) {
             dataIndex: 'id',
             key: 'id',
             render: (id) => {
-                let verificados = arraiDeFavoritosDoUsuario.filter((item) => item === id)
+                let verificados = arraiDeFavoritosDoUsuario.filter((item) => item.id === id)
                 if (verificados.length > 0) {
                     return <S.Star onClick={() => deleteOFavorito(id)} />
                 } else {
@@ -111,6 +113,7 @@ export default function TableAnt({ setBottom }: Table) {
         await api.get('api/Simulado', {
             params: { filter: params }
         }).then(function (response) {
+
             if (response.data.length === 0) {
                 setBottom(true);
             } else {
@@ -127,7 +130,7 @@ export default function TableAnt({ setBottom }: Table) {
 
     async function getIdsSimuladosFavoritosUsuario() {
         if (user) {
-            await api.get(`api/Simulado/SimuladosFavoritosIds?userId=${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } })
+            await api.get(`api/Simulado/SimuladosFavoritos/${user.id}`, { headers: { 'Authorization': 'Bearer ' + user.token } })
                 .then(function (response) {
                     if (response.data.length > 0) {
                         setArraiDeFavoritosDoUsuario(response.data);

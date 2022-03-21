@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAuth } from "../../hooks/auth";
 import * as S from './styles'
 
@@ -22,6 +23,16 @@ export default function Head({ home }: Home) {
     localStorage.removeItem("user")
     history.push('/login')
   }
+
+  function verificaLogadoEredirect() {
+    if (user) {
+        history.push(`/criar-simulados`)
+        return
+    } else {
+        toast.warning('Você precisa ter uma conta antes')
+    }
+}
+
   return (<>
     <S.Nav>
       <div style={{ cursor: "pointer", padding: '8px' }}>
@@ -53,7 +64,7 @@ export default function Head({ home }: Home) {
             <S.MenuLink >Meus Simulados</S.MenuLink>
           </a>
         </a>}
-        <a href="/criar-simulados">
+        <a onClick={() => verificaLogadoEredirect()}>
           <a>
             <S.MenuLink >Criar Simulados</S.MenuLink>
           </a>

@@ -32,7 +32,7 @@ export default function TableSimulated({ setBottom }: Table) {
     const { Search } = Input;
     const user = JSON.parse(localStorage.getItem("user"))
     const history = useHistory();
-
+console.log(data)
     const columns = [
         {
             title: 'Nome',
@@ -41,7 +41,7 @@ export default function TableSimulated({ setBottom }: Table) {
         },
         {
             title: 'Autor',
-            dataIndex: 'author',
+            dataIndex: 'autor',
             key: 'autor',
         },
         {
@@ -107,7 +107,6 @@ export default function TableSimulated({ setBottom }: Table) {
             params: { filter: params, meusSimulados: true },
             headers: { 'Authorization': 'Bearer ' + user.token } 
         }).then(function (response) {
-            console.log('responsee', response)
             if (response.data.length === 0) {
                 setBottom(true)
             } else {
@@ -118,7 +117,6 @@ export default function TableSimulated({ setBottom }: Table) {
             setIsLoading(false)
         }).catch(function (error) {
             setIsLoading(false)
-            console.log('errorerrorresponsee', {error})
             toast.error(`Um erro inesperado aconteceu ${error.response}`)
         });
     }

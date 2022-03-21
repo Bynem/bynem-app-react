@@ -101,7 +101,6 @@ export default function FormCreatedSimulated() {
         if (newObject.tempoPorProva) {
             newObject.tempoPorProva = newObject.tempoPorProva.toString();
         }
-        console.log('{ user.token } }', { headers: { 'Authorization': 'Bearer ' + user.token } })
 
         await api.post('api/Simulado', newObject, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(response => {
