@@ -74,7 +74,7 @@ export default function TableSimulated({ setBottom }: Table) {
 
     async function DeleteSimulated(id) {
         setIsSpinning(true)
-        await api.delete(`api/Simulado/${id}`, {headers: {'Authorization': 'Bearer ' + user.token }})
+        await api.delete(`api/Simulado/${id}`, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(function () {
                 setIsSpinning(false)
                 toast.success('Simulado Deletado com sucesso ')
@@ -82,7 +82,7 @@ export default function TableSimulated({ setBottom }: Table) {
 
             })
             .catch(function (error) {
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                toast.error(`Um erro inesperado aconteceu ${error.response }`)
 
 
             });
@@ -103,19 +103,23 @@ export default function TableSimulated({ setBottom }: Table) {
     }, [params]);
 
     async function getSimulateds() {
-        await api.get('api/Simulado', {
-            params: { filter: params }
+        await api.get('api/Simulado/MySimulateds', {
+            params: { filter: params, meusSimulados: true },
+            headers: { 'Authorization': 'Bearer ' + user.token } 
         }).then(function (response) {
+            console.log('responsee', response)
             if (response.data.length === 0) {
                 setBottom(true)
             } else {
                 setBottom(false)
             }
-            
+
             setData(response.data);
             setIsLoading(false)
         }).catch(function (error) {
-            toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+            setIsLoading(false)
+            console.log('errorerrorresponsee', {error})
+            toast.error(`Um erro inesperado aconteceu ${error.response}`)
         });
     }
     return (

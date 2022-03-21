@@ -39,7 +39,7 @@ const Login: React.FC = () => {
             return false;
         }
 
-        await api.post('/api/Auth/login', dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
+        await api.post('api/Auth/login', dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(function (response) {
                 setUser(response.data)
                 localStorage.setItem("user", JSON.stringify(response.data))
@@ -62,7 +62,7 @@ const Login: React.FC = () => {
             tipoLogin: 1
         };
 
-        await api.post('/api/Auth/login', data)
+        await api.post('api/Auth/login', data)
             .then(function (response) {
                 localStorage.setItem("user", JSON.stringify(response.data))
                 history.push(`/`)

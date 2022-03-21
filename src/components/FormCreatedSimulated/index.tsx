@@ -91,7 +91,8 @@ export default function FormCreatedSimulated() {
                     history.push(`/criar-perguntas/${response.data.id}`);
                 }
             }).catch(function (error) {
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                console.log('errir', error)
+                toast.error(`Um erro inesperado aconteceu ${error.response }`)
                 setIsSpinning(false)
             });
     }
@@ -100,6 +101,7 @@ export default function FormCreatedSimulated() {
         if (newObject.tempoPorProva) {
             newObject.tempoPorProva = newObject.tempoPorProva.toString();
         }
+        console.log('{ user.token } }', { headers: { 'Authorization': 'Bearer ' + user.token } })
 
         await api.post('api/Simulado', newObject, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(response => {
@@ -108,9 +110,10 @@ export default function FormCreatedSimulated() {
                 }
 
             }).catch(function (error) {
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                console.log('errir', error)
                 setIsSpinning(false)
                 setIsLoadingButton(false)
+                toast.error(`Um erro inesperado aconteceu ${error.response }`)
             });
     }
     async function postSimulated(newObject) {
@@ -132,9 +135,10 @@ export default function FormCreatedSimulated() {
                     postThumbnail(response.data.id)
                 }
             }).catch(function (error) {
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                console.log('errir', error)
                 setIsSpinning(false)
                 setIsLoadingButton(false)
+                toast.error(`Um erro inesperado aconteceu ${error.response }`)
 
             });
     }
@@ -148,8 +152,10 @@ export default function FormCreatedSimulated() {
                 history.push(`/criar-perguntas/${id}`);
                 toast.success('Simulado salvo com sucesso ')
             }).catch(function (error) {
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                console.log('errir', error)
+                toast.error(`Um erro inesperado aconteceu ${error.response }`)
                 setIsSpinning(false)
+                setIsLoadingButton(false)
             });
     }
 

@@ -111,7 +111,7 @@ export default function FormCreatedSimulated({ uuiSimulado, numeroDaPergunta, se
 
             }).catch(function (error) {
                 setIsSpinning(false)
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                toast.error(`Um erro inesperado aconteceu ${error.response }`)
                 setIsSpinning(false)
             });
     }

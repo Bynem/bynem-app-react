@@ -43,7 +43,8 @@ export default function TableAnt({ setBottom }: Table) {
                 const idsSimuladosFavoritos = arraiDeFavoritosDoUsuario.filter((value) => value !== id);
                 setArraiDeFavoritosDoUsuario(idsSimuladosFavoritos);
             }).catch(function (error) {
-            });
+            setIsLoading(false);
+        });
     }
 
     async function addOFavorito(id) {
@@ -56,6 +57,7 @@ export default function TableAnt({ setBottom }: Table) {
 
         await api.post(`api/Simulado/SimuladosFavoritos`, dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then().catch(function (error) {
+            setIsLoading(false);
             });
     }
 
@@ -114,7 +116,8 @@ export default function TableAnt({ setBottom }: Table) {
             setData(response.data);
             setIsLoading(false);
         }).catch(function (error) {
-            toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+            setIsLoading(false);
+            toast.error(`Um erro inesperado aconteceu ${error.response }`)
         });
     }
 
@@ -128,7 +131,8 @@ export default function TableAnt({ setBottom }: Table) {
 
                     setIsLoading(false);
                 }).catch(function (error) {
-                    toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                    setIsLoading(false);
+                    toast.error(`Um erro inesperado aconteceu ${error.response }`)
                 });
         }
     }

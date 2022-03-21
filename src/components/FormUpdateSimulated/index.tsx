@@ -115,7 +115,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
                 setSimulated(response.data)
             })
                 .catch(function (error) {
-                    toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                    toast.error(`Um erro inesperado aconteceu ${error.response }`)
                 });
         }
         getSimulatedById()
@@ -127,16 +127,16 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
         await api.put('api/Simulado', dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then().catch(function (error) {
                 setIsSpinning(false)
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                toast.error(`Um erro inesperado aconteceu ${error.response }`)
             });
 
         const archive = new FormData()
         archive.append('arquivo', formDataThumbnail)
 
-        await api.post(`/api/Simulado/upload-thumbnail/${idSimulated.id}`, archive, { headers: { 'Authorization': 'Bearer ' + user.token } })
+        await api.post(`api/Simulado/upload-thumbnail/${idSimulated.id}`, archive, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then().catch(function (error) {
                 setIsSpinning(false)
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                toast.error(`Um erro inesperado aconteceu ${error.response }`)
             });
 
         goToMySimulateds()
@@ -152,7 +152,7 @@ export default function FormUpdateSimulated({ uuid }: Uuid) {
             await api.put('api/Simulado', dataRequest, { headers: { 'Authorization': 'Bearer ' + user.token } })
                 .then().catch(function (error) {
                     setIsSpinning(false)
-                    toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                    toast.error(`Um erro inesperado aconteceu ${error.response }`)
                 });
         }
 

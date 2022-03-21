@@ -47,10 +47,9 @@ export default function VisualizeSimulated() {
         async function getSimulatedById() {
             await api.get(`api/Simulado/${params?.uuidSimulado}`).then(function (response) {
                 setSimulated(response.data)
-            })
-                .catch(function (error) {
-                    toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
-                });
+            }).catch(function (error) {
+                toast.error(`Um erro inesperado aconteceu ${error.response }`)
+            });
         }
 
         if (params.uuidSimulado) {

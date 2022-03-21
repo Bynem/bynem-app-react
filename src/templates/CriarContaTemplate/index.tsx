@@ -31,7 +31,7 @@ const CriarContaTemplate: React.FC = () => {
             return false;
         }
 
-        await api.post('/api/User', dataRequest)
+        await api.post('api/User', dataRequest)
             .then(function (response) {
                 toast.success('Conta Criada com Sucesso')
                 history.push(`/login`)

@@ -67,7 +67,7 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
                     setArreiDeRespostas(response.data.respostas)
                 }).catch(function (error) {
                     setIsSpinning(false)
-                    toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                    toast.error(`Um erro inesperado aconteceu ${error.response }`)
                     setIsSpinning(false)
                 });
         }
@@ -99,7 +99,7 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
                 }
             }).catch(function (error) {
                 setIsSpinning(false)
-                toast.error(`Um erro inesperado aconteceu ${error.response.status}`)
+                toast.error(`Um erro inesperado aconteceu ${error.response }`)
                 setIsSpinning(false)
             });
     }
@@ -245,7 +245,7 @@ export default function FormEditSimulated({ uuidSimulado, uuidQuestao }: EditQue
                                 borderRadius: "2px"
                             }}
                             size="large"
-                        >Adicionar Questão</Button>
+                        >Editar Questão</Button>
                     </S.ContainerDrop>
                 </Form>
             }
