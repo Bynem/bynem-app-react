@@ -22,6 +22,7 @@ export default function TableVizualizeQuestions({ uuidSimulado }: PerguntasType)
     const history = useHistory();
     const [isLoading, setIsLoading] = useState(false)
     const [perguntas, setPerguntas] = useState()
+    const user = JSON.parse(localStorage.getItem("user"))
 
     useEffect(() => {
         async function getSimulatedById() {
@@ -41,8 +42,7 @@ export default function TableVizualizeQuestions({ uuidSimulado }: PerguntasType)
 
     async function deleteQuestion(id) {
         setIsLoading(true)
-        await api.delete(`api/Pergunta/${id}`, {
-        })
+        await api.delete(`api/Pergunta/${id}`, { headers: { 'Authorization': 'Bearer ' + user.token } })
             .then(function () {
                 toast.success('Pergunta Deletada com sucesso ')
                 setIsLoading(false)

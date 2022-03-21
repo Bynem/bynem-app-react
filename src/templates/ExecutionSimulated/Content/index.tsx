@@ -9,8 +9,6 @@ import Footer from "../../../components/Footer"
 import api from '../../../service/api';
 import { FormCreatedSimulated, Pergunta } from '../../VisualizeSimulated';
 import * as S from '../styles'
-import { ConstructionOutlined } from '@mui/icons-material';
-
 
 export default function ExecutionSimulated({ uuidSimulado }: { uuidSimulado: string}) {
     const [simulated, setSimulated] = useState<FormCreatedSimulated>()
