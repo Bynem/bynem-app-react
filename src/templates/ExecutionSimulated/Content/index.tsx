@@ -196,7 +196,7 @@ export default function ExecutionSimulated({ uuidSimulado }: { uuidSimulado: str
                                 direction="vertical"
                             >
                                 {simulated.perguntas?.map((item, index) => {
-                                    return <Step key={item.id} status={statusStep(item)} />
+                                    return <Step key={item.id} status={statusStep(item)} onClick={() => setCurrent(index)}/>
                                 })}
 
                             </Steps>

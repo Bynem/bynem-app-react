@@ -124,7 +124,7 @@ export default function TableAnt({ setBottom }: Table) {
             setIsLoading(false);
         }).catch(function (error) {
             setIsLoading(false);
-            toast.error(`Um erro inesperado aconteceu ${error.response }`)
+            // toast.error(`Um erro inesperado aconteceu ${error.response }`)
         });
     }
 
@@ -139,7 +139,7 @@ export default function TableAnt({ setBottom }: Table) {
                     setIsLoading(false);
                 }).catch(function (error) {
                     setIsLoading(false);
-                    toast.error(`Um erro inesperado aconteceu ${error.response }`)
+                    // toast.error(`Um erro inesperado aconteceu ${error.response }`)
                 });
         }
     }
